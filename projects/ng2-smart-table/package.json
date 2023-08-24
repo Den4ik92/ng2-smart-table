@@ -1,0 +1,15 @@
+{
+  "name": "@Den4ik92/ng2-smart-table",
+  "version": "1.0",
+  "description": "Angular Smart Table",
+  "author": "Den4ik92",
+  "license": "MIT",
+  "dependencies": {
+    "tslib": "^2.6.1"
+  },
+  "peerDependencies": {
+    "@angular/common": "^15.2.9",
+    "@angular/core": "^15.2.9",
+    "@angular/forms": "^15.2.9"
+  }
+}
