@@ -1,0 +1,43 @@
+import { SimpleChange, EventEmitter, OnChanges } from '@angular/core';
+import { Grid } from './lib/grid';
+import { DataSource } from './lib/data-source/data-source';
+import { Row } from './lib/data-set/row';
+import { SmartTableConfirmDeleteEvent, SmartTableConfirmEditEvent, SmartTableCreateConfirm, SmartTableCustomEvent, SmartTableRowClickedEvent, SmartTableRowSelectEvent, SmartTableSettings } from './lib/interfaces/smart-table.models';
+import * as i0 from "@angular/core";
+export declare class Ng2SmartTableComponent implements OnChanges {
+    source: DataSource;
+    settings: SmartTableSettings;
+    multiRowSelect: EventEmitter<SmartTableRowSelectEvent<any>>;
+    rowClicked: EventEmitter<SmartTableRowClickedEvent<any>>;
+    delete: EventEmitter<any>;
+    edit: EventEmitter<any>;
+    create: EventEmitter<any>;
+    custom: EventEmitter<SmartTableCustomEvent<any>>;
+    deleteConfirm: EventEmitter<SmartTableConfirmDeleteEvent<any>>;
+    editConfirm: EventEmitter<SmartTableConfirmEditEvent<any>>;
+    createConfirm: EventEmitter<SmartTableCreateConfirm<any>>;
+    rowHover: EventEmitter<any>;
+    tableClass: string;
+    tableId: string;
+    perPageSelect: any;
+    isHideHeader: boolean;
+    isHideSubHeader: boolean;
+    isPagerDisplay: boolean;
+    rowClassFunction: Function;
+    grid: Grid;
+    defaultSettings: SmartTableSettings;
+    ngOnChanges(changes: {
+        [propertyName: string]: SimpleChange;
+    }): void;
+    onRowHover(row: Row): void;
+    multipleSelectRow(row: Row): void;
+    onSelectAllRows(): void;
+    onSelectRow(row: Row, state: boolean): void;
+    initGrid(): void;
+    prepareSource(): DataSource;
+    prepareSettings(): SmartTableSettings;
+    private emitUserSelectRow;
+    emitUserRowClicked(row: Row): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<Ng2SmartTableComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<Ng2SmartTableComponent, "ng2-smart-table", never, { "source": "source"; "settings": "settings"; }, { "multiRowSelect": "multiRowSelect"; "rowClicked": "rowClicked"; "delete": "delete"; "edit": "edit"; "create": "create"; "custom": "custom"; "deleteConfirm": "deleteConfirm"; "editConfirm": "editConfirm"; "createConfirm": "createConfirm"; "rowHover": "rowHover"; }, never, never, false, never>;
+}
