@@ -4,7 +4,10 @@ export interface SelectOption {
     title: string;
     value: number | string;
 }
-export interface SmartTableSettings<T = any> {
+interface ObjectAny {
+    [key: string]: any;
+}
+export interface SmartTableSettings<T extends ObjectAny = any> {
     mode?: 'inline' | 'external' | 'click-to-edit';
     selectMode?: 'single' | 'multi';
     selectedRowIndex?: number;
@@ -39,7 +42,7 @@ export interface SmartTableSettings<T = any> {
     };
     noDataMessage?: string;
     columns: {
-        [key: string]: SmartTableColumn<T>;
+        [key in keyof T]?: SmartTableColumn<T>;
     };
     pager?: {
         display: boolean;

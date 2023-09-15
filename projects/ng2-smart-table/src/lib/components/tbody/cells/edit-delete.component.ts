@@ -37,12 +37,11 @@ export class TbodyEditDeleteComponent implements OnChanges {
 
     this.editRowSelect.emit(this.row);
 
-    if (this.grid.getSetting('mode') === 'external') {
-      this.edit.emit({
-        data: this.row.getData(),
-        source: this.source,
-      });
-    } else {
+    this.edit.emit({
+      data: this.row.getData(),
+      source: this.source,
+    });
+    if (this.grid.getSetting('mode') !== 'external') {
       this.grid.edit(this.row);
     }
   }

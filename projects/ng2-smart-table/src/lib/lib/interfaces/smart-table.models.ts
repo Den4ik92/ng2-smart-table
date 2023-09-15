@@ -1,5 +1,4 @@
 import { DataSource } from "../data-source/data-source";
-import { LocalDataSource } from "../data-source/local/local.data-source";
 import { Deferred } from "../helpers";
 
 export interface SelectOption {
@@ -7,7 +6,11 @@ export interface SelectOption {
   value: number | string;
 }
 
-export interface SmartTableSettings<T = any> {
+interface ObjectAny {
+	[key: string]: any;
+}
+
+export interface SmartTableSettings<T extends ObjectAny = any> {
 	mode?: 'inline' | 'external' | 'click-to-edit';
 	selectMode?: 'single' | 'multi';
 	selectedRowIndex?: number; //if need deselect first item set value < 0;
@@ -47,7 +50,7 @@ export interface SmartTableSettings<T = any> {
 		class?: string;
 	};
 	noDataMessage?: string;
-	columns: { [key: string]: SmartTableColumn<T> };
+	columns: { [key in keyof T]?: SmartTableColumn<T> };
 	pager?: {
 		display: boolean;
 		page?: number;
