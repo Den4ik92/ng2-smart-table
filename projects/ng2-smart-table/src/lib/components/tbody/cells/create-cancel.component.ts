@@ -17,6 +17,7 @@ export class TbodyCreateCancelComponent implements OnChanges {
   @Input() grid: Grid;
   @Input() row: Row;
   @Input() editConfirm: EventEmitter<any>;
+  @Input() editCancel: EventEmitter<any>;
 
   cancelButtonContent: string;
   saveButtonContent: string;
@@ -24,14 +25,13 @@ export class TbodyCreateCancelComponent implements OnChanges {
   onSave(event: any) {
     event.preventDefault();
     event.stopPropagation();
-
     this.grid.save(this.row, this.editConfirm);
   }
 
   onCancelEdit(event: any) {
     event.preventDefault();
     event.stopPropagation();
-
+    this.editCancel.emit(true);
     this.row.isInEditing = false;
   }
 

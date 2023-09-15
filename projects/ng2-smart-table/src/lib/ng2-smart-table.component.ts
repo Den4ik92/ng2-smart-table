@@ -22,6 +22,7 @@ export class Ng2SmartTableComponent implements OnChanges {
   @Output() rowClicked = new EventEmitter<SmartTableRowClickedEvent>();
   @Output() delete = new EventEmitter<any>();
   @Output() edit = new EventEmitter<any>();
+  @Output() editCancel = new EventEmitter<any>();
   @Output() create = new EventEmitter<any>();
   @Output() custom = new EventEmitter<SmartTableCustomEvent>();
   @Output() deleteConfirm = new EventEmitter<SmartTableConfirmDeleteEvent>();

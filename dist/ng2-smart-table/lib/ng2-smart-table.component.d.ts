@@ -11,6 +11,7 @@ export declare class Ng2SmartTableComponent implements OnChanges {
     rowClicked: EventEmitter<SmartTableRowClickedEvent<any>>;
     delete: EventEmitter<any>;
     edit: EventEmitter<any>;
+    editCancel: EventEmitter<any>;
     create: EventEmitter<any>;
     custom: EventEmitter<SmartTableCustomEvent<any>>;
     deleteConfirm: EventEmitter<SmartTableConfirmDeleteEvent<any>>;
@@ -39,5 +40,5 @@ export declare class Ng2SmartTableComponent implements OnChanges {
     private emitUserSelectRow;
     emitUserRowClicked(row: Row): void;
     static ɵfac: i0.ɵɵFactoryDeclaration<Ng2SmartTableComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<Ng2SmartTableComponent, "ng2-smart-table", never, { "source": "source"; "settings": "settings"; }, { "multiRowSelect": "multiRowSelect"; "rowClicked": "rowClicked"; "delete": "delete"; "edit": "edit"; "create": "create"; "custom": "custom"; "deleteConfirm": "deleteConfirm"; "editConfirm": "editConfirm"; "createConfirm": "createConfirm"; "rowHover": "rowHover"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<Ng2SmartTableComponent, "ng2-smart-table", never, { "source": "source"; "settings": "settings"; }, { "multiRowSelect": "multiRowSelect"; "rowClicked": "rowClicked"; "delete": "delete"; "edit": "edit"; "editCancel": "editCancel"; "create": "create"; "custom": "custom"; "deleteConfirm": "deleteConfirm"; "editConfirm": "editConfirm"; "createConfirm": "createConfirm"; "rowHover": "rowHover"; }, never, never, false, never>;
 }

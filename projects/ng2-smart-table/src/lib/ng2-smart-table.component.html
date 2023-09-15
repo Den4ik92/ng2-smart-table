@@ -14,6 +14,7 @@
                       [editConfirm]="editConfirm"
                       [rowClassFunction]="rowClassFunction"
                       (edit)="edit.emit($event)"
+                      (editCancel)="editCancel.emit($event)"
                       (delete)="delete.emit($event)"
                       (custom)="custom.emit($event)"
                       (userClickedRow)="emitUserRowClicked($event)"
