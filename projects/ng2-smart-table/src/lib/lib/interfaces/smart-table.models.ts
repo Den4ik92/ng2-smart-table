@@ -50,7 +50,7 @@ export interface SmartTableSettings<T extends ObjectAny = any> {
 		class?: string;
 	};
 	noDataMessage?: string;
-	columns: { [key in keyof T]?: SmartTableColumn<T> };
+	columns: { [key: string]: SmartTableColumn<T> };
 	pager?: {
 		display: boolean;
 		page?: number;

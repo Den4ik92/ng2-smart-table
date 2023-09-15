@@ -42,7 +42,7 @@ export interface SmartTableSettings<T extends ObjectAny = any> {
     };
     noDataMessage?: string;
     columns: {
-        [key in keyof T]?: SmartTableColumn<T>;
+        [key: string]: SmartTableColumn<T>;
     };
     pager?: {
         display: boolean;
