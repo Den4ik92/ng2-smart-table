@@ -40,7 +40,6 @@ export interface SmartTableSettings<T extends ObjectAny = any> {
         id?: string;
         class?: string;
     };
-    addable?: boolean;
     noDataMessage?: string;
     columns: {
         [key in keyof T]?: SmartTableColumn<T>;
@@ -74,6 +73,7 @@ interface SmartTableDefaultColumn<T> {
     editable?: boolean;
     hide?: boolean;
     sort?: boolean;
+    addable?: boolean;
     sortDirection?: 'desc' | 'asc' | false;
     editor?: SmartTableEditorAndFilter;
     filter?: SmartTableEditorAndFilter | false;
