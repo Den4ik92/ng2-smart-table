@@ -1,6 +1,6 @@
 {
   "name": "@den4ik92/ng2-smart-table",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,7 +8,7 @@
     "build:lib": "ng build ng2-smart-table --configuration production",
     "build:ci": "npm run build:demo && npm run build:lib",
     "release": "npm run build:lib && npm run publish",
-    "publish": "npm publish --access=public dist/ng2-smart-table",
+    "publish": "cd dist/ng2-smart-table && npm publish --access=public",
     "lint": "ng lint"
   },
   "dependencies": {

@@ -20,7 +20,6 @@ export declare class Ng2SmartTableTbodyComponent {
     userClickedRow: EventEmitter<any>;
     editRowSelect: EventEmitter<any>;
     multipleSelectRow: EventEmitter<any>;
-    rowHover: EventEmitter<any>;
     isMultiSelectVisible: boolean;
     showActionColumnLeft: boolean;
     showActionColumnRight: boolean;
@@ -33,6 +32,7 @@ export declare class Ng2SmartTableTbodyComponent {
     get tableColumnsCount(): number;
     ngOnChanges(): void;
     getVisibleCells(cells: Array<Cell>): Array<Cell>;
+    protected trackByIdOrIndex(index: any, item: any): string | number;
     static ɵfac: i0.ɵɵFactoryDeclaration<Ng2SmartTableTbodyComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<Ng2SmartTableTbodyComponent, "[ng2-st-tbody]", never, { "grid": "grid"; "source": "source"; "deleteConfirm": "deleteConfirm"; "editConfirm": "editConfirm"; "rowClassFunction": "rowClassFunction"; }, { "save": "save"; "cancel": "cancel"; "edit": "edit"; "editCancel": "editCancel"; "delete": "delete"; "custom": "custom"; "edited": "edited"; "userSelectRow": "userSelectRow"; "userClickedRow": "userClickedRow"; "editRowSelect": "editRowSelect"; "multipleSelectRow": "multipleSelectRow"; "rowHover": "rowHover"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<Ng2SmartTableTbodyComponent, "[ng2-st-tbody]", never, { "grid": "grid"; "source": "source"; "deleteConfirm": "deleteConfirm"; "editConfirm": "editConfirm"; "rowClassFunction": "rowClassFunction"; }, { "save": "save"; "cancel": "cancel"; "edit": "edit"; "editCancel": "editCancel"; "delete": "delete"; "custom": "custom"; "edited": "edited"; "userSelectRow": "userSelectRow"; "userClickedRow": "userClickedRow"; "editRowSelect": "editRowSelect"; "multipleSelectRow": "multipleSelectRow"; }, never, never, false, never>;
 }

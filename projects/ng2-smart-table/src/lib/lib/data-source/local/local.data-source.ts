@@ -3,57 +3,57 @@ import { LocalFilter } from './local.filter';
 import { LocalPager } from './local.pager';
 import { DataSource } from '../data-source';
 import { deepExtend } from '../../helpers';
+import { SmartTableFilterConf, SmartTableFilterItem, SmartTablePagingItem, SmartTableSortItem } from '../../interfaces/smart-table.models';
 
-export class LocalDataSource extends DataSource {
+export class LocalDataSource<T=any> extends DataSource<T> {
 
-  protected data: Array<any> = [];
-  protected filteredAndSorted: Array<any> = [];
-  protected sortConf: Array<any> = [];
-  protected filterConf: any = {
+  protected data: T[] = [];
+  protected filteredAndSorted: T[] = [];
+  protected sortConf: SmartTableSortItem[] = [];
+  protected filterConf: SmartTableFilterConf = {
     filters: [],
     andOperator: true,
   };
-  protected pagingConf: any = {};
+  protected pagingConf: SmartTablePagingItem = {
+    page: 1,
+	  perPage: 1,
+  };
 
-  constructor(data: Array<any> = []) {
+  constructor(data: T[] = []) {
     super();
 
     this.data = data;
   }
 
-  load(data: Array<any>): Promise<any> {
+  load(data: any): Promise<true> {
     this.data = data;
-
     return super.load(data);
   }
 
-  prepend(element: any): Promise<any> {
+  prepend(element: T): Promise<true> {
     this.reset(true);
-
     this.data.unshift(element);
     return super.prepend(element);
   }
 
-  append(element: any): Promise<any> {
+  append(element: T): Promise<true> {
     this.reset(true);
 
     this.data.push(element);
     return super.append(element);
   }
 
-  add(element: any): Promise<any> {
+  add(element: T): Promise<true> {
     this.data.push(element);
-
     return super.add(element);
   }
 
-  remove(element: any): Promise<any> {
+  remove(element: T): Promise<true> {
     this.data = this.data.filter(el => el !== element);
-
     return super.remove(element);
   }
 
-  update(element: any, values: any): Promise<any> {
+  update(element: T, values: T): Promise<true> {
     return new Promise((resolve, reject) => {
       this.find(element).then((found) => {
         found = deepExtend(found, values);
@@ -62,27 +62,26 @@ export class LocalDataSource extends DataSource {
     });
   }
 
-  find(element: any): Promise<any> {
+  find(element: T): Promise<T> {
     const found = this.data.find(el => el === element);
     if (found) {
       return Promise.resolve(found);
     }
-
     return Promise.reject(new Error('Element was not found in the dataset'));
   }
 
-  getElements(): Promise<any> {
+  getElements(): Promise<T[]> {
     const data = this.data.slice(0);
     return Promise.resolve(this.prepareData(data));
   }
 
-  getFilteredAndSorted(): Promise<any> {
+  getFilteredAndSorted(): Promise<T[]> {
     let data = this.data.slice(0);
     this.prepareData(data);
     return Promise.resolve(this.filteredAndSorted);
   }
 
-  getAll(): Promise<any> {
+  getAll(): Promise<T[]> {
     const data = this.data.slice(0);
     return Promise.resolve(data);
   }
@@ -94,7 +93,7 @@ export class LocalDataSource extends DataSource {
         andOperator: true,
       };
       this.sortConf = [];
-      this.pagingConf['page'] = 1;
+      this.pagingConf.page = 1;
     } else {
       this.setFilter([], true, false);
       this.setSort([], false);
@@ -102,9 +101,8 @@ export class LocalDataSource extends DataSource {
     }
   }
 
-  empty(): Promise<any> {
+  empty(): Promise<true> {
     this.data = [];
-
     return super.empty();
   }
 
@@ -122,17 +120,15 @@ export class LocalDataSource extends DataSource {
    * @param doEmit
    * @returns {LocalDataSource}
    */
-  setSort(conf: Array<any>, doEmit = true): LocalDataSource {
+  setSort(conf: SmartTableSortItem[], doEmit = true): LocalDataSource {
     if (conf !== null) {
-
       conf.forEach((fieldConf) => {
-        if (!fieldConf['field'] || typeof fieldConf['direction'] === 'undefined') {
+        if (!fieldConf.field || typeof fieldConf.direction === 'undefined') {
           throw new Error('Sort configuration object is not valid');
         }
       });
       this.sortConf = conf;
     }
-
     super.setSort(conf, doEmit);
     return this;
   }
@@ -148,7 +144,7 @@ export class LocalDataSource extends DataSource {
    * @param doEmit
    * @returns {LocalDataSource}
    */
-  setFilter(conf: Array<any>, andOperator = true, doEmit = true): LocalDataSource {
+  setFilter(conf: SmartTableFilterItem[], andOperator = true, doEmit = true): LocalDataSource {
     if (conf && conf.length > 0) {
       conf.forEach((fieldConf) => {
         this.addFilter(fieldConf, andOperator, false);
@@ -160,20 +156,20 @@ export class LocalDataSource extends DataSource {
       };
     }
     this.filterConf.andOperator = andOperator;
-    this.pagingConf['page'] = 1;
+    this.pagingConf.page = 1;
 
     super.setFilter(conf, andOperator, doEmit);
     return this;
   }
 
-  addFilter(fieldConf: any, andOperator = true, doEmit: boolean = true): LocalDataSource {
-    if (!fieldConf['field'] || typeof fieldConf['search'] === 'undefined') {
+  addFilter(fieldConf: SmartTableFilterItem, andOperator = true, doEmit: boolean = true): LocalDataSource {
+    if (!fieldConf.field || typeof fieldConf.search === 'undefined') {
       throw new Error('Filter configuration object is not valid');
     }
 
     let found = false;
     this.filterConf.filters.forEach((currentFieldConf: any, index: any) => {
-      if (currentFieldConf['field'] === fieldConf['field']) {
+      if (currentFieldConf.field === fieldConf.field) {
         this.filterConf.filters[index] = fieldConf;
         found = true;
       }
@@ -187,32 +183,32 @@ export class LocalDataSource extends DataSource {
   }
 
   setPaging(page: number, perPage: number, doEmit: boolean = true): LocalDataSource {
-    this.pagingConf['page'] = page;
-    this.pagingConf['perPage'] = perPage;
+    this.pagingConf.page = page;
+    this.pagingConf.perPage = perPage;
 
     super.setPaging(page, perPage, doEmit);
     return this;
   }
 
   setPage(page: number, doEmit: boolean = true): LocalDataSource {
-    this.pagingConf['page'] = page;
+    this.pagingConf.page = page;
     super.setPage(page, doEmit);
     return this;
   }
 
-  getSort(): any {
+  getSort(): SmartTableSortItem[] {
     return this.sortConf;
   }
 
-  getFilter(): any {
+  getFilter(): SmartTableFilterConf {
     return this.filterConf;
   }
 
-  getPaging(): any {
+  getPaging(): SmartTablePagingItem {
     return this.pagingConf;
   }
 
-  protected prepareData(data: Array<any>): Array<any> {
+  protected prepareData(data: T[]): T[] {
     data = this.filter(data);
     data = this.sort(data);
     this.filteredAndSorted = data.slice(0);
@@ -220,32 +216,32 @@ export class LocalDataSource extends DataSource {
     return this.paginate(data);
   }
 
-  protected sort(data: Array<any>): Array<any> {
+  protected sort(data: T[]): T[] {
     if (this.sortConf) {
       this.sortConf.forEach((fieldConf) => {
         data = LocalSorter
-          .sort(data, fieldConf['field'], fieldConf['direction'], fieldConf['compare']);
+          .sort(data, fieldConf.field, fieldConf.direction, fieldConf.compare);
       });
     }
     return data;
   }
 
   // TODO: refactor?
-  protected filter(data: Array<any>): Array<any> {
+  protected filter(data: T[]): T[] {
     if (this.filterConf.filters) {
       if (this.filterConf.andOperator) {
-        this.filterConf.filters.forEach((fieldConf: any) => {
-          if (fieldConf['search']?.length > 0) {
+        this.filterConf.filters.forEach((fieldConf: SmartTableFilterItem) => {
+          if (fieldConf.search?.length > 0) {
             data = LocalFilter
-              .filter(data, fieldConf['field'], fieldConf['search'], fieldConf['filter']);
+              .filter(data, fieldConf.field, fieldConf.search, fieldConf.filter);
           }
         });
       } else {
-        let mergedData: any = [];
-        this.filterConf.filters.forEach((fieldConf: any) => {
-          if (fieldConf['search']?.length > 0) {
+        let mergedData: T[] = [];
+        this.filterConf.filters.forEach((fieldConf: SmartTableFilterItem) => {
+          if (fieldConf.search?.length > 0) {
             mergedData = mergedData.concat(LocalFilter
-              .filter(data, fieldConf['field'], fieldConf['search'], fieldConf['filter']));
+              .filter(data, fieldConf.field, fieldConf.search, fieldConf.filter));
           }
         });
         // remove non unique items
@@ -257,9 +253,9 @@ export class LocalDataSource extends DataSource {
     return data;
   }
 
-  protected paginate(data: Array<any>): Array<any> {
-    if (this.pagingConf && this.pagingConf['page'] && this.pagingConf['perPage']) {
-      data = LocalPager.paginate(data, this.pagingConf['page'], this.pagingConf['perPage']);
+  protected paginate(data: T[]): T[] {
+    if (this.pagingConf && this.pagingConf.page && this.pagingConf.perPage) {
+      data = LocalPager.paginate(data, this.pagingConf.page, this.pagingConf.perPage);
     }
     return data;
   }

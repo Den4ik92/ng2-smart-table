@@ -30,7 +30,6 @@ export declare class Ng2SmartTableComponent implements OnChanges {
     ngOnChanges(changes: {
         [propertyName: string]: SimpleChange;
     }): void;
-    onRowHover(row: Row): void;
     multipleSelectRow(row: Row): void;
     onSelectAllRows(): void;
     onSelectRow(row: Row, state: boolean): void;

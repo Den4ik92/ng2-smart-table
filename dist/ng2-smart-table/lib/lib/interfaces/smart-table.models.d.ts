@@ -74,7 +74,7 @@ interface SmartTableDefaultColumn<T> {
     hide?: boolean;
     sort?: boolean;
     addable?: boolean;
-    sortDirection?: 'desc' | 'asc' | false;
+    sortDirection?: SmartTableSortDirection | false;
     editor?: SmartTableEditorAndFilter;
     filter?: SmartTableEditorAndFilter | false;
     compareFunction?: (itemA: T, itemB: T) => number;
@@ -125,6 +125,17 @@ export interface SmartTableEditorCheckbox {
 export interface SmartTableFilterItem {
     field: string;
     search: string;
+    filter?: any;
+}
+export interface SmartTablePagingItem {
+    page: number;
+    perPage: number;
+}
+export type SmartTableSortDirection = 'asc' | 'desc';
+export interface SmartTableSortItem {
+    field: string;
+    direction: SmartTableSortDirection;
+    compare?: any;
 }
 interface SmartTableDefaultEvent<T> {
     confirm: Deferred;
@@ -148,5 +159,31 @@ export interface SmartTableCreateConfirm<T = any> extends Omit<SmartTableDefault
 }
 export interface ObjectStringString {
     [key: string]: string;
+}
+export declare enum SmartTableOnChangedEventName {
+    'load' = "load",
+    'paging' = "paging",
+    'update' = "update",
+    'page' = "page",
+    'filter' = "filter",
+    'empty' = "empty",
+    'sort' = "sort",
+    'add' = "add",
+    'remove' = "remove",
+    'append' = "append",
+    'prepend' = "prepend",
+    'refresh' = "refresh"
+}
+export type SmartTableOnChangedEventType = 'load' | 'prepend' | 'append' | 'update' | 'empty' | 'paging' | 'page' | 'filter' | 'sort' | 'add' | 'remove' | 'refresh';
+export interface SmartTableOnChangedEvent<T extends ObjectAny = any> {
+    action: SmartTableOnChangedEventType;
+    elements: T[];
+    filter: SmartTableFilterConf;
+    paging: SmartTablePagingItem;
+    sort: SmartTableSortItem[];
+}
+export interface SmartTableFilterConf {
+    filters: SmartTableFilterItem[];
+    andOperator: boolean;
 }
 export {};

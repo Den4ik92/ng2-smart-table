@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { Grid } from '../../lib/grid';
 import { DataSource } from '../../lib/data-source/data-source';
@@ -28,7 +28,6 @@ export class Ng2SmartTableTbodyComponent {
   @Output() userClickedRow = new EventEmitter<any>();
   @Output() editRowSelect = new EventEmitter<any>();
   @Output() multipleSelectRow = new EventEmitter<any>();
-  @Output() rowHover = new EventEmitter<any>();
 
   isMultiSelectVisible: boolean;
   showActionColumnLeft: boolean;
@@ -59,5 +58,9 @@ export class Ng2SmartTableTbodyComponent {
 
   getVisibleCells(cells: Array<Cell>): Array<Cell> {
     return (cells || []).filter((cell: Cell) => !cell.getColumn().hide);
+  }
+
+  protected trackByIdOrIndex(index, item): string | number {   
+    return item?.id || index;
   }
 }

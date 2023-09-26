@@ -1,23 +1,24 @@
 import { DataSource } from '../data-source';
-export declare class LocalDataSource extends DataSource {
-    protected data: Array<any>;
-    protected filteredAndSorted: Array<any>;
-    protected sortConf: Array<any>;
-    protected filterConf: any;
-    protected pagingConf: any;
-    constructor(data?: Array<any>);
-    load(data: Array<any>): Promise<any>;
-    prepend(element: any): Promise<any>;
-    append(element: any): Promise<any>;
-    add(element: any): Promise<any>;
-    remove(element: any): Promise<any>;
-    update(element: any, values: any): Promise<any>;
-    find(element: any): Promise<any>;
-    getElements(): Promise<any>;
-    getFilteredAndSorted(): Promise<any>;
-    getAll(): Promise<any>;
+import { SmartTableFilterConf, SmartTableFilterItem, SmartTablePagingItem, SmartTableSortItem } from '../../interfaces/smart-table.models';
+export declare class LocalDataSource<T = any> extends DataSource<T> {
+    protected data: T[];
+    protected filteredAndSorted: T[];
+    protected sortConf: SmartTableSortItem[];
+    protected filterConf: SmartTableFilterConf;
+    protected pagingConf: SmartTablePagingItem;
+    constructor(data?: T[]);
+    load(data: any): Promise<true>;
+    prepend(element: T): Promise<true>;
+    append(element: T): Promise<true>;
+    add(element: T): Promise<true>;
+    remove(element: T): Promise<true>;
+    update(element: T, values: T): Promise<true>;
+    find(element: T): Promise<T>;
+    getElements(): Promise<T[]>;
+    getFilteredAndSorted(): Promise<T[]>;
+    getAll(): Promise<T[]>;
     reset(silent?: boolean): void;
-    empty(): Promise<any>;
+    empty(): Promise<true>;
     count(): number;
     /**
      *
@@ -29,7 +30,7 @@ export declare class LocalDataSource extends DataSource {
      * @param doEmit
      * @returns {LocalDataSource}
      */
-    setSort(conf: Array<any>, doEmit?: boolean): LocalDataSource;
+    setSort(conf: SmartTableSortItem[], doEmit?: boolean): LocalDataSource;
     /**
      *
      * Array of conf objects
@@ -41,15 +42,15 @@ export declare class LocalDataSource extends DataSource {
      * @param doEmit
      * @returns {LocalDataSource}
      */
-    setFilter(conf: Array<any>, andOperator?: boolean, doEmit?: boolean): LocalDataSource;
-    addFilter(fieldConf: any, andOperator?: boolean, doEmit?: boolean): LocalDataSource;
+    setFilter(conf: SmartTableFilterItem[], andOperator?: boolean, doEmit?: boolean): LocalDataSource;
+    addFilter(fieldConf: SmartTableFilterItem, andOperator?: boolean, doEmit?: boolean): LocalDataSource;
     setPaging(page: number, perPage: number, doEmit?: boolean): LocalDataSource;
     setPage(page: number, doEmit?: boolean): LocalDataSource;
-    getSort(): any;
-    getFilter(): any;
-    getPaging(): any;
-    protected prepareData(data: Array<any>): Array<any>;
-    protected sort(data: Array<any>): Array<any>;
-    protected filter(data: Array<any>): Array<any>;
-    protected paginate(data: Array<any>): Array<any>;
+    getSort(): SmartTableSortItem[];
+    getFilter(): SmartTableFilterConf;
+    getPaging(): SmartTablePagingItem;
+    protected prepareData(data: T[]): T[];
+    protected sort(data: T[]): T[];
+    protected filter(data: T[]): T[];
+    protected paginate(data: T[]): T[];
 }
