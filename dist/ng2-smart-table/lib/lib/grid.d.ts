@@ -1,21 +1,21 @@
+import { LocalDataSource } from './data-source/local/local.data-source';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { EventEmitter } from '@angular/core';
 import { Column } from './data-set/column';
 import { Row } from './data-set/row';
 import { DataSet } from './data-set/data-set';
-import { DataSource } from './data-source/data-source';
-import { SmartTableSettings } from './interfaces/smart-table.models';
+import { SmartTableSettings, SmartTableSortItem } from './interfaces/smart-table.models';
 export declare class Grid {
     createFormShown: boolean;
-    source: DataSource;
+    source: LocalDataSource;
     settings: SmartTableSettings;
     dataSet: DataSet;
     onSelectRowSource: Subject<any>;
     onDeselectRowSource: Subject<any>;
     private sourceOnChangedSubscription;
     private sourceOnUpdatedSubscription;
-    constructor(source: DataSource, settings: SmartTableSettings);
+    constructor(source: LocalDataSource, settings: SmartTableSettings);
     detach(): void;
     showActionColumn(position: string): boolean;
     isCurrentActionsPosition(position: string): boolean;
@@ -24,8 +24,8 @@ export declare class Grid {
     getNewRow(): Row;
     setSettings(settings: SmartTableSettings): void;
     getDataSet(): DataSet;
-    setSource(source: DataSource): void;
-    getSetting(name: string, defaultValue?: any): any;
+    setSource(source: LocalDataSource): void;
+    getSetting<T>(name: string, defaultValue?: any): T;
     getColumns(): Array<Column>;
     getRows(): Array<Row>;
     selectRow(row: Row, state: boolean): void;
@@ -38,12 +38,10 @@ export declare class Grid {
     delete(row: Row, confirmEmitter: EventEmitter<any>): void;
     processDataChange(changes: any): void;
     shouldProcessChange(changes: any): boolean;
-    prepareSource(source: any): DataSource;
-    getInitialSort(): any;
+    prepareSource(source: LocalDataSource): LocalDataSource;
+    getInitialSort(): SmartTableSortItem | false;
     getSelectedRowsData(): Array<any>;
     selectAllRows(status: boolean): void;
     getFirstRow(): Row;
     getLastRow(): Row;
-    private getSelectionInfo;
-    private getPageToSelect;
 }

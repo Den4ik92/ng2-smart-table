@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 
 import { EditCellDefault } from './edit-cell-default';
+import { SmartTableEditorAndFilter } from '../../../lib/interfaces/smart-table.models';
 
 @Component({
   selector: 'table-cell-custom-editor',
@@ -26,8 +27,9 @@ export class CustomEditComponent extends EditCellDefault implements OnChanges, O
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.cell && !this.customComponent) {
-      const componentFactory = this.resolver.resolveComponentFactory(this.cell.getColumn().editor.component);
+    const editor: SmartTableEditorAndFilter | false = this.cell.getColumn().editor
+    if (this.cell && !this.customComponent && editor && editor.type == 'custom') {
+      const componentFactory = this.resolver.resolveComponentFactory(editor.component);
       this.customComponent = this.dynamicTarget.createComponent(componentFactory);
 
       // set @Inputs and @Outputs of custom component

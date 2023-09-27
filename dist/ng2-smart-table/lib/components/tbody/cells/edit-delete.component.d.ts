@@ -1,12 +1,12 @@
 import { EventEmitter, OnChanges } from '@angular/core';
 import { Grid } from '../../../lib/grid';
 import { Row } from '../../../lib/data-set/row';
-import { DataSource } from '../../../lib/data-source/data-source';
+import { LocalDataSource } from '../../../lib/data-source/local/local.data-source';
 import * as i0 from "@angular/core";
 export declare class TbodyEditDeleteComponent implements OnChanges {
     grid: Grid;
     row: Row;
-    source: DataSource;
+    source: LocalDataSource;
     deleteConfirm: EventEmitter<any>;
     editConfirm: EventEmitter<any>;
     edit: EventEmitter<any>;

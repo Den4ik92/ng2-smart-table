@@ -7,14 +7,14 @@ export declare class Row {
     protected _dataSet: DataSet;
     isSelected: boolean;
     isInEditing: boolean;
-    cells: Array<Cell>;
+    cells: Cell[];
     constructor(index: number, data: any, _dataSet: DataSet);
-    getCell(column: Column): Cell;
+    getCell(column: Column): Cell | undefined;
     getCells(): Cell[];
     getData(): any;
     getIsSelected(): boolean;
     getNewData(): any;
-    setData(data: any): any;
+    setData<T = any>(data: T): void;
     process(): void;
     createCell(column: Column): Cell;
 }

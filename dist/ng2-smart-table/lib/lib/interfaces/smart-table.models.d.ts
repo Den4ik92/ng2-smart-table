@@ -1,8 +1,8 @@
-import { DataSource } from "../data-source/data-source";
+import { LocalDataSource } from "../data-source/local/local.data-source";
 import { Deferred } from "../helpers";
 export interface SelectOption {
     title: string;
-    value: number | string;
+    value: any;
 }
 interface ObjectAny {
     [key: string]: any;
@@ -42,13 +42,9 @@ export interface SmartTableSettings<T extends ObjectAny = any> {
     };
     noDataMessage?: string;
     columns: {
-        [key in keyof T]?: SmartTableColumn<T>;
+        [key in keyof T]?: SmartTableColumnSettings<T>;
     };
-    pager?: {
-        display: boolean;
-        page?: number;
-        perPage: number;
-    } | false;
+    pager?: SmartTablePagerSettings | false;
     rowClassFunction?: (row: {
         data: T;
     }) => string;
@@ -65,7 +61,8 @@ export interface SmartTableCustomAction {
     name: string;
     title: string;
 }
-export type SmartTableColumn<T> = SmartTableTextHtmlColumn<T> | SmartTableCustomColumn<T>;
+export type SmartTableColumnSettingsTypes = 'text' | 'html' | 'custom';
+export type SmartTableColumnSettings<T = any> = SmartTableTextHtmlColumn<T> | SmartTableCustomColumn<T>;
 interface SmartTableDefaultColumn<T> {
     title: string;
     width?: string;
@@ -88,9 +85,14 @@ interface SmartTableCustomColumn<T> extends SmartTableDefaultColumn<T> {
     type: 'custom';
     renderComponent: any;
 }
-export type SmartTableEditorAndFilter = {
-    type: 'text' | 'textarea';
-} | SmartTableEditorList | SmartTableEditorCompleter | SmartTableEditorCheckbox | SmartTableEditorCustom;
+export type SmartTableEditorAndFilterTypes = 'text' | 'textarea' | 'list' | 'custom' | 'checkbox';
+export type SmartTableEditorAndFilter = SmartTableTextEditor | SmartTableTextAreaEditor | SmartTableEditorList | SmartTableEditorCheckbox | SmartTableEditorCustom;
+interface SmartTableTextEditor {
+    type: 'text';
+}
+interface SmartTableTextAreaEditor {
+    type: 'textarea';
+}
 interface SmartTableEditorList {
     type: 'list';
     config: {
@@ -98,15 +100,12 @@ interface SmartTableEditorList {
         list: SelectOption[];
     };
 }
-interface SmartTableEditorCompleter {
-    type: 'completer';
-    config: {
-        completer: {
-            data: any[];
-            searchFields: string;
-            titleField: string;
-            descriptionField?: string;
-        };
+interface SmartTableEditorCheckbox {
+    type: 'checkbox';
+    config?: {
+        true: any;
+        false: any;
+        resetText?: string;
     };
 }
 interface SmartTableEditorCustom {
@@ -114,13 +113,11 @@ interface SmartTableEditorCustom {
     component: any;
     config?: any;
 }
-export interface SmartTableEditorCheckbox {
-    type: 'checkbox';
-    config?: {
-        true: string;
-        false: string;
-        resetText?: string;
-    };
+interface SmartTablePagerSettings {
+    display: boolean;
+    page?: number;
+    perPage: number;
+    perPageSelect?: number[];
 }
 export interface SmartTableFilterItem {
     field: string;
@@ -140,7 +137,7 @@ export interface SmartTableSortItem {
 interface SmartTableDefaultEvent<T> {
     confirm: Deferred;
     data: T;
-    source: DataSource;
+    source: LocalDataSource;
 }
 export type SmartTableConfirmDeleteEvent<T = any> = SmartTableDefaultEvent<T>;
 export type SmartTableRowClickedEvent<T = any> = Omit<SmartTableDefaultEvent<T>, "confirm">;
@@ -151,8 +148,8 @@ export interface SmartTableRowSelectEvent<T = any> extends Omit<SmartTableDefaul
     isSelected: boolean;
     selected: T[];
 }
-export interface SmartTableConfirmEditEvent<T = any> extends SmartTableDefaultEvent<T> {
-    newData: T;
+export interface SmartTableConfirmEditEvent<T = any, N = T> extends SmartTableDefaultEvent<T> {
+    newData: N;
 }
 export interface SmartTableCreateConfirm<T = any> extends Omit<SmartTableDefaultEvent<T>, "data"> {
     newData: T;
@@ -179,7 +176,7 @@ export interface SmartTableOnChangedEvent<T extends ObjectAny = any> {
     action: SmartTableOnChangedEventType;
     elements: T[];
     filter: SmartTableFilterConf;
-    paging: SmartTablePagingItem;
+    paging: SmartTablePagingItem | false;
     sort: SmartTableSortItem[];
 }
 export interface SmartTableFilterConf {

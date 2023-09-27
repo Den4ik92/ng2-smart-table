@@ -1,10 +1,12 @@
+import { SmartTableColumnSettings, SmartTableColumnSettingsTypes, SmartTableSortDirection } from './../interfaces/smart-table.models';
+import { SmartTableEditorAndFilter } from '../interfaces/smart-table.models';
 import { DataSet } from './data-set';
 export declare class Column {
     id: string;
-    protected settings: any;
+    protected settings: SmartTableColumnSettings;
     protected dataSet: DataSet;
     title: string;
-    type: string;
+    type: SmartTableColumnSettingsTypes;
     class: string;
     width: string;
     hide: boolean;
@@ -12,33 +14,21 @@ export declare class Column {
     isEditable: boolean;
     isAddable: boolean;
     isFilterable: boolean;
-    sortDirection: string;
-    defaultSortDirection: string;
-    editor: {
-        type: string;
-        config: any;
-        component: any;
-    };
-    filter: {
-        type: string;
-        config: any;
-        component: any;
-    };
+    sortDirection: SmartTableSortDirection;
+    defaultSortDirection: SmartTableSortDirection | false;
+    editor: SmartTableEditorAndFilter | false;
+    filter: SmartTableEditorAndFilter | false;
     renderComponent: any;
-    compareFunction: Function;
-    valuePrepareFunction: Function;
-    filterFunction: Function;
-    onComponentInitFunction: Function;
-    constructor(id: string, settings: any, dataSet: DataSet);
-    getOnComponentInitFunction(): Function;
-    getCompareFunction(): Function;
-    getValuePrepareFunction(): Function;
-    getFilterFunction(): Function;
+    compareFunction: Function | undefined;
+    valuePrepareFunction: Function | undefined;
+    filterFunction: Function | undefined;
+    constructor(id: string, settings: SmartTableColumnSettings, dataSet: DataSet);
+    getCompareFunction(): Function | undefined;
+    getValuePrepareFunction(): Function | undefined;
+    getFilterFunction(): Function | undefined;
     getConfig(): any;
     getFilterType(): any;
     getFilterConfig(): any;
     protected process(): void;
-    prepareType(): string;
-    prepareSortDirection(): string;
-    determineType(): string;
+    prepareSortDirection(): SmartTableSortDirection;
 }

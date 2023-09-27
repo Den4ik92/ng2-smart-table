@@ -6,7 +6,6 @@ import { FilterComponent } from './filter.component';
 import { DefaultFilterComponent } from "./default-filter.component";
 import { CustomFilterComponent } from "./custom-filter.component";
 import { CheckboxFilterComponent } from './filter-types/checkbox-filter.component';
-import { CompleterFilterComponent } from './filter-types/completer-filter.component';
 import { InputFilterComponent } from './filter-types/input-filter.component';
 import { SelectFilterComponent } from './filter-types/select-filter.component';
 import { DefaultFilter } from './filter-types/default-filter';
@@ -19,7 +18,6 @@ const FILTER_COMPONENTS = [
   DefaultFilterComponent,
   CustomFilterComponent,
   CheckboxFilterComponent,
-  CompleterFilterComponent,
   InputFilterComponent,
   SelectFilterComponent,
 ];

@@ -1,7 +1,7 @@
+import { SmartTableSortDirection } from './../../../../lib/interfaces/smart-table.models';
+import { LocalDataSource } from './../../../../lib/data-source/local/local.data-source';
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
-
-import { DataSource } from '../../../../lib/data-source/data-source';
 import { Column } from '../../../../lib/data-set/column';
 
 @Component({
@@ -19,16 +19,16 @@ import { Column } from '../../../../lib/data-set/column';
 })
 export class TitleComponent implements OnChanges {
 
-  currentDirection = '';
-  @Input() column: Column;
-  @Input() source: DataSource;
+  currentDirection: SmartTableSortDirection | '' = '';
+  @Input() column!: Column;
+  @Input() source!: LocalDataSource;
   @Output() sort = new EventEmitter<any>();
 
-  protected dataChangedSub: Subscription;
+  protected dataChangedSub: Subscription | false = false;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.source) {
-      if (!changes.source.firstChange) {
+    if (changes['source']) {
+      if (!changes['source'].firstChange && this.dataChangedSub) {
         this.dataChangedSub.unsubscribe();
       }
       this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
@@ -39,10 +39,6 @@ export class TitleComponent implements OnChanges {
         } else {
           this.currentDirection = '';
         }
-
-        sortConf.forEach((fieldConf: any) => {
-
-        });
       });
     }
   }
@@ -53,7 +49,7 @@ export class TitleComponent implements OnChanges {
     this.source.setSort([
       {
         field: this.column.id,
-        direction: this.currentDirection,
+        direction: this.currentDirection === 'desc' ? 'desc': 'asc',
         compare: this.column.getCompareFunction(),
       },
     ]);

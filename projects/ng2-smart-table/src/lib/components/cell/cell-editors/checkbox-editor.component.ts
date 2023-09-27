@@ -11,7 +11,7 @@ import { DefaultEditor } from './default-editor';
            class="form-control"
            [name]="cell.getId()"
            [disabled]="!cell.isEditable()"
-           [checked]="cell.getValue() == (cell.getColumn().getConfig()?.true || true)"
+           [checked]="cell.getValue() === (cell.getColumn().getConfig()?.true || true)"
            (click)="onClick.emit($event)"
            (change)="onChange($event)">
     `,
@@ -23,8 +23,9 @@ export class CheckboxEditorComponent extends DefaultEditor {
   }
 
   onChange(event: any) {
-    const trueVal = (this.cell.getColumn().getConfig() && this.cell.getColumn().getConfig().true) || true;
-    const falseVal = (this.cell.getColumn().getConfig() && this.cell.getColumn().getConfig().false) || false;
+    const config: any = this.cell.getColumn().getConfig();
+    const trueVal = (config && config?.true) || true;
+    const falseVal = (config && config?.false) || false;
     this.cell.newValue = event.target.checked ? trueVal : falseVal;
   }
 }

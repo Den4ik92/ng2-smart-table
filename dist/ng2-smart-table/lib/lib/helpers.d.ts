@@ -14,5 +14,5 @@ export declare class Deferred {
     reject: any;
     constructor();
 }
-export declare function getDeepFromObject(object: {}, name: string, defaultValue?: any): any;
+export declare function getDeepFromObject(object: {} | undefined, name: string, defaultValue?: any): any;
 export declare function getPageForRowIndex(index: number, perPage: number): number;

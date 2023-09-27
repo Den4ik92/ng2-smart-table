@@ -1,8 +1,6 @@
-import { Component, Input, Output, SimpleChange, EventEmitter, OnChanges, OnDestroy } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Component, Input, Output, SimpleChange, EventEmitter, OnChanges } from '@angular/core';
 
 import { Grid } from './lib/grid';
-import { DataSource } from './lib/data-source/data-source';
 import { Row } from './lib/data-set/row';
 import { deepExtend } from './lib/helpers';
 import { LocalDataSource } from './lib/data-source/local/local.data-source';
@@ -15,8 +13,8 @@ import { SmartTableConfirmDeleteEvent, SmartTableConfirmEditEvent, SmartTableCre
 })
 export class Ng2SmartTableComponent implements OnChanges {
 
-  @Input() source: DataSource;
-  @Input() settings: SmartTableSettings;
+  @Input() source!: LocalDataSource;
+  @Input() settings!: SmartTableSettings;
 
   @Output() multiRowSelect = new EventEmitter<SmartTableRowSelectEvent>();
   @Output() rowClicked = new EventEmitter<SmartTableRowClickedEvent>();
@@ -30,24 +28,19 @@ export class Ng2SmartTableComponent implements OnChanges {
   @Output() createConfirm = new EventEmitter<SmartTableCreateConfirm>();
   @Output() rowHover: EventEmitter<any> = new EventEmitter<any>();
 
-  tableClass: string;
-  tableId: string;
-  perPageSelect: any;
-  isHideHeader: boolean;
-  isHideSubHeader: boolean;
-  isPagerDisplay: boolean;
-  rowClassFunction: Function;
+  tableClass: string = '';
+  tableId: string = '';
+  perPageSelect: number[] = [];
+  isHideHeader = false;
+  isHideSubHeader = false;
+  isPagerDisplay = false;
+  rowClassFunction: Function = ()=>'';
 
-  grid: Grid;
+  grid!: Grid;
   defaultSettings: SmartTableSettings = {
     mode: 'inline', // inline|external|click-to-edit
     selectMode: 'single', // single|multi
-    /**
-     * Points to an element in all data
-     *
-     * when < 0 all lines must be deselected
-     */
-    selectedRowIndex: 0,
+    selectedRowIndex: -1,
     switchPageToSelectedRowPage: false,
     hideHeader: false,
     hideSubHeader: false,
@@ -86,11 +79,7 @@ export class Ng2SmartTableComponent implements OnChanges {
     },
     noDataMessage: 'No data found',
     columns: {},
-    pager: {
-      display: true,
-      page: 1,
-      perPage: 10,
-    },
+    pager: false,
     rowClassFunction: () => '',
   };
 
@@ -110,10 +99,9 @@ export class Ng2SmartTableComponent implements OnChanges {
     this.tableClass = this.grid.getSetting('attr.class');
     this.isHideHeader = this.grid.getSetting('hideHeader');
     this.isHideSubHeader = this.grid.getSetting('hideSubHeader');
-    this.isPagerDisplay = this.grid.getSetting('pager.display');
-    this.isPagerDisplay = this.grid.getSetting('pager.display');
+    this.isPagerDisplay = this.grid.getSetting('pager.display', false);
     this.perPageSelect = this.grid.getSetting('pager.perPageSelect');
-    this.rowClassFunction = this.grid.getSetting('rowClassFunction');
+    this.rowClassFunction = this.grid.getSetting('rowClassFunction', () => '');
   }
 
   multipleSelectRow(row: Row): void {
@@ -137,8 +125,8 @@ export class Ng2SmartTableComponent implements OnChanges {
     this.grid = new Grid(this.source, this.prepareSettings());
   }
 
-  prepareSource(): DataSource {
-    if (this.source instanceof DataSource) {
+  prepareSource(): LocalDataSource {
+    if (this.source instanceof LocalDataSource) {
       return this.source;
     }
     return new LocalDataSource();
@@ -148,10 +136,10 @@ export class Ng2SmartTableComponent implements OnChanges {
     return deepExtend({}, this.defaultSettings, this.settings);
   }
 
-  private emitUserSelectRow(row: Row): void {
+  private emitUserSelectRow(row: Row | null): void {
     this.multiRowSelect.emit({
       data: row ? row.getData() : null,
-      isSelected: row ? row.getIsSelected() : null,
+      isSelected: row ? row.getIsSelected() : false,
       source: this.source,
       selected: this.grid.dataSet.getSelectedRowsData(),
     });

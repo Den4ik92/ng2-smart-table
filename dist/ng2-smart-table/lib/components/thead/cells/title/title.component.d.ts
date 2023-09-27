@@ -1,14 +1,15 @@
+import { SmartTableSortDirection } from './../../../../lib/interfaces/smart-table.models';
+import { LocalDataSource } from './../../../../lib/data-source/local/local.data-source';
 import { EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { DataSource } from '../../../../lib/data-source/data-source';
 import { Column } from '../../../../lib/data-set/column';
 import * as i0 from "@angular/core";
 export declare class TitleComponent implements OnChanges {
-    currentDirection: string;
+    currentDirection: SmartTableSortDirection | '';
     column: Column;
-    source: DataSource;
+    source: LocalDataSource;
     sort: EventEmitter<any>;
-    protected dataChangedSub: Subscription;
+    protected dataChangedSub: Subscription | false;
     ngOnChanges(changes: SimpleChanges): void;
     _sort(event: any): void;
     changeSortDirection(): string;

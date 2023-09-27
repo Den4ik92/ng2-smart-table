@@ -5,7 +5,7 @@ export declare class LocalDataSource<T = any> extends DataSource<T> {
     protected filteredAndSorted: T[];
     protected sortConf: SmartTableSortItem[];
     protected filterConf: SmartTableFilterConf;
-    protected pagingConf: SmartTablePagingItem;
+    protected pagingConf: SmartTablePagingItem | false;
     constructor(data?: T[]);
     load(data: any): Promise<true>;
     prepend(element: T): Promise<true>;
@@ -44,11 +44,11 @@ export declare class LocalDataSource<T = any> extends DataSource<T> {
      */
     setFilter(conf: SmartTableFilterItem[], andOperator?: boolean, doEmit?: boolean): LocalDataSource;
     addFilter(fieldConf: SmartTableFilterItem, andOperator?: boolean, doEmit?: boolean): LocalDataSource;
-    setPaging(page: number, perPage: number, doEmit?: boolean): LocalDataSource;
-    setPage(page: number, doEmit?: boolean): LocalDataSource;
+    setPaging(page: number | undefined, perPage: number, doEmit?: boolean): void;
+    setPage(page: number, doEmit?: boolean): void;
     getSort(): SmartTableSortItem[];
     getFilter(): SmartTableFilterConf;
-    getPaging(): SmartTablePagingItem;
+    getPaging(): SmartTablePagingItem | false;
     protected prepareData(data: T[]): T[];
     protected sort(data: T[]): T[];
     protected filter(data: T[]): T[];

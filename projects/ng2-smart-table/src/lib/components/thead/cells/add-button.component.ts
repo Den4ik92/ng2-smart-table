@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, AfterViewInit, ElementRef, OnChanges } from '@angular/core';
 
 import { Grid } from '../../../lib/grid';
-import { DataSource } from '../../../lib/data-source/data-source';
+import { LocalDataSource } from '../../../lib/data-source/local/local.data-source';
 
 @Component({
   selector: '[ng2-st-add-button]',
@@ -12,12 +12,12 @@ import { DataSource } from '../../../lib/data-source/data-source';
 })
 export class AddButtonComponent implements AfterViewInit, OnChanges {
 
-  @Input() grid: Grid;
-  @Input() source: DataSource;
+  @Input() grid!: Grid;
+  @Input() source!: LocalDataSource;
   @Output() create = new EventEmitter<any>();
 
-  isActionAdd: boolean;
-  addNewButtonContent: string;
+  isActionAdd: boolean = false;
+  addNewButtonContent: string = '';
 
   constructor(private ref: ElementRef) {
   }

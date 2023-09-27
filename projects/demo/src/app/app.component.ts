@@ -9,9 +9,9 @@ import { Component } from '@angular/core';
 export class AppComponent {
 
   settings: SmartTableSettings = {
-    pager:{
+    pager: {
       display:true,
-      perPage: 2,
+      perPage: 5,
     },
     selectMode: 'multi',
     columns: {

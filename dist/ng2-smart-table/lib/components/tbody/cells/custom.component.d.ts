@@ -1,3 +1,4 @@
+import { LocalDataSource } from './../../../lib/data-source/local/local.data-source';
 import { EventEmitter } from '@angular/core';
 import { Row } from '../../../lib/data-set/row';
 import { Grid } from '../../../lib/grid';
@@ -5,7 +6,7 @@ import * as i0 from "@angular/core";
 export declare class TbodyCustomComponent {
     grid: Grid;
     row: Row;
-    source: any;
+    source: LocalDataSource;
     custom: EventEmitter<any>;
     onCustom(action: any, event: any): void;
     static ɵfac: i0.ɵɵFactoryDeclaration<TbodyCustomComponent, never>;

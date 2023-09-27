@@ -5,7 +5,7 @@ import { DataSource } from '../data-source';
 import { deepExtend } from '../../helpers';
 import { SmartTableFilterConf, SmartTableFilterItem, SmartTablePagingItem, SmartTableSortItem } from '../../interfaces/smart-table.models';
 
-export class LocalDataSource<T=any> extends DataSource<T> {
+export class LocalDataSource<T = any> extends DataSource<T> {
 
   protected data: T[] = [];
   protected filteredAndSorted: T[] = [];
@@ -14,10 +14,7 @@ export class LocalDataSource<T=any> extends DataSource<T> {
     filters: [],
     andOperator: true,
   };
-  protected pagingConf: SmartTablePagingItem = {
-    page: 1,
-	  perPage: 1,
-  };
+  protected pagingConf: SmartTablePagingItem | false = false;
 
   constructor(data: T[] = []) {
     super();
@@ -27,37 +24,37 @@ export class LocalDataSource<T=any> extends DataSource<T> {
 
   load(data: any): Promise<true> {
     this.data = data;
-    return super.load(data);
+    return super.loadEmit();
   }
 
   prepend(element: T): Promise<true> {
     this.reset(true);
     this.data.unshift(element);
-    return super.prepend(element);
+    return super.prependEmit(element);
   }
 
   append(element: T): Promise<true> {
     this.reset(true);
 
     this.data.push(element);
-    return super.append(element);
+    return super.appendEmit(element);
   }
 
   add(element: T): Promise<true> {
     this.data.push(element);
-    return super.add(element);
+    return super.addEmit(element);
   }
 
   remove(element: T): Promise<true> {
     this.data = this.data.filter(el => el !== element);
-    return super.remove(element);
+    return super.removeEmit(element);
   }
 
   update(element: T, values: T): Promise<true> {
     return new Promise((resolve, reject) => {
       this.find(element).then((found) => {
         found = deepExtend(found, values);
-        super.update(found, values).then(resolve).catch(reject);
+        super.updateEmit(found).then(resolve).catch(reject);
       }).catch(reject);
     });
   }
@@ -93,17 +90,21 @@ export class LocalDataSource<T=any> extends DataSource<T> {
         andOperator: true,
       };
       this.sortConf = [];
-      this.pagingConf.page = 1;
+      if (this.pagingConf) {
+        this.pagingConf.page = 1;
+      }
     } else {
       this.setFilter([], true, false);
       this.setSort([], false);
-      this.setPage(1);
+      if (this.pagingConf) {
+        this.setPage(1);
+       }
     }
   }
 
   empty(): Promise<true> {
     this.data = [];
-    return super.empty();
+    return super.emptyEmit();
   }
 
   count(): number {
@@ -129,7 +130,9 @@ export class LocalDataSource<T=any> extends DataSource<T> {
       });
       this.sortConf = conf;
     }
-    super.setSort(conf, doEmit);
+    if (doEmit) {
+      super.setSortEmit();
+    }
     return this;
   }
 
@@ -156,9 +159,12 @@ export class LocalDataSource<T=any> extends DataSource<T> {
       };
     }
     this.filterConf.andOperator = andOperator;
-    this.pagingConf.page = 1;
-
-    super.setFilter(conf, andOperator, doEmit);
+    if (this.pagingConf) {
+      this.pagingConf.page = 1;
+    }
+    if (doEmit) {
+      super.setFilterEmit();
+    }
     return this;
   }
 
@@ -178,22 +184,36 @@ export class LocalDataSource<T=any> extends DataSource<T> {
       this.filterConf.filters.push(fieldConf);
     }
     this.filterConf.andOperator = andOperator;
-    super.addFilter(fieldConf, andOperator, doEmit);
+    if (doEmit) {
+      super.addFilterEmit();
+    }
     return this;
   }
 
-  setPaging(page: number, perPage: number, doEmit: boolean = true): LocalDataSource {
-    this.pagingConf.page = page;
-    this.pagingConf.perPage = perPage;
-
-    super.setPaging(page, perPage, doEmit);
-    return this;
+  setPaging(page: number = 1, perPage: number, doEmit: boolean = true): void {
+    if (this.pagingConf) {
+      this.pagingConf.page = page;
+      this.pagingConf.perPage = perPage;
+    } else {
+      this.pagingConf = {
+        page, perPage
+      }
+    }
+    if (doEmit) {
+      super.setPagingEmit();
+    }
+    return;
   }
 
-  setPage(page: number, doEmit: boolean = true): LocalDataSource {
+  setPage(page: number, doEmit: boolean = true): void {
+    if (!this.pagingConf) {
+      return;
+    }
     this.pagingConf.page = page;
-    super.setPage(page, doEmit);
-    return this;
+    if(doEmit) {
+      super.setPageEmit();
+    }
+    return;
   }
 
   getSort(): SmartTableSortItem[] {
@@ -204,7 +224,7 @@ export class LocalDataSource<T=any> extends DataSource<T> {
     return this.filterConf;
   }
 
-  getPaging(): SmartTablePagingItem {
+  getPaging(): SmartTablePagingItem | false {
     return this.pagingConf;
   }
 
@@ -212,8 +232,9 @@ export class LocalDataSource<T=any> extends DataSource<T> {
     data = this.filter(data);
     data = this.sort(data);
     this.filteredAndSorted = data.slice(0);
-
-    return this.paginate(data);
+    if(this.pagingConf) {
+      return this.paginate(data);
+    } else return data
   }
 
   protected sort(data: T[]): T[] {

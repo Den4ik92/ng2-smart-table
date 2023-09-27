@@ -1,3 +1,4 @@
+import { LocalDataSource } from './data-source/local/local.data-source';
 import { Subject, Subscription } from 'rxjs';
 import { Observable } from 'rxjs';
 import { EventEmitter } from '@angular/core';
@@ -6,24 +7,23 @@ import { Deferred, getDeepFromObject, getPageForRowIndex } from './helpers';
 import { Column } from './data-set/column';
 import { Row } from './data-set/row';
 import { DataSet } from './data-set/data-set';
-import { DataSource } from './data-source/data-source';
-import { SmartTableSettings } from './interfaces/smart-table.models';
+import { SmartTableSettings, SmartTableColumnSettings, SmartTableSortItem } from './interfaces/smart-table.models';
 
 export class Grid {
 
   createFormShown: boolean = false;
 
-  source: DataSource;
-  settings: SmartTableSettings;
-  dataSet: DataSet;
+  source!: LocalDataSource;
+  settings!: SmartTableSettings;
+  dataSet!: DataSet;
 
   onSelectRowSource = new Subject<any>();
   onDeselectRowSource = new Subject<any>();
 
-  private sourceOnChangedSubscription: Subscription;
-  private sourceOnUpdatedSubscription: Subscription;
+  private sourceOnChangedSubscription: Subscription | undefined;
+  private sourceOnUpdatedSubscription: Subscription | undefined;
 
-  constructor(source: DataSource, settings: SmartTableSettings) {
+  constructor(source: LocalDataSource, settings: SmartTableSettings) {
     this.setSettings(settings);
     this.setSource(source);
   }
@@ -46,7 +46,7 @@ export class Grid {
   }
 
   isActionsVisible(): boolean {
-    return this.getSetting('actions.add') || this.getSetting('actions.edit') || this.getSetting('actions.delete') || this.getSetting('actions.custom').length;
+    return this.getSetting<boolean>('actions.add', false) || this.getSetting<boolean>('actions.edit', false) || this.getSetting<boolean>('actions.delete', false) || !!this.getSetting<[]>('actions.custom', [])?.length;
   }
 
   isMultiSelectVisible(): boolean {
@@ -59,7 +59,7 @@ export class Grid {
 
   setSettings(settings: SmartTableSettings) {
     this.settings = settings;
-    this.dataSet = new DataSet([], this.getSetting('columns'));
+    this.dataSet = new DataSet([], this.getSetting<SmartTableColumnSettings>('columns'));
 
     if (this.source) {
       this.source.refresh();
@@ -70,7 +70,7 @@ export class Grid {
     return this.dataSet;
   }
 
-  setSource(source: DataSource) {
+  setSource(source: LocalDataSource) {
     this.source = this.prepareSource(source);
     this.detach();
 
@@ -78,11 +78,13 @@ export class Grid {
 
     this.sourceOnUpdatedSubscription = this.source.onUpdated().subscribe((data: any) => {
       const changedRow = this.dataSet.findRowByData(data);
-      changedRow.setData(data);
+      if (changedRow) {
+        changedRow.setData(data);
+      }
     });
   }
 
-  getSetting(name: string, defaultValue?: any): any {
+  getSetting<T>(name: string, defaultValue?: any): T {
     return getDeepFromObject(this.settings, name, defaultValue);
   }
 
@@ -187,14 +189,14 @@ export class Grid {
     } else {
       deferred.resolve();
     }
-    if(row.isSelected) {
+    if (row.isSelected) {
       this.dataSet.selectRow(row, false);
     }
   }
 
   processDataChange(changes: any) {
     if (this.shouldProcessChange(changes)) {
-      if(changes['action'] === 'load') {
+      if (changes['action'] === 'load') {
         this.dataSet.deselectAll()
       }
       this.dataSet.setData(changes['elements']);
@@ -210,29 +212,29 @@ export class Grid {
     return false;
   }
 
-  prepareSource(source: any): DataSource {
-    const initialSource: any = this.getInitialSort();
-    if (initialSource && initialSource['field'] && initialSource['direction']) {
-      source.setSort([initialSource], false);
+  prepareSource(source: LocalDataSource): LocalDataSource {
+    const initialSort: SmartTableSortItem | false = this.getInitialSort();
+    if (initialSort) {
+      source.setSort([initialSort], false);
     }
     if (this.getSetting('pager.display') === true) {
-      source.setPaging(this.getPageToSelect(source), this.getSetting('pager.perPage'), false);
+      source.setPaging(1, this.getSetting('pager.perPage'), false);
     }
 
     source.refresh();
     return source;
   }
 
-  getInitialSort() {
-    const sortConf: any = {};
-    this.getColumns().forEach((column: Column) => {
-      if (column.isSortable && column.defaultSortDirection) {
-        sortConf['field'] = column.id;
-        sortConf['direction'] = column.defaultSortDirection;
-        sortConf['compare'] = column.getCompareFunction();
-      }
-    });
-    return sortConf;
+  getInitialSort(): SmartTableSortItem | false {
+    const defaultSortColumn = this.getColumns().find((column: Column) => column.isSortable && column.defaultSortDirection);
+    if (!defaultSortColumn) {
+      return false;
+    }
+    return {
+      field: defaultSortColumn.id,
+      direction: defaultSortColumn.defaultSortDirection || 'asc',
+      compare: defaultSortColumn.getCompareFunction(),
+    }
   }
 
   getSelectedRowsData(): Array<any> {
@@ -249,22 +251,5 @@ export class Grid {
 
   getLastRow(): Row {
     return this.dataSet.getLastRow();
-  }
-
-  private getSelectionInfo(): { perPage: number, page: number, selectedRowIndex: number, switchPageToSelectedRowPage: boolean } {
-    const switchPageToSelectedRowPage: boolean = this.getSetting('switchPageToSelectedRowPage');
-    const selectedRowIndex: number = Number(this.getSetting('selectedRowIndex', 0)) || 0;
-    const { perPage, page }: { perPage: number, page: number } = this.getSetting('pager');
-    return { perPage, page, selectedRowIndex, switchPageToSelectedRowPage };
-  }
-
-  private getPageToSelect(source: DataSource): number {
-    const { switchPageToSelectedRowPage, selectedRowIndex, perPage, page } = this.getSelectionInfo();
-    let pageToSelect: number = Math.max(1, page);
-    if (switchPageToSelectedRowPage && selectedRowIndex >= 0) {
-      pageToSelect = getPageForRowIndex(selectedRowIndex, perPage);
-    }
-    const maxPageAmount: number = Math.ceil(source.count() / perPage);
-    return maxPageAmount ? Math.min(pageToSelect, maxPageAmount) : pageToSelect;
   }
 }

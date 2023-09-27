@@ -1,3 +1,4 @@
+import { LocalDataSource } from './../../../lib/data-source/local/local.data-source';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Row } from '../../../lib/data-set/row';
 
@@ -15,9 +16,9 @@ import { Grid } from '../../../lib/grid';
 })
 export class TbodyCustomComponent {
 
-    @Input() grid: Grid;
-    @Input() row: Row;
-    @Input() source: any;
+    @Input() grid!: Grid;
+    @Input() row!: Row;
+    @Input() source!: LocalDataSource;
     @Output() custom = new EventEmitter<any>();
 
     onCustom(action: any, event: any) {

@@ -16,12 +16,12 @@ import { Row } from '../../lib/data-set/row';
 })
 export class CellComponent {
 
-  @Input() grid: Grid;
-  @Input() row: Row;
-  @Input() editConfirm: EventEmitter<any>;
-  @Input() createConfirm: EventEmitter<any>;
-  @Input() isNew: boolean;
-  @Input() cell: Cell;
+  @Input() grid!: Grid;
+  @Input() row!: Row;
+  @Input() editConfirm!: EventEmitter<any>;
+  @Input() createConfirm!: EventEmitter<any>;
+  @Input() isNew!: boolean;
+  @Input() cell!: Cell;
   @Input() inputClass: string = '';
   @Input() mode: string = 'inline';
   @Input() isInEditing: boolean = false;

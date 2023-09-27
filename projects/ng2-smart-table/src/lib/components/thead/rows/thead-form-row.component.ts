@@ -28,16 +28,16 @@ import { Cell } from '../../../lib/data-set/cell';
 })
 export class TheadFormRowComponent implements OnChanges {
 
-  @Input() grid: Grid;
-  @Input() row: Row;
-  @Input() createConfirm: EventEmitter<any>;
+  @Input() grid!: Grid;
+  @Input() row!: Row;
+  @Input() createConfirm!: EventEmitter<any>;
 
   @Output() create = new EventEmitter<any>();
 
-  isMultiSelectVisible: boolean;
-  showActionColumnLeft: boolean;
-  showActionColumnRight: boolean;
-  addInputClass: string;
+  isMultiSelectVisible: boolean = false;
+  showActionColumnLeft: boolean = false;
+  showActionColumnRight: boolean = false;
+  addInputClass = '';
 
   onCreate(event: any) {
     event.stopPropagation();
@@ -49,7 +49,7 @@ export class TheadFormRowComponent implements OnChanges {
     this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
     this.showActionColumnLeft = this.grid.showActionColumn('left');
     this.showActionColumnRight = this.grid.showActionColumn('right');
-    this.addInputClass = this.grid.getSetting('add.inputClass');
+    this.addInputClass = this.grid.getSetting('add.inputClass', '');
   }
 
   getVisibleCells(cells: Array<Cell>): Array<Cell> {

@@ -1,11 +1,11 @@
 import { SimpleChange, EventEmitter, OnChanges } from '@angular/core';
 import { Grid } from './lib/grid';
-import { DataSource } from './lib/data-source/data-source';
 import { Row } from './lib/data-set/row';
+import { LocalDataSource } from './lib/data-source/local/local.data-source';
 import { SmartTableConfirmDeleteEvent, SmartTableConfirmEditEvent, SmartTableCreateConfirm, SmartTableCustomEvent, SmartTableRowClickedEvent, SmartTableRowSelectEvent, SmartTableSettings } from './lib/interfaces/smart-table.models';
 import * as i0 from "@angular/core";
 export declare class Ng2SmartTableComponent implements OnChanges {
-    source: DataSource;
+    source: LocalDataSource;
     settings: SmartTableSettings;
     multiRowSelect: EventEmitter<SmartTableRowSelectEvent<any>>;
     rowClicked: EventEmitter<SmartTableRowClickedEvent<any>>;
@@ -15,12 +15,12 @@ export declare class Ng2SmartTableComponent implements OnChanges {
     create: EventEmitter<any>;
     custom: EventEmitter<SmartTableCustomEvent<any>>;
     deleteConfirm: EventEmitter<SmartTableConfirmDeleteEvent<any>>;
-    editConfirm: EventEmitter<SmartTableConfirmEditEvent<any>>;
+    editConfirm: EventEmitter<SmartTableConfirmEditEvent<any, any>>;
     createConfirm: EventEmitter<SmartTableCreateConfirm<any>>;
     rowHover: EventEmitter<any>;
     tableClass: string;
     tableId: string;
-    perPageSelect: any;
+    perPageSelect: number[];
     isHideHeader: boolean;
     isHideSubHeader: boolean;
     isPagerDisplay: boolean;
@@ -34,7 +34,7 @@ export declare class Ng2SmartTableComponent implements OnChanges {
     onSelectAllRows(): void;
     onSelectRow(row: Row, state: boolean): void;
     initGrid(): void;
-    prepareSource(): DataSource;
+    prepareSource(): LocalDataSource;
     prepareSettings(): SmartTableSettings;
     private emitUserSelectRow;
     emitUserRowClicked(row: Row): void;

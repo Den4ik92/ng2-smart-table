@@ -1,20 +1,20 @@
 import { Row } from './row';
 import { Column } from './column';
+import { SmartTableColumnSettings } from '../interfaces/smart-table.models';
 export declare class DataSet {
-    protected columnSettings: Object;
+    protected columnSettings: SmartTableColumnSettings;
     newRow: Row;
     protected data: Array<any>;
     protected columns: Array<Column>;
     protected rows: Array<Row>;
     protected selectedRows: Set<Row>;
-    protected willSelect: string;
-    constructor(data: Array<any>, columnSettings: Object);
+    constructor(data: any[] | undefined, columnSettings: SmartTableColumnSettings);
     setData(data: Array<any>): void;
     getColumns(): Array<Column>;
     getRows(): Array<Row>;
     getFirstRow(): Row;
     getLastRow(): Row;
-    findRowByData(data: any): Row;
+    findRowByData(data: any): Row | undefined;
     setSelectAll(state: boolean): void;
     deselectAll(): void;
     selectRow(row: Row, state: boolean): void;

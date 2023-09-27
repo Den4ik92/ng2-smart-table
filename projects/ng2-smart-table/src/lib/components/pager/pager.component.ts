@@ -1,7 +1,7 @@
+import { SmartTablePagingItem } from './../../lib/interfaces/smart-table.models';
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
-
-import { DataSource } from '../../lib/data-source/data-source';
+import { LocalDataSource } from '../../lib/data-source/local/local.data-source';
 
 @Component({
   selector: 'ng2-smart-table-pager',
@@ -55,7 +55,7 @@ import { DataSource } from '../../lib/data-source/data-source';
       <label for="per-page">
         Per Page:
       </label>
-      <select (change)="onChangePerPage($event)" [(ngModel)]="currentPerPage" id="per-page">
+      <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
         <option *ngFor="let item of perPageSelect" [value]="item">{{ item }}</option>
       </select>
     </nav>
@@ -63,28 +63,31 @@ import { DataSource } from '../../lib/data-source/data-source';
 })
 export class PagerComponent implements OnChanges {
 
-  @Input() source: DataSource;
-  @Input() perPageSelect: any[] = [];
+  @Input() source!: LocalDataSource;
+  @Input() perPageSelect: number[] = [];
 
   @Output() changePage = new EventEmitter<any>();
 
-  currentPerPage: any;
+  currentPerPage: number = 0;
 
-  protected pages: Array<any>;
-  protected page: number;
+  protected pages: number[] = [];
+  protected page: number = 1;
   protected count: number = 0;
-  protected perPage: number;
+  protected perPage: number = 0;
 
-  protected dataChangedSub: Subscription;
+  protected dataChangedSub: Subscription | undefined;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.source) {
-      if (!changes.source.firstChange) {
+    if (changes['source']) {
+      if (!changes['source'].firstChange && this.dataChangedSub) {
         this.dataChangedSub.unsubscribe();
       }
       this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
-        this.page = this.source.getPaging().page;
-        this.perPage = this.source.getPaging().perPage;
+        const paging: SmartTablePagingItem | false = this.source.getPaging();
+        if (paging) {
+          this.page = paging.page;
+          this.perPage = paging.perPage;
+        }
         this.currentPerPage = this.perPage;
         this.count = this.source.count();
         if (this.isPageOutOfBounce()) {
@@ -135,7 +138,7 @@ export class PagerComponent implements OnChanges {
     return this.page;
   }
 
-  getPages(): Array<any> {
+  getPages(): number[] {
     return this.pages;
   }
 
@@ -169,17 +172,12 @@ export class PagerComponent implements OnChanges {
     }
   }
 
-  onChangePerPage(event: any) {
-    if (this.currentPerPage) {
-
-      if (typeof this.currentPerPage === 'string' && this.currentPerPage.toLowerCase() === 'all') {
-        this.source.getPaging().perPage = null;
-      } else {
-        this.source.getPaging().perPage = this.currentPerPage * 1;
-        this.source.refresh();
-      }
-      this.initPages();
+  onChangePerPage() {
+    const paging: SmartTablePagingItem | false = this.source.getPaging(); 
+    if (paging) {
+      paging.perPage = this.currentPerPage * 1;
     }
+    this.source.refresh();
+    this.initPages();
   }
-
 }

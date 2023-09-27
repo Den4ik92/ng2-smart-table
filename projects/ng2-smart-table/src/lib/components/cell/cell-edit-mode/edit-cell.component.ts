@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { Cell } from '../../../lib/data-set/cell';
+import { SmartTableEditorAndFilterTypes } from '../../../lib/interfaces/smart-table.models';
 
 @Component({
   selector: 'table-cell-edit-mode',
@@ -21,7 +22,7 @@ import { Cell } from '../../../lib/data-set/cell';
 })
 export class EditCellComponent {
 
-  @Input() cell: Cell;
+  @Input() cell!: Cell;
   @Input() inputClass: string = '';
 
   @Output() edited = new EventEmitter<any>();
@@ -31,7 +32,11 @@ export class EditCellComponent {
     return false;
   }
 
-  getEditorType(): string {
-    return this.cell.getColumn().editor && this.cell.getColumn().editor.type;
+  getEditorType(): SmartTableEditorAndFilterTypes {
+    const editor = this.cell.getColumn().editor
+    if (editor) {
+      return editor.type
+    }
+    return 'text';
   }
 }

@@ -1,11 +1,11 @@
 import { EventEmitter, OnChanges } from '@angular/core';
 import { Grid } from '../../../lib/grid';
-import { DataSource } from '../../../lib/data-source/data-source';
 import { Column } from "../../../lib/data-set/column";
+import { LocalDataSource } from '../../../lib/data-source/local/local.data-source';
 import * as i0 from "@angular/core";
 export declare class TheadFitlersRowComponent implements OnChanges {
     grid: Grid;
-    source: DataSource;
+    source: LocalDataSource;
     create: EventEmitter<any>;
     filter: EventEmitter<any>;
     isMultiSelectVisible: boolean;

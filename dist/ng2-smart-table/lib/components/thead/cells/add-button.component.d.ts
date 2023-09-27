@@ -1,11 +1,11 @@
 import { EventEmitter, AfterViewInit, ElementRef, OnChanges } from '@angular/core';
 import { Grid } from '../../../lib/grid';
-import { DataSource } from '../../../lib/data-source/data-source';
+import { LocalDataSource } from '../../../lib/data-source/local/local.data-source';
 import * as i0 from "@angular/core";
 export declare class AddButtonComponent implements AfterViewInit, OnChanges {
     private ref;
     grid: Grid;
-    source: DataSource;
+    source: LocalDataSource;
     create: EventEmitter<any>;
     isActionAdd: boolean;
     addNewButtonContent: string;

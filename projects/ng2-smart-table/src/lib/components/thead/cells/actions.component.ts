@@ -15,11 +15,11 @@ import { Grid } from '../../../lib/grid';
 })
 export class ActionsComponent implements OnChanges {
 
-  @Input() grid: Grid;
+  @Input() grid!: Grid;
   @Output() create = new EventEmitter<any>();
 
-  createButtonContent: string;
-  cancelButtonContent: string;
+  createButtonContent: string = '';
+  cancelButtonContent: string = '';
 
   ngOnChanges() {
     this.createButtonContent = this.grid.getSetting('add.createButtonContent');

@@ -145,7 +145,7 @@ Try low-code internal tool builder for free
 Yes!  Visit [our homepage](http://akveo.com/) or simply leave us a note to [contact@akveo.com](mailto:contact@akveo.com). We will be happy to work with you!
 
 ## Features
-* Local data source (Server/API DataSource is on its way)
+* Local data source (Server/API LocalDataSource is on its way)
 * Filtering
 * Sorting
 * Pagination

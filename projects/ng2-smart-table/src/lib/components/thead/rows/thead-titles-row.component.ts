@@ -1,8 +1,8 @@
 import {Component, Input, Output, EventEmitter, OnChanges} from '@angular/core';
 
 import { Grid } from '../../../lib/grid';
-import { DataSource } from '../../../lib/data-source/data-source';
 import { Column } from "../../../lib/data-set/column";
+import { LocalDataSource } from '../../../lib/data-source/local/local.data-source';
 
 @Component({
   selector: '[ng2-st-thead-titles-row]',
@@ -24,16 +24,15 @@ import { Column } from "../../../lib/data-set/column";
 })
 export class TheadTitlesRowComponent implements OnChanges {
 
-  @Input() grid: Grid;
-  @Input() source: DataSource;
+  @Input() grid!: Grid;
+  @Input() source!: LocalDataSource;
 
   @Output() sort = new EventEmitter<any>();
   @Output() selectAllRows = new EventEmitter<any>();
 
-  isMultiSelectVisible: boolean;
-  showActionColumnLeft: boolean;
-  showActionColumnRight: boolean;
-
+  isMultiSelectVisible = false;
+  showActionColumnLeft = false;
+  showActionColumnRight = false;
 
   ngOnChanges() {
     this.isMultiSelectVisible = this.grid.isMultiSelectVisible();

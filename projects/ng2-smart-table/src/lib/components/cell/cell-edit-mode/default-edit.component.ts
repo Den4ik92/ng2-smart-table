@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { EditCellDefault } from './edit-cell-default';
-import { Cell } from '../../../lib/data-set/cell';
+import { SmartTableEditorAndFilterTypes } from '../../../lib/interfaces/smart-table.models';
 
 @Component({
   selector: 'table-cell-default-editor',
@@ -13,7 +13,11 @@ export class DefaultEditComponent extends EditCellDefault {
     super();
   }
 
-  getEditorType(): string {
-    return this.cell.getColumn().editor && this.cell.getColumn().editor.type;
+  getEditorType(): SmartTableEditorAndFilterTypes {
+    const editor = this.cell.getColumn().editor
+    if (editor) {
+      return editor.type
+    }
+    return 'text';
   }
 }

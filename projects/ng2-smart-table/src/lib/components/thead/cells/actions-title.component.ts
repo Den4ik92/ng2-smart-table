@@ -10,9 +10,9 @@ import { Grid } from '../../../lib/grid';
 })
 export class ActionsTitleComponent implements AfterViewInit, OnChanges {
 
-  @Input() grid: Grid;
+  @Input() grid!: Grid;
 
-  actionsColumnTitle: string;
+  actionsColumnTitle: string = '';
 
   constructor(private ref: ElementRef) {
   }

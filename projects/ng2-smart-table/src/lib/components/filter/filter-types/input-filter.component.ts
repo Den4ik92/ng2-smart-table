@@ -39,7 +39,7 @@ export class InputFilterComponent extends DefaultFilter implements OnInit, OnCha
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.query) {
+    if (changes?.['query']) {
       this.inputControl.setValue(this.query);
     }
   }

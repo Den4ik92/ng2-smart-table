@@ -14,13 +14,13 @@ import { Row } from '../../../lib/data-set/row';
 })
 export class TbodyCreateCancelComponent implements OnChanges {
 
-  @Input() grid: Grid;
-  @Input() row: Row;
-  @Input() editConfirm: EventEmitter<any>;
-  @Input() editCancel: EventEmitter<any>;
+  @Input() grid!: Grid;
+  @Input() row!: Row;
+  @Input() editConfirm!: EventEmitter<any>;
+  @Input() editCancel!: EventEmitter<any>;
 
-  cancelButtonContent: string;
-  saveButtonContent: string;
+  cancelButtonContent: string = '';
+  saveButtonContent: string = '';
 
   onSave(event: any) {
     event.preventDefault();
@@ -36,7 +36,7 @@ export class TbodyCreateCancelComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    this.saveButtonContent = this.grid.getSetting('edit.saveButtonContent');
-    this.cancelButtonContent = this.grid.getSetting('edit.cancelButtonContent')
+    this.saveButtonContent = this.grid.getSetting('edit.saveButtonContent', 'save');
+    this.cancelButtonContent = this.grid.getSetting('edit.cancelButtonContent', 'cancel')
   }
 }

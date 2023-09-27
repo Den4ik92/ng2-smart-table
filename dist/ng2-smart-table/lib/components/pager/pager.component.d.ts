@@ -1,17 +1,17 @@
 import { EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { DataSource } from '../../lib/data-source/data-source';
+import { LocalDataSource } from '../../lib/data-source/local/local.data-source';
 import * as i0 from "@angular/core";
 export declare class PagerComponent implements OnChanges {
-    source: DataSource;
-    perPageSelect: any[];
+    source: LocalDataSource;
+    perPageSelect: number[];
     changePage: EventEmitter<any>;
-    currentPerPage: any;
-    protected pages: Array<any>;
+    currentPerPage: number;
+    protected pages: number[];
     protected page: number;
     protected count: number;
     protected perPage: number;
-    protected dataChangedSub: Subscription;
+    protected dataChangedSub: Subscription | undefined;
     ngOnChanges(changes: SimpleChanges): void;
     /**
      * We change the page here depending on the action performed against data source
@@ -25,11 +25,11 @@ export declare class PagerComponent implements OnChanges {
     next(): boolean;
     prev(): boolean;
     getPage(): number;
-    getPages(): Array<any>;
+    getPages(): number[];
     getLast(): number;
     isPageOutOfBounce(): boolean;
     initPages(): void;
-    onChangePerPage(event: any): void;
+    onChangePerPage(): void;
     static ɵfac: i0.ɵɵFactoryDeclaration<PagerComponent, never>;
     static ɵcmp: i0.ɵɵComponentDeclaration<PagerComponent, "ng2-smart-table-pager", never, { "source": "source"; "perPageSelect": "perPageSelect"; }, { "changePage": "changePage"; }, never, never, false, never>;
 }

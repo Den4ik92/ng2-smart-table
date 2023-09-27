@@ -20,7 +20,7 @@ import { ViewCell } from './view-cell';
 export class CustomViewComponent implements OnInit, OnDestroy {
 
   customComponent: any;
-  @Input() cell: Cell;
+  @Input() cell!: Cell;
   @ViewChild('dynamicTarget', { read: ViewContainerRef, static: true }) dynamicTarget: any;
 
   constructor(private resolver: ComponentFactoryResolver) {
@@ -29,7 +29,6 @@ export class CustomViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.cell && !this.customComponent) {
       this.createCustomComponent();
-      this.callOnComponentInit();
       this.patchInstance();
     }
   }
@@ -43,11 +42,6 @@ export class CustomViewComponent implements OnInit, OnDestroy {
   protected createCustomComponent() {
     const componentFactory = this.resolver.resolveComponentFactory(this.cell.getColumn().renderComponent);
     this.customComponent = this.dynamicTarget.createComponent(componentFactory);
-  }
-
-  protected callOnComponentInit() {
-    const onComponentInitFunction = this.cell.getColumn().getOnComponentInitFunction();
-    onComponentInitFunction && onComponentInitFunction(this.customComponent.instance);
   }
 
   protected patchInstance() {

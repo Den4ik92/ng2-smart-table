@@ -2,7 +2,7 @@ import {Component, Input, Output, EventEmitter, OnChanges, ChangeDetectionStrate
 
 import { Grid } from '../../../lib/grid';
 import { Row } from '../../../lib/data-set/row';
-import { DataSource } from '../../../lib/data-source/data-source';
+import { LocalDataSource } from '../../../lib/data-source/local/local.data-source';
 
 @Component({
   selector: 'ng2-st-tbody-edit-delete',
@@ -16,20 +16,20 @@ import { DataSource } from '../../../lib/data-source/data-source';
 })
 export class TbodyEditDeleteComponent implements OnChanges {
 
-  @Input() grid: Grid;
-  @Input() row: Row;
-  @Input() source: DataSource;
-  @Input() deleteConfirm: EventEmitter<any>;
-  @Input() editConfirm: EventEmitter<any>;
+  @Input() grid!: Grid;
+  @Input() row!: Row;
+  @Input() source!: LocalDataSource;
+  @Input() deleteConfirm!: EventEmitter<any>;
+  @Input() editConfirm!: EventEmitter<any>;
 
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
   @Output() editRowSelect = new EventEmitter<any>();
 
-  isActionEdit: boolean;
-  isActionDelete: boolean;
-  editRowButtonContent: string;
-  deleteRowButtonContent: string;
+  isActionEdit: boolean = false;
+  isActionDelete: boolean = false;
+  editRowButtonContent: string = '';
+  deleteRowButtonContent: string = '';
 
   onEdit(event: any) {
     event.preventDefault();

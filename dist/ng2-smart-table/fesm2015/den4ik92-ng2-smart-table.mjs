@@ -4,9 +4,8 @@ import * as i1 from '@angular/common';
 import { CommonModule } from '@angular/common';
 import * as i2 from '@angular/forms';
 import { FormsModule, UntypedFormControl, NgControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, skip, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, skip } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { HttpParams } from '@angular/common/http';
 
 class EditCellDefault {
     constructor() {
@@ -46,8 +45,9 @@ class CustomEditComponent extends EditCellDefault {
         this.resolver = resolver;
     }
     ngOnChanges(changes) {
-        if (this.cell && !this.customComponent) {
-            const componentFactory = this.resolver.resolveComponentFactory(this.cell.getColumn().editor.component);
+        const editor = this.cell.getColumn().editor;
+        if (this.cell && !this.customComponent && editor && editor.type == 'custom') {
+            const componentFactory = this.resolver.resolveComponentFactory(editor.component);
             this.customComponent = this.dynamicTarget.createComponent(componentFactory);
             // set @Inputs and @Outputs of custom component
             this.customComponent.instance.cell = this.cell;
@@ -82,6 +82,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
 
 class DefaultEditor {
     constructor() {
+        this.inputClass = '';
         this.onStopEditing = new EventEmitter();
         this.onEdited = new EventEmitter();
         this.onClick = new EventEmitter();
@@ -111,8 +112,9 @@ class CheckboxEditorComponent extends DefaultEditor {
         super();
     }
     onChange(event) {
-        const trueVal = (this.cell.getColumn().getConfig() && this.cell.getColumn().getConfig().true) || true;
-        const falseVal = (this.cell.getColumn().getConfig() && this.cell.getColumn().getConfig().false) || false;
+        const config = this.cell.getColumn().getConfig();
+        const trueVal = (config && (config === null || config === void 0 ? void 0 : config.true)) || true;
+        const falseVal = (config && (config === null || config === void 0 ? void 0 : config.false)) || false;
         this.cell.newValue = event.target.checked ? trueVal : falseVal;
     }
 }
@@ -123,7 +125,7 @@ CheckboxEditorComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0"
            class="form-control"
            [name]="cell.getId()"
            [disabled]="!cell.isEditable()"
-           [checked]="cell.getValue() == (cell.getColumn().getConfig()?.true || true)"
+           [checked]="cell.getValue() === (cell.getColumn().getConfig()?.true || true)"
            (click)="onClick.emit($event)"
            (change)="onChange($event)">
     `, isInline: true, styles: [":host input,:host textarea{width:100%;line-height:normal;padding:.375em .75em}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }] });
@@ -135,53 +137,10 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
            class="form-control"
            [name]="cell.getId()"
            [disabled]="!cell.isEditable()"
-           [checked]="cell.getValue() == (cell.getColumn().getConfig()?.true || true)"
+           [checked]="cell.getValue() === (cell.getColumn().getConfig()?.true || true)"
            (click)="onClick.emit($event)"
            (change)="onChange($event)">
     `, styles: [":host input,:host textarea{width:100%;line-height:normal;padding:.375em .75em}\n"] }]
-        }], ctorParameters: function () { return []; } });
-
-class CompleterEditorComponent extends DefaultEditor {
-    constructor() {
-        super();
-        this.completerStr = '';
-    }
-    ngOnInit() {
-        // if (this.cell.getColumn().editor && this.cell.getColumn().editor.type === 'completer') {
-        //   const config = this.cell.getColumn().getConfig().completer;
-        //   config.dataService = this.completerService.local(config.data, config.searchFields, config.titleField);
-        //   config.dataService.descriptionField(config.descriptionField);
-        // }
-    }
-    onEditedCompleter(event) {
-        this.cell.newValue = event.title;
-        return false;
-    }
-}
-CompleterEditorComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: CompleterEditorComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
-CompleterEditorComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.2.9", type: CompleterEditorComponent, selector: "completer-editor", usesInheritance: true, ngImport: i0, template: `
-    <!-- <ng2-completer [(ngModel)]="completerStr"
-                   [dataService]="cell.getColumn().getConfig().completer.dataService"
-                   [minSearchLength]="cell.getColumn().getConfig().completer.minSearchLength || 0"
-                   [pause]="cell.getColumn().getConfig().completer.pause || 0"
-                   [placeholder]="cell.getColumn().getConfig().completer.placeholder || 'Start typing...'"
-                   (selected)="onEditedCompleter($event)">
-    </ng2-completer> -->
-    `, isInline: true });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: CompleterEditorComponent, decorators: [{
-            type: Component,
-            args: [{
-                    selector: 'completer-editor',
-                    template: `
-    <!-- <ng2-completer [(ngModel)]="completerStr"
-                   [dataService]="cell.getColumn().getConfig().completer.dataService"
-                   [minSearchLength]="cell.getColumn().getConfig().completer.minSearchLength || 0"
-                   [pause]="cell.getColumn().getConfig().completer.pause || 0"
-                   [placeholder]="cell.getColumn().getConfig().completer.placeholder || 'Start typing...'"
-                   (selected)="onEditedCompleter($event)">
-    </ng2-completer> -->
-    `,
-                }]
         }], ctorParameters: function () { return []; } });
 
 class InputEditorComponent extends DefaultEditor {
@@ -298,14 +257,18 @@ class DefaultEditComponent extends EditCellDefault {
         super();
     }
     getEditorType() {
-        return this.cell.getColumn().editor && this.cell.getColumn().editor.type;
+        const editor = this.cell.getColumn().editor;
+        if (editor) {
+            return editor.type;
+        }
+        return 'text';
     }
 }
 DefaultEditComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: DefaultEditComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
-DefaultEditComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.2.9", type: DefaultEditComponent, selector: "table-cell-default-editor", usesInheritance: true, ngImport: i0, template: "<div [ngSwitch]=\"getEditorType()\">\n    <select-editor *ngSwitchCase=\"'list'\"\n                   [cell]=\"cell\"\n                   [inputClass]=\"inputClass\"\n                   (onClick)=\"onClick($event)\"\n                   (onEdited)=\"onEdited($event)\"\n                   (onStopEditing)=\"onStopEditing()\">\n    </select-editor>\n\n    <textarea-editor *ngSwitchCase=\"'textarea'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\"\n                     (onEdited)=\"onEdited($event)\"\n                     (onStopEditing)=\"onStopEditing()\">\n    </textarea-editor>\n\n    <checkbox-editor *ngSwitchCase=\"'checkbox'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\">\n    </checkbox-editor>\n\n    <completer-editor *ngSwitchCase=\"'completer'\"\n                      [cell]=\"cell\">\n    </completer-editor>\n\n    <input-editor *ngSwitchDefault\n                  [cell]=\"cell\"\n                  [inputClass]=\"inputClass\"\n                  (onClick)=\"onClick($event)\"\n                  (onEdited)=\"onEdited($event)\"\n                  (onStopEditing)=\"onStopEditing()\">\n    </input-editor>\n</div>", dependencies: [{ kind: "directive", type: i1.NgSwitch, selector: "[ngSwitch]", inputs: ["ngSwitch"] }, { kind: "directive", type: i1.NgSwitchCase, selector: "[ngSwitchCase]", inputs: ["ngSwitchCase"] }, { kind: "directive", type: i1.NgSwitchDefault, selector: "[ngSwitchDefault]" }, { kind: "component", type: CheckboxEditorComponent, selector: "checkbox-editor" }, { kind: "component", type: CompleterEditorComponent, selector: "completer-editor" }, { kind: "component", type: InputEditorComponent, selector: "input-editor" }, { kind: "component", type: SelectEditorComponent, selector: "select-editor" }, { kind: "component", type: TextareaEditorComponent, selector: "textarea-editor" }] });
+DefaultEditComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.2.9", type: DefaultEditComponent, selector: "table-cell-default-editor", usesInheritance: true, ngImport: i0, template: "<div [ngSwitch]=\"getEditorType()\">\n    <select-editor *ngSwitchCase=\"'list'\"\n                   [cell]=\"cell\"\n                   [inputClass]=\"inputClass\"\n                   (onClick)=\"onClick($event)\"\n                   (onEdited)=\"onEdited($event)\"\n                   (onStopEditing)=\"onStopEditing()\">\n    </select-editor>\n\n    <textarea-editor *ngSwitchCase=\"'textarea'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\"\n                     (onEdited)=\"onEdited($event)\"\n                     (onStopEditing)=\"onStopEditing()\">\n    </textarea-editor>\n\n    <checkbox-editor *ngSwitchCase=\"'checkbox'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\">\n    </checkbox-editor>\n\n    <input-editor *ngSwitchDefault\n                  [cell]=\"cell\"\n                  [inputClass]=\"inputClass\"\n                  (onClick)=\"onClick($event)\"\n                  (onEdited)=\"onEdited($event)\"\n                  (onStopEditing)=\"onStopEditing()\">\n    </input-editor>\n</div>", dependencies: [{ kind: "directive", type: i1.NgSwitch, selector: "[ngSwitch]", inputs: ["ngSwitch"] }, { kind: "directive", type: i1.NgSwitchCase, selector: "[ngSwitchCase]", inputs: ["ngSwitchCase"] }, { kind: "directive", type: i1.NgSwitchDefault, selector: "[ngSwitchDefault]" }, { kind: "component", type: CheckboxEditorComponent, selector: "checkbox-editor" }, { kind: "component", type: InputEditorComponent, selector: "input-editor" }, { kind: "component", type: SelectEditorComponent, selector: "select-editor" }, { kind: "component", type: TextareaEditorComponent, selector: "textarea-editor" }] });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: DefaultEditComponent, decorators: [{
             type: Component,
-            args: [{ selector: 'table-cell-default-editor', template: "<div [ngSwitch]=\"getEditorType()\">\n    <select-editor *ngSwitchCase=\"'list'\"\n                   [cell]=\"cell\"\n                   [inputClass]=\"inputClass\"\n                   (onClick)=\"onClick($event)\"\n                   (onEdited)=\"onEdited($event)\"\n                   (onStopEditing)=\"onStopEditing()\">\n    </select-editor>\n\n    <textarea-editor *ngSwitchCase=\"'textarea'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\"\n                     (onEdited)=\"onEdited($event)\"\n                     (onStopEditing)=\"onStopEditing()\">\n    </textarea-editor>\n\n    <checkbox-editor *ngSwitchCase=\"'checkbox'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\">\n    </checkbox-editor>\n\n    <completer-editor *ngSwitchCase=\"'completer'\"\n                      [cell]=\"cell\">\n    </completer-editor>\n\n    <input-editor *ngSwitchDefault\n                  [cell]=\"cell\"\n                  [inputClass]=\"inputClass\"\n                  (onClick)=\"onClick($event)\"\n                  (onEdited)=\"onEdited($event)\"\n                  (onStopEditing)=\"onStopEditing()\">\n    </input-editor>\n</div>" }]
+            args: [{ selector: 'table-cell-default-editor', template: "<div [ngSwitch]=\"getEditorType()\">\n    <select-editor *ngSwitchCase=\"'list'\"\n                   [cell]=\"cell\"\n                   [inputClass]=\"inputClass\"\n                   (onClick)=\"onClick($event)\"\n                   (onEdited)=\"onEdited($event)\"\n                   (onStopEditing)=\"onStopEditing()\">\n    </select-editor>\n\n    <textarea-editor *ngSwitchCase=\"'textarea'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\"\n                     (onEdited)=\"onEdited($event)\"\n                     (onStopEditing)=\"onStopEditing()\">\n    </textarea-editor>\n\n    <checkbox-editor *ngSwitchCase=\"'checkbox'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\">\n    </checkbox-editor>\n\n    <input-editor *ngSwitchDefault\n                  [cell]=\"cell\"\n                  [inputClass]=\"inputClass\"\n                  (onClick)=\"onClick($event)\"\n                  (onEdited)=\"onEdited($event)\"\n                  (onStopEditing)=\"onStopEditing()\">\n    </input-editor>\n</div>" }]
         }], ctorParameters: function () { return []; } });
 
 class EditCellComponent {
@@ -318,7 +281,11 @@ class EditCellComponent {
         return false;
     }
     getEditorType() {
-        return this.cell.getColumn().editor && this.cell.getColumn().editor.type;
+        const editor = this.cell.getColumn().editor;
+        if (editor) {
+            return editor.type;
+        }
+        return 'text';
     }
 }
 EditCellComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: EditCellComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
@@ -370,7 +337,6 @@ class CustomViewComponent {
     ngOnInit() {
         if (this.cell && !this.customComponent) {
             this.createCustomComponent();
-            this.callOnComponentInit();
             this.patchInstance();
         }
     }
@@ -382,10 +348,6 @@ class CustomViewComponent {
     createCustomComponent() {
         const componentFactory = this.resolver.resolveComponentFactory(this.cell.getColumn().renderComponent);
         this.customComponent = this.dynamicTarget.createComponent(componentFactory);
-    }
-    callOnComponentInit() {
-        const onComponentInitFunction = this.cell.getColumn().getOnComponentInitFunction();
-        onComponentInitFunction && onComponentInitFunction(this.customComponent.instance);
     }
     patchInstance() {
         Object.assign(this.customComponent.instance, this.getPatch());
@@ -509,7 +471,6 @@ const CELL_COMPONENTS = [
     DefaultEditComponent,
     EditCellComponent,
     CheckboxEditorComponent,
-    CompleterEditorComponent,
     InputEditorComponent,
     SelectEditorComponent,
     TextareaEditorComponent,
@@ -526,7 +487,6 @@ CellModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "15
         DefaultEditComponent,
         EditCellComponent,
         CheckboxEditorComponent,
-        CompleterEditorComponent,
         InputEditorComponent,
         SelectEditorComponent,
         TextareaEditorComponent,
@@ -539,7 +499,6 @@ CellModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "15
         DefaultEditComponent,
         EditCellComponent,
         CheckboxEditorComponent,
-        CompleterEditorComponent,
         InputEditorComponent,
         SelectEditorComponent,
         TextareaEditorComponent,
@@ -566,8 +525,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
 class FilterDefault {
     constructor() {
         this.inputClass = '';
-        this.filter = new EventEmitter();
         this.query = '';
+        this.filter = new EventEmitter();
     }
     onFilter(query) {
         this.source.addFilter({
@@ -578,7 +537,7 @@ class FilterDefault {
     }
 }
 FilterDefault.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: FilterDefault, deps: [], target: i0.ɵɵFactoryTarget.Component });
-FilterDefault.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.2.9", type: FilterDefault, selector: "ng-component", inputs: { column: "column", source: "source", inputClass: "inputClass" }, outputs: { filter: "filter" }, ngImport: i0, template: '', isInline: true });
+FilterDefault.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.2.9", type: FilterDefault, selector: "ng-component", inputs: { column: "column", source: "source", inputClass: "inputClass", query: "query" }, outputs: { filter: "filter" }, ngImport: i0, template: '', isInline: true });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: FilterDefault, decorators: [{
             type: Component,
             args: [{
@@ -590,6 +549,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
                 type: Input
             }], inputClass: [{
                 type: Input
+            }], query: [{
+                type: Input
             }], filter: [{
                 type: Output
             }] } });
@@ -597,6 +558,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
 class DefaultFilter {
     constructor() {
         this.delay = 300;
+        this.query = '';
+        this.inputClass = '';
         this.filter = new EventEmitter();
     }
     ngOnDestroy() {
@@ -668,63 +631,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
                 }]
         }], ctorParameters: function () { return []; } });
 
-class CompleterFilterComponent extends DefaultFilter {
-    constructor() {
-        super();
-        this.completerContent = new Subject();
-    }
-    ngOnInit() {
-        // const config = this.column.getFilterConfig().completer;
-        // config.dataService = this.completerService.local(config.data, config.searchFields, config.titleField);
-        // config.dataService.descriptionField(config.descriptionField);
-        // this.changesSubscription = this.completerContent
-        //   .pipe(
-        //     map((ev: any) => (ev && ev.title) || ev || ''),
-        //     distinctUntilChanged(),
-        //     debounceTime(this.delay)
-        //   )
-        //   .subscribe((search: string) => {
-        //     this.query = search;
-        //     this.setFilter();
-        //   });
-    }
-    inputTextChanged(event) {
-        // workaround to trigger the search event when the home/end buttons are clicked
-        // when this happens the [(ngModel)]="query" is set to "" but the (selected) method is not called
-        // so here it gets called manually
-        if (event === '') {
-            this.completerContent.next(event);
-        }
-    }
-}
-CompleterFilterComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: CompleterFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
-CompleterFilterComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.2.9", type: CompleterFilterComponent, selector: "completer-filter", usesInheritance: true, ngImport: i0, template: `
-    <!-- <ng2-completer [(ngModel)]="query"
-                   (ngModelChange)="inputTextChanged($event)"
-                   [dataService]="column.getFilterConfig().completer.dataService"
-                   [minSearchLength]="column.getFilterConfig().completer.minSearchLength || 0"
-                   [pause]="column.getFilterConfig().completer.pause || 0"
-                   [placeholder]="column.getFilterConfig().completer.placeholder || 'Start typing...'"
-                   (selected)="completerContent.next($event)">
-    </ng2-completer> -->
-  `, isInline: true });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: CompleterFilterComponent, decorators: [{
-            type: Component,
-            args: [{
-                    selector: 'completer-filter',
-                    template: `
-    <!-- <ng2-completer [(ngModel)]="query"
-                   (ngModelChange)="inputTextChanged($event)"
-                   [dataService]="column.getFilterConfig().completer.dataService"
-                   [minSearchLength]="column.getFilterConfig().completer.minSearchLength || 0"
-                   [pause]="column.getFilterConfig().completer.pause || 0"
-                   [placeholder]="column.getFilterConfig().completer.placeholder || 'Start typing...'"
-                   (selected)="completerContent.next($event)">
-    </ng2-completer> -->
-  `,
-                }]
-        }], ctorParameters: function () { return []; } });
-
 class InputFilterComponent extends DefaultFilter {
     constructor() {
         super();
@@ -742,7 +648,7 @@ class InputFilterComponent extends DefaultFilter {
         });
     }
     ngOnChanges(changes) {
-        if (changes.query) {
+        if (changes === null || changes === void 0 ? void 0 : changes['query']) {
             this.inputControl.setValue(this.query);
         }
     }
@@ -776,9 +682,11 @@ class SelectFilterComponent extends DefaultFilter {
         super();
     }
     ngOnInit() {
-        this.inputControl.valueChanges
-            .pipe(skip(1), distinctUntilChanged(), debounceTime(this.delay))
-            .subscribe((value) => this.setFilter());
+        if (this.inputControl.valueChanges) {
+            this.inputControl.valueChanges
+                .pipe(skip(1), distinctUntilChanged(), debounceTime(this.delay))
+                .subscribe((value) => this.setFilter());
+        }
     }
 }
 SelectFilterComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: SelectFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
@@ -819,7 +727,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
 class DefaultFilterComponent extends FilterDefault {
 }
 DefaultFilterComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: DefaultFilterComponent, deps: null, target: i0.ɵɵFactoryTarget.Component });
-DefaultFilterComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.2.9", type: DefaultFilterComponent, selector: "default-table-filter", inputs: { query: "query" }, usesInheritance: true, ngImport: i0, template: `
+DefaultFilterComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.2.9", type: DefaultFilterComponent, selector: "default-table-filter", usesInheritance: true, ngImport: i0, template: `
     <ng-container [ngSwitch]="column.getFilterType()">
       <select-filter *ngSwitchCase="'list'"
                      [query]="query"
@@ -833,12 +741,6 @@ DefaultFilterComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0",
                        [column]="column"
                        (filter)="onFilter($event)">
       </checkbox-filter>
-      <completer-filter *ngSwitchCase="'completer'"
-                        [query]="query"
-                        [ngClass]="inputClass"
-                        [column]="column"
-                        (filter)="onFilter($event)">
-      </completer-filter>
       <input-filter *ngSwitchDefault
                     [query]="query"
                     [ngClass]="inputClass"
@@ -846,7 +748,7 @@ DefaultFilterComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0",
                     (filter)="onFilter($event)">
       </input-filter>
     </ng-container>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgSwitch, selector: "[ngSwitch]", inputs: ["ngSwitch"] }, { kind: "directive", type: i1.NgSwitchCase, selector: "[ngSwitchCase]", inputs: ["ngSwitchCase"] }, { kind: "directive", type: i1.NgSwitchDefault, selector: "[ngSwitchDefault]" }, { kind: "component", type: CheckboxFilterComponent, selector: "checkbox-filter" }, { kind: "component", type: CompleterFilterComponent, selector: "completer-filter" }, { kind: "component", type: InputFilterComponent, selector: "input-filter" }, { kind: "component", type: SelectFilterComponent, selector: "select-filter" }] });
+  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgSwitch, selector: "[ngSwitch]", inputs: ["ngSwitch"] }, { kind: "directive", type: i1.NgSwitchCase, selector: "[ngSwitchCase]", inputs: ["ngSwitchCase"] }, { kind: "directive", type: i1.NgSwitchDefault, selector: "[ngSwitchDefault]" }, { kind: "component", type: CheckboxFilterComponent, selector: "checkbox-filter" }, { kind: "component", type: InputFilterComponent, selector: "input-filter" }, { kind: "component", type: SelectFilterComponent, selector: "select-filter" }] });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: DefaultFilterComponent, decorators: [{
             type: Component,
             args: [{
@@ -865,12 +767,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
                        [column]="column"
                        (filter)="onFilter($event)">
       </checkbox-filter>
-      <completer-filter *ngSwitchCase="'completer'"
-                        [query]="query"
-                        [ngClass]="inputClass"
-                        [column]="column"
-                        (filter)="onFilter($event)">
-      </completer-filter>
       <input-filter *ngSwitchDefault
                     [query]="query"
                     [ngClass]="inputClass"
@@ -880,9 +776,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
     </ng-container>
   `,
                 }]
-        }], propDecorators: { query: [{
-                type: Input
-            }] } });
+        }] });
 
 class CustomFilterComponent extends FilterDefault {
     constructor(resolver) {
@@ -890,19 +784,21 @@ class CustomFilterComponent extends FilterDefault {
         this.resolver = resolver;
     }
     ngOnChanges(changes) {
-        if (this.column && !this.customComponent) {
-            const componentFactory = this.resolver.resolveComponentFactory(this.column.filter.component);
-            this.customComponent = this.dynamicTarget.createComponent(componentFactory);
-            // set @Inputs and @Outputs of custom component
-            this.customComponent.instance.query = this.query;
-            this.customComponent.instance.column = this.column;
-            this.customComponent.instance.source = this.source;
-            this.customComponent.instance.inputClass = this.inputClass;
-            this.customComponent.instance.filter.subscribe((event) => this.onFilter(event));
-        }
+        var _a;
         if (this.customComponent) {
             this.customComponent.instance.ngOnChanges(changes);
+            return;
         }
+        if (this.column.filter && this.column.filter.type === 'custom') {
+            const componentFactory = this.resolver.resolveComponentFactory((_a = this.column.filter) === null || _a === void 0 ? void 0 : _a.component);
+            this.customComponent = this.dynamicTarget.createComponent(componentFactory);
+        }
+        // set @Inputs and @Outputs of custom component
+        this.customComponent.instance.query = this.query;
+        this.customComponent.instance.column = this.column;
+        this.customComponent.instance.source = this.source;
+        this.customComponent.instance.inputClass = this.inputClass;
+        this.customComponent.instance.filter.subscribe((event) => this.onFilter(event));
     }
     ngOnDestroy() {
         if (this.customComponent) {
@@ -911,28 +807,22 @@ class CustomFilterComponent extends FilterDefault {
     }
 }
 CustomFilterComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: CustomFilterComponent, deps: [{ token: i0.ComponentFactoryResolver }], target: i0.ɵɵFactoryTarget.Component });
-CustomFilterComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.2.9", type: CustomFilterComponent, selector: "custom-table-filter", inputs: { query: "query" }, viewQueries: [{ propertyName: "dynamicTarget", first: true, predicate: ["dynamicTarget"], descendants: true, read: ViewContainerRef, static: true }], usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `<ng-template #dynamicTarget></ng-template>`, isInline: true });
+CustomFilterComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "15.2.9", type: CustomFilterComponent, selector: "custom-table-filter", viewQueries: [{ propertyName: "dynamicTarget", first: true, predicate: ["dynamicTarget"], descendants: true, read: ViewContainerRef, static: true }], usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `<ng-template #dynamicTarget></ng-template>`, isInline: true });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: CustomFilterComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'custom-table-filter',
                     template: `<ng-template #dynamicTarget></ng-template>`,
                 }]
-        }], ctorParameters: function () { return [{ type: i0.ComponentFactoryResolver }]; }, propDecorators: { query: [{
-                type: Input
-            }], dynamicTarget: [{
+        }], ctorParameters: function () { return [{ type: i0.ComponentFactoryResolver }]; }, propDecorators: { dynamicTarget: [{
                 type: ViewChild,
                 args: ['dynamicTarget', { read: ViewContainerRef, static: true }]
             }] } });
 
 class FilterComponent extends FilterDefault {
-    constructor() {
-        super(...arguments);
-        this.query = '';
-    }
     ngOnChanges(changes) {
-        if (changes.source) {
-            if (!changes.source.firstChange) {
+        if (changes['source']) {
+            if (!changes['source'].firstChange && this.dataChangedSub) {
                 this.dataChangedSub.unsubscribe();
             }
             this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
@@ -971,7 +861,7 @@ FilterComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", versio
                               (filter)="onFilter($event)">
         </default-table-filter>
       </div>
-    `, isInline: true, styles: [":host .ng2-smart-filter ::ng-deep input,:host .ng2-smart-filter ::ng-deep select{width:100%;line-height:normal;padding:.375em .75em;font-weight:400}:host .ng2-smart-filter ::ng-deep input[type=search]{box-sizing:inherit}:host .ng2-smart-filter ::ng-deep .completer-dropdown-holder{font-weight:400}:host .ng2-smart-filter ::ng-deep a{font-weight:400}\n"], dependencies: [{ kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "directive", type: i1.NgSwitch, selector: "[ngSwitch]", inputs: ["ngSwitch"] }, { kind: "directive", type: i1.NgSwitchCase, selector: "[ngSwitchCase]", inputs: ["ngSwitchCase"] }, { kind: "directive", type: i1.NgSwitchDefault, selector: "[ngSwitchDefault]" }, { kind: "component", type: DefaultFilterComponent, selector: "default-table-filter", inputs: ["query"] }, { kind: "component", type: CustomFilterComponent, selector: "custom-table-filter", inputs: ["query"] }] });
+    `, isInline: true, styles: [":host .ng2-smart-filter ::ng-deep input,:host .ng2-smart-filter ::ng-deep select{width:100%;line-height:normal;padding:.375em .75em;font-weight:400}:host .ng2-smart-filter ::ng-deep input[type=search]{box-sizing:inherit}:host .ng2-smart-filter ::ng-deep .completer-dropdown-holder{font-weight:400}:host .ng2-smart-filter ::ng-deep a{font-weight:400}\n"], dependencies: [{ kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "directive", type: i1.NgSwitch, selector: "[ngSwitch]", inputs: ["ngSwitch"] }, { kind: "directive", type: i1.NgSwitchCase, selector: "[ngSwitchCase]", inputs: ["ngSwitchCase"] }, { kind: "directive", type: i1.NgSwitchDefault, selector: "[ngSwitchDefault]" }, { kind: "component", type: DefaultFilterComponent, selector: "default-table-filter" }, { kind: "component", type: CustomFilterComponent, selector: "custom-table-filter" }] });
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: FilterComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ng2-smart-table-filter', template: `
@@ -1001,7 +891,6 @@ const FILTER_COMPONENTS = [
     DefaultFilterComponent,
     CustomFilterComponent,
     CheckboxFilterComponent,
-    CompleterFilterComponent,
     InputFilterComponent,
     SelectFilterComponent,
 ];
@@ -1014,7 +903,6 @@ FilterModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "
         DefaultFilterComponent,
         CustomFilterComponent,
         CheckboxFilterComponent,
-        CompleterFilterComponent,
         InputFilterComponent,
         SelectFilterComponent], imports: [CommonModule,
         FormsModule,
@@ -1024,7 +912,6 @@ FilterModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "
         DefaultFilterComponent,
         CustomFilterComponent,
         CheckboxFilterComponent,
-        CompleterFilterComponent,
         InputFilterComponent,
         SelectFilterComponent] });
 FilterModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: FilterModule, imports: [CommonModule,
@@ -1051,16 +938,23 @@ class PagerComponent {
     constructor() {
         this.perPageSelect = [];
         this.changePage = new EventEmitter();
+        this.currentPerPage = 0;
+        this.pages = [];
+        this.page = 1;
         this.count = 0;
+        this.perPage = 0;
     }
     ngOnChanges(changes) {
-        if (changes.source) {
-            if (!changes.source.firstChange) {
+        if (changes['source']) {
+            if (!changes['source'].firstChange && this.dataChangedSub) {
                 this.dataChangedSub.unsubscribe();
             }
             this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
-                this.page = this.source.getPaging().page;
-                this.perPage = this.source.getPaging().perPage;
+                const paging = this.source.getPaging();
+                if (paging) {
+                    this.page = paging.page;
+                    this.perPage = paging.perPage;
+                }
                 this.currentPerPage = this.perPage;
                 this.count = this.source.count();
                 if (this.isPageOutOfBounce()) {
@@ -1128,17 +1022,13 @@ class PagerComponent {
             }
         }
     }
-    onChangePerPage(event) {
-        if (this.currentPerPage) {
-            if (typeof this.currentPerPage === 'string' && this.currentPerPage.toLowerCase() === 'all') {
-                this.source.getPaging().perPage = null;
-            }
-            else {
-                this.source.getPaging().perPage = this.currentPerPage * 1;
-                this.source.refresh();
-            }
-            this.initPages();
+    onChangePerPage() {
+        const paging = this.source.getPaging();
+        if (paging) {
+            paging.perPage = this.currentPerPage * 1;
         }
+        this.source.refresh();
+        this.initPages();
     }
 }
 PagerComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: PagerComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
@@ -1191,7 +1081,7 @@ PagerComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version
       <label for="per-page">
         Per Page:
       </label>
-      <select (change)="onChangePerPage($event)" [(ngModel)]="currentPerPage" id="per-page">
+      <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
         <option *ngFor="let item of perPageSelect" [value]="item">{{ item }}</option>
       </select>
     </nav>
@@ -1247,7 +1137,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
       <label for="per-page">
         Per Page:
       </label>
-      <select (change)="onChangePerPage($event)" [(ngModel)]="currentPerPage" id="per-page">
+      <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
         <option *ngFor="let item of perPageSelect" [value]="item">{{ item }}</option>
       </select>
     </nav>
@@ -1284,6 +1174,10 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
         }] });
 
 class TbodyCreateCancelComponent {
+    constructor() {
+        this.cancelButtonContent = '';
+        this.saveButtonContent = '';
+    }
     onSave(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -1296,8 +1190,8 @@ class TbodyCreateCancelComponent {
         this.row.isInEditing = false;
     }
     ngOnChanges() {
-        this.saveButtonContent = this.grid.getSetting('edit.saveButtonContent');
-        this.cancelButtonContent = this.grid.getSetting('edit.cancelButtonContent');
+        this.saveButtonContent = this.grid.getSetting('edit.saveButtonContent', 'save');
+        this.cancelButtonContent = this.grid.getSetting('edit.cancelButtonContent', 'cancel');
     }
 }
 TbodyCreateCancelComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: TbodyCreateCancelComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
@@ -1333,6 +1227,10 @@ class TbodyEditDeleteComponent {
         this.edit = new EventEmitter();
         this.delete = new EventEmitter();
         this.editRowSelect = new EventEmitter();
+        this.isActionEdit = false;
+        this.isActionDelete = false;
+        this.editRowButtonContent = '';
+        this.deleteRowButtonContent = '';
     }
     onEdit(event) {
         event.preventDefault();
@@ -1448,6 +1346,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
 
 class Ng2SmartTableTbodyComponent {
     constructor() {
+        this.rowClassFunction = () => '';
         this.save = new EventEmitter();
         this.cancel = new EventEmitter();
         this.edit = new EventEmitter();
@@ -1459,6 +1358,15 @@ class Ng2SmartTableTbodyComponent {
         this.userClickedRow = new EventEmitter();
         this.editRowSelect = new EventEmitter();
         this.multipleSelectRow = new EventEmitter();
+        this.isMultiSelectVisible = false;
+        this.showActionColumnLeft = false;
+        this.showActionColumnRight = false;
+        this.mode = 'inline';
+        this.editInputClass = '';
+        this.isActionAdd = false;
+        this.isActionEdit = false;
+        this.isActionDelete = false;
+        this.noDataMessage = false;
     }
     get tableColumnsCount() {
         const actionColumns = this.isActionAdd || this.isActionEdit || this.isActionDelete ? 1 : 0;
@@ -1467,12 +1375,12 @@ class Ng2SmartTableTbodyComponent {
     ngOnChanges() {
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
         this.showActionColumnLeft = this.grid.showActionColumn('left');
-        this.mode = this.grid.getSetting('mode');
-        this.editInputClass = this.grid.getSetting('edit.inputClass');
+        this.mode = this.grid.getSetting('mode', 'inline');
+        this.editInputClass = this.grid.getSetting('edit.inputClass', '');
         this.showActionColumnRight = this.grid.showActionColumn('right');
-        this.isActionAdd = this.grid.getSetting('actions.add');
-        this.isActionEdit = this.grid.getSetting('actions.edit');
-        this.isActionDelete = this.grid.getSetting('actions.delete');
+        this.isActionAdd = this.grid.getSetting('actions.add', false);
+        this.isActionEdit = this.grid.getSetting('actions.edit', false);
+        this.isActionDelete = this.grid.getSetting('actions.delete', false);
         this.noDataMessage = this.grid.getSetting('noDataMessage');
     }
     getVisibleCells(cells) {
@@ -1563,6 +1471,8 @@ class AddButtonComponent {
     constructor(ref) {
         this.ref = ref;
         this.create = new EventEmitter();
+        this.isActionAdd = false;
+        this.addNewButtonContent = '';
     }
     ngAfterViewInit() {
         this.ref.nativeElement.classList.add('ng2-smart-actions-title', 'ng2-smart-actions-title-add');
@@ -1610,12 +1520,16 @@ class TheadFitlersRowComponent {
     constructor() {
         this.create = new EventEmitter();
         this.filter = new EventEmitter();
+        this.isMultiSelectVisible = false;
+        this.showActionColumnLeft = false;
+        this.showActionColumnRight = false;
+        this.filterInputClass = '';
     }
     ngOnChanges() {
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
         this.showActionColumnLeft = this.grid.showActionColumn('left');
         this.showActionColumnRight = this.grid.showActionColumn('right');
-        this.filterInputClass = this.grid.getSetting('filter.inputClass');
+        this.filterInputClass = this.grid.getSetting('filter.inputClass', '');
     }
     getVisibleColumns(columns) {
         return (columns || []).filter((column) => !column.hide);
@@ -1678,6 +1592,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
 class ActionsComponent {
     constructor() {
         this.create = new EventEmitter();
+        this.createButtonContent = '';
+        this.cancelButtonContent = '';
     }
     ngOnChanges() {
         this.createButtonContent = this.grid.getSetting('add.createButtonContent');
@@ -1715,6 +1631,10 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
 class TheadFormRowComponent {
     constructor() {
         this.create = new EventEmitter();
+        this.isMultiSelectVisible = false;
+        this.showActionColumnLeft = false;
+        this.showActionColumnRight = false;
+        this.addInputClass = '';
     }
     onCreate(event) {
         event.stopPropagation();
@@ -1724,7 +1644,7 @@ class TheadFormRowComponent {
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
         this.showActionColumnLeft = this.grid.showActionColumn('left');
         this.showActionColumnRight = this.grid.showActionColumn('right');
-        this.addInputClass = this.grid.getSetting('add.inputClass');
+        this.addInputClass = this.grid.getSetting('add.inputClass', '');
     }
     getVisibleCells(cells) {
         return (cells || []).filter((cell) => !cell.getColumn().hide);
@@ -1787,6 +1707,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
 class ActionsTitleComponent {
     constructor(ref) {
         this.ref = ref;
+        this.actionsColumnTitle = '';
     }
     ngAfterViewInit() {
         this.ref.nativeElement.classList.add('ng2-smart-actions');
@@ -1835,10 +1756,11 @@ class TitleComponent {
     constructor() {
         this.currentDirection = '';
         this.sort = new EventEmitter();
+        this.dataChangedSub = false;
     }
     ngOnChanges(changes) {
-        if (changes.source) {
-            if (!changes.source.firstChange) {
+        if (changes['source']) {
+            if (!changes['source'].firstChange && this.dataChangedSub) {
                 this.dataChangedSub.unsubscribe();
             }
             this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
@@ -1849,8 +1771,6 @@ class TitleComponent {
                 else {
                     this.currentDirection = '';
                 }
-                sortConf.forEach((fieldConf) => {
-                });
             });
         }
     }
@@ -1860,7 +1780,7 @@ class TitleComponent {
         this.source.setSort([
             {
                 field: this.column.id,
-                direction: this.currentDirection,
+                direction: this.currentDirection === 'desc' ? 'desc' : 'asc',
                 compare: this.column.getCompareFunction(),
             },
         ]);
@@ -1939,6 +1859,9 @@ class TheadTitlesRowComponent {
     constructor() {
         this.sort = new EventEmitter();
         this.selectAllRows = new EventEmitter();
+        this.isMultiSelectVisible = false;
+        this.showActionColumnLeft = false;
+        this.showActionColumnRight = false;
     }
     ngOnChanges() {
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
@@ -2001,10 +1924,12 @@ class Ng2SmartTableTheadComponent {
         this.selectAllRows = new EventEmitter();
         this.create = new EventEmitter();
         this.filter = new EventEmitter();
+        this.isHideHeader = false;
+        this.isHideSubHeader = false;
     }
     ngOnChanges() {
-        this.isHideHeader = this.grid.getSetting('hideHeader');
-        this.isHideSubHeader = this.grid.getSetting('hideSubHeader');
+        this.isHideHeader = this.grid.getSetting('hideHeader', false);
+        this.isHideSubHeader = this.grid.getSetting('hideSubHeader', false);
     }
 }
 Ng2SmartTableTheadComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "15.2.9", ngImport: i0, type: Ng2SmartTableTheadComponent, deps: [], target: i0.ɵɵFactoryTarget.Component });
@@ -2155,7 +2080,7 @@ class Deferred {
     }
 }
 // getDeepFromObject({result: {data: 1}}, 'result.data', 2); // returns 1
-function getDeepFromObject(object = {}, name, defaultValue) {
+function getDeepFromObject(object = {}, name, defaultValue = null) {
     const keys = name.split('.');
     // clone the object
     let level = deepExtend({}, object);
@@ -2263,7 +2188,7 @@ class Column {
         this.settings = settings;
         this.dataSet = dataSet;
         this.title = '';
-        this.type = '';
+        this.type = 'text';
         this.class = '';
         this.width = '';
         this.hide = false;
@@ -2271,15 +2196,11 @@ class Column {
         this.isEditable = true;
         this.isAddable = true;
         this.isFilterable = false;
-        this.sortDirection = '';
-        this.defaultSortDirection = '';
-        this.editor = { type: '', config: {}, component: null };
-        this.filter = { type: '', config: {}, component: null };
-        this.renderComponent = null;
+        this.sortDirection = 'asc';
+        this.defaultSortDirection = false;
+        this.editor = false;
+        this.filter = false;
         this.process();
-    }
-    getOnComponentInitFunction() {
-        return this.onComponentInitFunction;
     }
     getCompareFunction() {
         return this.compareFunction;
@@ -2291,44 +2212,50 @@ class Column {
         return this.filterFunction;
     }
     getConfig() {
-        return this.editor && this.editor.config;
+        var _a;
+        if (this.editor && (this.editor.type === 'checkbox' || this.editor.type === 'custom' || this.editor.type === 'list')) {
+            return (_a = this.editor) === null || _a === void 0 ? void 0 : _a.config;
+        }
+        return false;
     }
     getFilterType() {
         return this.filter && this.filter.type;
     }
     getFilterConfig() {
-        return this.filter && this.filter.config;
+        var _a;
+        if (this.filter && (this.filter.type === 'checkbox' || this.filter.type === 'custom' || this.filter.type === 'list')) {
+            return (_a = this.filter) === null || _a === void 0 ? void 0 : _a.config;
+        }
+        return false;
     }
     process() {
-        this.title = this.settings['title'];
-        this.class = this.settings['class'];
-        this.width = this.settings['width'];
-        this.hide = !!this.settings['hide'];
-        this.type = this.prepareType();
-        this.editor = this.settings['editor'];
-        this.filter = this.settings['filter'];
-        this.renderComponent = this.settings['renderComponent'];
-        this.isFilterable = typeof this.settings['filter'] === 'undefined' ? true : !!this.settings['filter'];
-        this.defaultSortDirection = ['asc', 'desc']
-            .indexOf(this.settings['sortDirection']) !== -1 ? this.settings['sortDirection'] : '';
-        this.isSortable = typeof this.settings['sort'] === 'undefined' ? true : !!this.settings['sort'];
-        this.isEditable = typeof this.settings['editable'] === 'undefined' ? true : !!this.settings['editable'];
-        this.isAddable = typeof this.settings['addable'] === 'undefined' ? true : !!this.settings['addable'];
+        var _a, _b, _c;
+        this.title = this.settings.title;
+        this.class = this.settings.class || '';
+        this.width = this.settings.width || '';
+        this.hide = !!this.settings.hide;
+        this.type = this.settings.type;
+        if ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.editor) {
+            this.editor = this.settings.editor;
+        }
+        if ((_b = this.settings) === null || _b === void 0 ? void 0 : _b.filter) {
+            this.filter = this.settings.filter;
+        }
+        if (this.settings.type === 'custom' && this.settings.renderComponent) {
+            this.renderComponent = this.settings.renderComponent;
+        }
+        this.isFilterable = typeof this.settings.filter === 'undefined' ? true : !!this.settings['filter'];
+        this.defaultSortDirection = ((_c = this.settings) === null || _c === void 0 ? void 0 : _c.sortDirection) || false;
+        this.isSortable = typeof this.settings.sort === 'undefined' ? true : this.settings.sort;
+        this.isEditable = typeof this.settings.editable === 'undefined' ? true : this.settings.editable;
+        this.isAddable = typeof this.settings.addable === 'undefined' ? true : this.settings.addable;
         this.sortDirection = this.prepareSortDirection();
-        this.compareFunction = this.settings['compareFunction'];
-        this.valuePrepareFunction = this.settings['valuePrepareFunction'];
-        this.filterFunction = this.settings['filterFunction'];
-        this.onComponentInitFunction = this.settings['onComponentInitFunction'];
-    }
-    prepareType() {
-        return this.settings['type'] || this.determineType();
+        this.compareFunction = this.settings.compareFunction;
+        this.valuePrepareFunction = this.settings.valuePrepareFunction;
+        this.filterFunction = this.settings.filterFunction;
     }
     prepareSortDirection() {
-        return this.settings['sort'] === 'desc' ? 'desc' : 'asc';
-    }
-    determineType() {
-        // TODO: determine type by data
-        return 'text';
+        return this.defaultSortDirection === 'desc' ? 'desc' : 'asc';
     }
 }
 
@@ -2451,7 +2378,8 @@ class Grid {
         return position == this.getSetting('actions.position');
     }
     isActionsVisible() {
-        return this.getSetting('actions.add') || this.getSetting('actions.edit') || this.getSetting('actions.delete') || this.getSetting('actions.custom').length;
+        var _a;
+        return this.getSetting('actions.add', false) || this.getSetting('actions.edit', false) || this.getSetting('actions.delete', false) || !!((_a = this.getSetting('actions.custom', [])) === null || _a === void 0 ? void 0 : _a.length);
     }
     isMultiSelectVisible() {
         return this.getSetting('selectMode') === 'multi';
@@ -2475,7 +2403,9 @@ class Grid {
         this.sourceOnChangedSubscription = this.source.onChanged().subscribe((changes) => this.processDataChange(changes));
         this.sourceOnUpdatedSubscription = this.source.onUpdated().subscribe((data) => {
             const changedRow = this.dataSet.findRowByData(data);
-            changedRow.setData(data);
+            if (changedRow) {
+                changedRow.setData(data);
+            }
         });
     }
     getSetting(name, defaultValue) {
@@ -2595,26 +2525,26 @@ class Grid {
         return false;
     }
     prepareSource(source) {
-        const initialSource = this.getInitialSort();
-        if (initialSource && initialSource['field'] && initialSource['direction']) {
-            source.setSort([initialSource], false);
+        const initialSort = this.getInitialSort();
+        if (initialSort) {
+            source.setSort([initialSort], false);
         }
         if (this.getSetting('pager.display') === true) {
-            source.setPaging(this.getPageToSelect(source), this.getSetting('pager.perPage'), false);
+            source.setPaging(1, this.getSetting('pager.perPage'), false);
         }
         source.refresh();
         return source;
     }
     getInitialSort() {
-        const sortConf = {};
-        this.getColumns().forEach((column) => {
-            if (column.isSortable && column.defaultSortDirection) {
-                sortConf['field'] = column.id;
-                sortConf['direction'] = column.defaultSortDirection;
-                sortConf['compare'] = column.getCompareFunction();
-            }
-        });
-        return sortConf;
+        const defaultSortColumn = this.getColumns().find((column) => column.isSortable && column.defaultSortDirection);
+        if (!defaultSortColumn) {
+            return false;
+        }
+        return {
+            field: defaultSortColumn.id,
+            direction: defaultSortColumn.defaultSortDirection || 'asc',
+            compare: defaultSortColumn.getCompareFunction(),
+        };
     }
     getSelectedRowsData() {
         return this.dataSet.getRows();
@@ -2627,137 +2557,6 @@ class Grid {
     }
     getLastRow() {
         return this.dataSet.getLastRow();
-    }
-    getSelectionInfo() {
-        const switchPageToSelectedRowPage = this.getSetting('switchPageToSelectedRowPage');
-        const selectedRowIndex = Number(this.getSetting('selectedRowIndex', 0)) || 0;
-        const { perPage, page } = this.getSetting('pager');
-        return { perPage, page, selectedRowIndex, switchPageToSelectedRowPage };
-    }
-    getPageToSelect(source) {
-        const { switchPageToSelectedRowPage, selectedRowIndex, perPage, page } = this.getSelectionInfo();
-        let pageToSelect = Math.max(1, page);
-        if (switchPageToSelectedRowPage && selectedRowIndex >= 0) {
-            pageToSelect = getPageForRowIndex(selectedRowIndex, perPage);
-        }
-        const maxPageAmount = Math.ceil(source.count() / perPage);
-        return maxPageAmount ? Math.min(pageToSelect, maxPageAmount) : pageToSelect;
-    }
-}
-
-var SmartTableOnChangedEventName;
-(function (SmartTableOnChangedEventName) {
-    SmartTableOnChangedEventName["load"] = "load";
-    SmartTableOnChangedEventName["paging"] = "paging";
-    SmartTableOnChangedEventName["update"] = "update";
-    SmartTableOnChangedEventName["page"] = "page";
-    SmartTableOnChangedEventName["filter"] = "filter";
-    SmartTableOnChangedEventName["empty"] = "empty";
-    SmartTableOnChangedEventName["sort"] = "sort";
-    SmartTableOnChangedEventName["add"] = "add";
-    SmartTableOnChangedEventName["remove"] = "remove";
-    SmartTableOnChangedEventName["append"] = "append";
-    SmartTableOnChangedEventName["prepend"] = "prepend";
-    SmartTableOnChangedEventName["refresh"] = "refresh";
-})(SmartTableOnChangedEventName || (SmartTableOnChangedEventName = {}));
-
-class DataSource {
-    constructor() {
-        this.onChangedSource = new Subject();
-        this.onAddedSource = new Subject();
-        this.onUpdatedSource = new Subject();
-        this.onRemovedSource = new Subject();
-    }
-    refresh() {
-        this.emitOnChanged(SmartTableOnChangedEventName.refresh);
-    }
-    load(data) {
-        this.emitOnChanged(SmartTableOnChangedEventName.load);
-        return Promise.resolve(true);
-    }
-    onChanged() {
-        return this.onChangedSource.asObservable();
-    }
-    onAdded() {
-        return this.onAddedSource.asObservable();
-    }
-    onUpdated() {
-        return this.onUpdatedSource.asObservable();
-    }
-    onRemoved() {
-        return this.onRemovedSource.asObservable();
-    }
-    prepend(element) {
-        this.emitOnAdded(element);
-        this.emitOnChanged(SmartTableOnChangedEventName.prepend);
-        return Promise.resolve(true);
-    }
-    append(element) {
-        this.emitOnAdded(element);
-        this.emitOnChanged(SmartTableOnChangedEventName.append);
-        return Promise.resolve(true);
-    }
-    add(element) {
-        this.emitOnAdded(element);
-        this.emitOnChanged(SmartTableOnChangedEventName.add);
-        return Promise.resolve(true);
-    }
-    remove(element) {
-        this.emitOnRemoved(element);
-        this.emitOnChanged(SmartTableOnChangedEventName.remove);
-        return Promise.resolve(true);
-    }
-    update(element, values) {
-        this.emitOnUpdated(element);
-        this.emitOnChanged(SmartTableOnChangedEventName.update);
-        return Promise.resolve(true);
-    }
-    empty() {
-        this.emitOnChanged(SmartTableOnChangedEventName.empty);
-        return Promise.resolve(true);
-    }
-    setSort(conf, doEmit) {
-        if (doEmit) {
-            this.emitOnChanged(SmartTableOnChangedEventName.sort);
-        }
-    }
-    setFilter(conf, andOperator, doEmit) {
-        if (doEmit) {
-            this.emitOnChanged(SmartTableOnChangedEventName.filter);
-        }
-    }
-    addFilter(fieldConf, andOperator, doEmit) {
-        if (doEmit) {
-            this.emitOnChanged(SmartTableOnChangedEventName.filter);
-        }
-    }
-    setPaging(page, perPage, doEmit) {
-        if (doEmit) {
-            this.emitOnChanged(SmartTableOnChangedEventName.paging);
-        }
-    }
-    setPage(page, doEmit) {
-        if (doEmit) {
-            this.emitOnChanged(SmartTableOnChangedEventName.page);
-        }
-    }
-    emitOnRemoved(element) {
-        this.onRemovedSource.next(element);
-    }
-    emitOnUpdated(element) {
-        this.onUpdatedSource.next(element);
-    }
-    emitOnAdded(element) {
-        this.onAddedSource.next(element);
-    }
-    emitOnChanged(action) {
-        this.getElements().then((elements) => this.onChangedSource.next({
-            action: action,
-            elements: elements,
-            paging: this.getPaging(),
-            filter: this.getFilter(),
-            sort: this.getSort(),
-        }));
     }
 }
 
@@ -2799,6 +2598,112 @@ class LocalPager {
     }
 }
 
+var SmartTableOnChangedEventName;
+(function (SmartTableOnChangedEventName) {
+    SmartTableOnChangedEventName["load"] = "load";
+    SmartTableOnChangedEventName["paging"] = "paging";
+    SmartTableOnChangedEventName["update"] = "update";
+    SmartTableOnChangedEventName["page"] = "page";
+    SmartTableOnChangedEventName["filter"] = "filter";
+    SmartTableOnChangedEventName["empty"] = "empty";
+    SmartTableOnChangedEventName["sort"] = "sort";
+    SmartTableOnChangedEventName["add"] = "add";
+    SmartTableOnChangedEventName["remove"] = "remove";
+    SmartTableOnChangedEventName["append"] = "append";
+    SmartTableOnChangedEventName["prepend"] = "prepend";
+    SmartTableOnChangedEventName["refresh"] = "refresh";
+})(SmartTableOnChangedEventName || (SmartTableOnChangedEventName = {}));
+
+class DataSource {
+    constructor() {
+        this.onChangedSource = new Subject();
+        this.onAddedSource = new Subject();
+        this.onUpdatedSource = new Subject();
+        this.onRemovedSource = new Subject();
+    }
+    refresh() {
+        this.emitOnChanged(SmartTableOnChangedEventName.refresh);
+    }
+    loadEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.load);
+        return Promise.resolve(true);
+    }
+    onChanged() {
+        return this.onChangedSource.asObservable();
+    }
+    onAdded() {
+        return this.onAddedSource.asObservable();
+    }
+    onUpdated() {
+        return this.onUpdatedSource.asObservable();
+    }
+    onRemoved() {
+        return this.onRemovedSource.asObservable();
+    }
+    prependEmit(element) {
+        this.emitOnAdded(element);
+        this.emitOnChanged(SmartTableOnChangedEventName.prepend);
+        return Promise.resolve(true);
+    }
+    appendEmit(element) {
+        this.emitOnAdded(element);
+        this.emitOnChanged(SmartTableOnChangedEventName.append);
+        return Promise.resolve(true);
+    }
+    addEmit(element) {
+        this.emitOnAdded(element);
+        this.emitOnChanged(SmartTableOnChangedEventName.add);
+        return Promise.resolve(true);
+    }
+    removeEmit(element) {
+        this.emitOnRemoved(element);
+        this.emitOnChanged(SmartTableOnChangedEventName.remove);
+        return Promise.resolve(true);
+    }
+    updateEmit(element) {
+        this.emitOnUpdated(element);
+        this.emitOnChanged(SmartTableOnChangedEventName.update);
+        return Promise.resolve(true);
+    }
+    emptyEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.empty);
+        return Promise.resolve(true);
+    }
+    setSortEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.sort);
+    }
+    setFilterEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.filter);
+    }
+    addFilterEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.filter);
+    }
+    setPagingEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.paging);
+    }
+    setPageEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.page);
+    }
+    emitOnRemoved(element) {
+        this.onRemovedSource.next(element);
+    }
+    emitOnUpdated(element) {
+        this.onUpdatedSource.next(element);
+    }
+    emitOnAdded(element) {
+        this.onAddedSource.next(element);
+    }
+    emitOnChanged(action) {
+        this.getElements().then((elements) => this.onChangedSource.next({
+            action: action,
+            elements: elements,
+            paging: this.getPaging(),
+            filter: this.getFilter(),
+            sort: this.getSort(),
+        }));
+    }
+}
+
 class LocalDataSource extends DataSource {
     constructor(data = []) {
         super();
@@ -2809,39 +2714,36 @@ class LocalDataSource extends DataSource {
             filters: [],
             andOperator: true,
         };
-        this.pagingConf = {
-            page: 1,
-            perPage: 1,
-        };
+        this.pagingConf = false;
         this.data = data;
     }
     load(data) {
         this.data = data;
-        return super.load(data);
+        return super.loadEmit();
     }
     prepend(element) {
         this.reset(true);
         this.data.unshift(element);
-        return super.prepend(element);
+        return super.prependEmit(element);
     }
     append(element) {
         this.reset(true);
         this.data.push(element);
-        return super.append(element);
+        return super.appendEmit(element);
     }
     add(element) {
         this.data.push(element);
-        return super.add(element);
+        return super.addEmit(element);
     }
     remove(element) {
         this.data = this.data.filter(el => el !== element);
-        return super.remove(element);
+        return super.removeEmit(element);
     }
     update(element, values) {
         return new Promise((resolve, reject) => {
             this.find(element).then((found) => {
                 found = deepExtend(found, values);
-                super.update(found, values).then(resolve).catch(reject);
+                super.updateEmit(found).then(resolve).catch(reject);
             }).catch(reject);
         });
     }
@@ -2872,17 +2774,21 @@ class LocalDataSource extends DataSource {
                 andOperator: true,
             };
             this.sortConf = [];
-            this.pagingConf.page = 1;
+            if (this.pagingConf) {
+                this.pagingConf.page = 1;
+            }
         }
         else {
             this.setFilter([], true, false);
             this.setSort([], false);
-            this.setPage(1);
+            if (this.pagingConf) {
+                this.setPage(1);
+            }
         }
     }
     empty() {
         this.data = [];
-        return super.empty();
+        return super.emptyEmit();
     }
     count() {
         return this.filteredAndSorted.length;
@@ -2906,7 +2812,9 @@ class LocalDataSource extends DataSource {
             });
             this.sortConf = conf;
         }
-        super.setSort(conf, doEmit);
+        if (doEmit) {
+            super.setSortEmit();
+        }
         return this;
     }
     /**
@@ -2933,8 +2841,12 @@ class LocalDataSource extends DataSource {
             };
         }
         this.filterConf.andOperator = andOperator;
-        this.pagingConf.page = 1;
-        super.setFilter(conf, andOperator, doEmit);
+        if (this.pagingConf) {
+            this.pagingConf.page = 1;
+        }
+        if (doEmit) {
+            super.setFilterEmit();
+        }
         return this;
     }
     addFilter(fieldConf, andOperator = true, doEmit = true) {
@@ -2952,19 +2864,35 @@ class LocalDataSource extends DataSource {
             this.filterConf.filters.push(fieldConf);
         }
         this.filterConf.andOperator = andOperator;
-        super.addFilter(fieldConf, andOperator, doEmit);
+        if (doEmit) {
+            super.addFilterEmit();
+        }
         return this;
     }
-    setPaging(page, perPage, doEmit = true) {
-        this.pagingConf.page = page;
-        this.pagingConf.perPage = perPage;
-        super.setPaging(page, perPage, doEmit);
-        return this;
+    setPaging(page = 1, perPage, doEmit = true) {
+        if (this.pagingConf) {
+            this.pagingConf.page = page;
+            this.pagingConf.perPage = perPage;
+        }
+        else {
+            this.pagingConf = {
+                page, perPage
+            };
+        }
+        if (doEmit) {
+            super.setPagingEmit();
+        }
+        return;
     }
     setPage(page, doEmit = true) {
+        if (!this.pagingConf) {
+            return;
+        }
         this.pagingConf.page = page;
-        super.setPage(page, doEmit);
-        return this;
+        if (doEmit) {
+            super.setPageEmit();
+        }
+        return;
     }
     getSort() {
         return this.sortConf;
@@ -2979,7 +2907,11 @@ class LocalDataSource extends DataSource {
         data = this.filter(data);
         data = this.sort(data);
         this.filteredAndSorted = data.slice(0);
-        return this.paginate(data);
+        if (this.pagingConf) {
+            return this.paginate(data);
+        }
+        else
+            return data;
     }
     sort(data) {
         if (this.sortConf) {
@@ -3040,15 +2972,17 @@ class Ng2SmartTableComponent {
         this.editConfirm = new EventEmitter();
         this.createConfirm = new EventEmitter();
         this.rowHover = new EventEmitter();
+        this.tableClass = '';
+        this.tableId = '';
+        this.perPageSelect = [];
+        this.isHideHeader = false;
+        this.isHideSubHeader = false;
+        this.isPagerDisplay = false;
+        this.rowClassFunction = () => '';
         this.defaultSettings = {
             mode: 'inline',
             selectMode: 'single',
-            /**
-             * Points to an element in all data
-             *
-             * when < 0 all lines must be deselected
-             */
-            selectedRowIndex: 0,
+            selectedRowIndex: -1,
             switchPageToSelectedRowPage: false,
             hideHeader: false,
             hideSubHeader: false,
@@ -3087,11 +3021,7 @@ class Ng2SmartTableComponent {
             },
             noDataMessage: 'No data found',
             columns: {},
-            pager: {
-                display: true,
-                page: 1,
-                perPage: 10,
-            },
+            pager: false,
             rowClassFunction: () => '',
         };
     }
@@ -3112,10 +3042,9 @@ class Ng2SmartTableComponent {
         this.tableClass = this.grid.getSetting('attr.class');
         this.isHideHeader = this.grid.getSetting('hideHeader');
         this.isHideSubHeader = this.grid.getSetting('hideSubHeader');
-        this.isPagerDisplay = this.grid.getSetting('pager.display');
-        this.isPagerDisplay = this.grid.getSetting('pager.display');
+        this.isPagerDisplay = this.grid.getSetting('pager.display', false);
         this.perPageSelect = this.grid.getSetting('pager.perPageSelect');
-        this.rowClassFunction = this.grid.getSetting('rowClassFunction');
+        this.rowClassFunction = this.grid.getSetting('rowClassFunction', () => '');
     }
     multipleSelectRow(row) {
         this.grid.multipleSelectRow(row);
@@ -3134,7 +3063,7 @@ class Ng2SmartTableComponent {
         this.grid = new Grid(this.source, this.prepareSettings());
     }
     prepareSource() {
-        if (this.source instanceof DataSource) {
+        if (this.source instanceof LocalDataSource) {
             return this.source;
         }
         return new LocalDataSource();
@@ -3145,7 +3074,7 @@ class Ng2SmartTableComponent {
     emitUserSelectRow(row) {
         this.multiRowSelect.emit({
             data: row ? row.getData() : null,
-            isSelected: row ? row.getIsSelected() : null,
+            isSelected: row ? row.getIsSelected() : false,
             source: this.source,
             selected: this.grid.dataSet.getSelectedRowsData(),
         });
@@ -3231,117 +3160,9 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "15.2.9", ngImpor
                 }]
         }] });
 
-class ServerSourceConf {
-    constructor({ endPoint = '', sortFieldKey = '', sortDirKey = '', pagerPageKey = '', pagerLimitKey = '', filterFieldKey = '', totalKey = '', dataKey = '' } = {}) {
-        this.endPoint = endPoint ? endPoint : '';
-        this.sortFieldKey = sortFieldKey ? sortFieldKey : ServerSourceConf.SORT_FIELD_KEY;
-        this.sortDirKey = sortDirKey ? sortDirKey : ServerSourceConf.SORT_DIR_KEY;
-        this.pagerPageKey = pagerPageKey ? pagerPageKey : ServerSourceConf.PAGER_PAGE_KEY;
-        this.pagerLimitKey = pagerLimitKey ? pagerLimitKey : ServerSourceConf.PAGER_LIMIT_KEY;
-        this.filterFieldKey = filterFieldKey ? filterFieldKey : ServerSourceConf.FILTER_FIELD_KEY;
-        this.totalKey = totalKey ? totalKey : ServerSourceConf.TOTAL_KEY;
-        this.dataKey = dataKey ? dataKey : ServerSourceConf.DATA_KEY;
-    }
-}
-ServerSourceConf.SORT_FIELD_KEY = '_sort';
-ServerSourceConf.SORT_DIR_KEY = '_order';
-ServerSourceConf.PAGER_PAGE_KEY = '_page';
-ServerSourceConf.PAGER_LIMIT_KEY = '_limit';
-ServerSourceConf.FILTER_FIELD_KEY = '#field#_like';
-ServerSourceConf.TOTAL_KEY = 'x-total-count';
-ServerSourceConf.DATA_KEY = '';
-
-class ServerDataSource extends LocalDataSource {
-    constructor(http, conf = {}) {
-        super();
-        this.http = http;
-        this.lastRequestCount = 0;
-        this.conf = new ServerSourceConf(conf);
-        if (!this.conf.endPoint) {
-            throw new Error('At least endPoint must be specified as a configuration of the server data source.');
-        }
-    }
-    count() {
-        return this.lastRequestCount;
-    }
-    getElements() {
-        return this.requestElements()
-            .pipe(map(res => {
-            this.lastRequestCount = this.extractTotalFromResponse(res);
-            this.data = this.extractDataFromResponse(res);
-            return this.data;
-        })).toPromise();
-    }
-    /**
-     * Extracts array of data from server response
-     * @param res
-     * @returns {any}
-     */
-    extractDataFromResponse(res) {
-        const rawData = res.body;
-        const data = !!this.conf.dataKey ? getDeepFromObject(rawData, this.conf.dataKey, []) : rawData;
-        if (data instanceof Array) {
-            return data;
-        }
-        throw new Error(`Data must be an array.
-    Please check that data extracted from the server response by the key '${this.conf.dataKey}' exists and is array.`);
-    }
-    /**
-     * Extracts total rows count from the server response
-     * Looks for the count in the heders first, then in the response body
-     * @param res
-     * @returns {any}
-     */
-    extractTotalFromResponse(res) {
-        if (res.headers.has(this.conf.totalKey)) {
-            return +res.headers.get(this.conf.totalKey);
-        }
-        else {
-            const rawData = res.body;
-            return getDeepFromObject(rawData, this.conf.totalKey, 0);
-        }
-    }
-    requestElements() {
-        let httpParams = this.createRequesParams();
-        return this.http.get(this.conf.endPoint, { params: httpParams, observe: 'response' });
-    }
-    createRequesParams() {
-        let httpParams = new HttpParams();
-        httpParams = this.addSortRequestParams(httpParams);
-        httpParams = this.addFilterRequestParams(httpParams);
-        return this.addPagerRequestParams(httpParams);
-    }
-    addSortRequestParams(httpParams) {
-        if (this.sortConf) {
-            this.sortConf.forEach((fieldConf) => {
-                httpParams = httpParams.set(this.conf.sortFieldKey, fieldConf.field);
-                httpParams = httpParams.set(this.conf.sortDirKey, fieldConf.direction.toUpperCase());
-            });
-        }
-        return httpParams;
-    }
-    addFilterRequestParams(httpParams) {
-        if (this.filterConf.filters) {
-            this.filterConf.filters.forEach((fieldConf) => {
-                if (fieldConf['search']) {
-                    httpParams = httpParams.set(this.conf.filterFieldKey.replace('#field#', fieldConf['field']), fieldConf['search']);
-                }
-            });
-        }
-        return httpParams;
-    }
-    addPagerRequestParams(httpParams) {
-        if (this.pagingConf && this.pagingConf['page'] && this.pagingConf['perPage']) {
-            httpParams = httpParams.set(this.conf.pagerPageKey, this.pagingConf['page']);
-            httpParams = httpParams.set(this.conf.pagerLimitKey, this.pagingConf['perPage']);
-        }
-        return httpParams;
-    }
-}
-
 /**
  * Generated bundle index. Do not edit.
  */
 
-export { Cell, DefaultEditor, DefaultFilter, LocalDataSource, Ng2SmartTableComponent, Ng2SmartTableModule, ServerDataSource };
+export { Cell, DefaultEditor, DefaultFilter, LocalDataSource, Ng2SmartTableComponent, Ng2SmartTableModule };
 //# sourceMappingURL=den4ik92-ng2-smart-table.mjs.map

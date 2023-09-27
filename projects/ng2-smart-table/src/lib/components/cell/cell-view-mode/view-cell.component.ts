@@ -14,6 +14,5 @@ import { Cell } from '../../../lib/data-set/cell';
     `,
 })
 export class ViewCellComponent {
-
-  @Input() cell: Cell;
+  @Input() cell!: Cell;
 }

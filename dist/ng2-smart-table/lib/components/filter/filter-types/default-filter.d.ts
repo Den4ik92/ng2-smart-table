@@ -4,7 +4,7 @@ import { Column } from '../../../lib/data-set/column';
 import * as i0 from "@angular/core";
 export declare class DefaultFilter implements Filter, OnDestroy {
     delay: number;
-    changesSubscription: Subscription;
+    changesSubscription?: Subscription;
     query: string;
     inputClass: string;
     column: Column;

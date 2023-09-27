@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs';
-import { SmartTableFilterConf, SmartTableFilterItem, SmartTableOnChangedEvent, SmartTableOnChangedEventName, SmartTableOnChangedEventType, SmartTablePagingItem, SmartTableSortItem } from '../interfaces/smart-table.models';
+import { SmartTableFilterConf, SmartTableOnChangedEvent, SmartTableOnChangedEventName, SmartTableOnChangedEventType, SmartTablePagingItem, SmartTableSortItem } from '../interfaces/smart-table.models';
 
 export abstract class DataSource<T=any> {
 
@@ -13,14 +13,14 @@ export abstract class DataSource<T=any> {
   abstract getElements(): Promise<T[]>;
   abstract getSort(): SmartTableSortItem[];
   abstract getFilter(): SmartTableFilterConf;
-  abstract getPaging(): SmartTablePagingItem;
+  abstract getPaging(): SmartTablePagingItem | false;
   abstract count(): number;
 
   refresh(): void {
     this.emitOnChanged(SmartTableOnChangedEventName.refresh);
   }
 
-  load<T>(data: Array<T>): Promise<true> {
+  loadEmit<T>(): Promise<true> {
     this.emitOnChanged(SmartTableOnChangedEventName.load);
     return Promise.resolve(true);
   }
@@ -41,69 +41,59 @@ export abstract class DataSource<T=any> {
     return this.onRemovedSource.asObservable();
   }
 
-  prepend(element: T): Promise<true> {
+  prependEmit(element: T): Promise<true> {
     this.emitOnAdded(element);
     this.emitOnChanged(SmartTableOnChangedEventName.prepend);
     return Promise.resolve(true);
   }
 
-  append(element: T): Promise<true> {
+  appendEmit(element: T): Promise<true> {
     this.emitOnAdded(element);
     this.emitOnChanged(SmartTableOnChangedEventName.append);
     return Promise.resolve(true);
   }
 
-  add(element: T): Promise<true> {
+  addEmit(element: T): Promise<true> {
     this.emitOnAdded(element);
     this.emitOnChanged(SmartTableOnChangedEventName.add);
     return Promise.resolve(true);
   }
 
-  remove(element: T): Promise<true> {
+  removeEmit(element: T): Promise<true> {
     this.emitOnRemoved(element);
     this.emitOnChanged(SmartTableOnChangedEventName.remove);
     return Promise.resolve(true);
   }
 
-  update(element: T, values: any): Promise<true> {
+  updateEmit(element: T): Promise<true> {
     this.emitOnUpdated(element);
     this.emitOnChanged(SmartTableOnChangedEventName.update);
     return Promise.resolve(true);
   }
 
-  empty(): Promise<true> {
+  emptyEmit(): Promise<true> {
     this.emitOnChanged(SmartTableOnChangedEventName.empty);
     return Promise.resolve(true);
   }
 
-  setSort(conf: Array<any>, doEmit?: boolean) {
-    if (doEmit) {
-      this.emitOnChanged(SmartTableOnChangedEventName.sort);
-    }
+  setSortEmit() {
+    this.emitOnChanged(SmartTableOnChangedEventName.sort);
   }
 
-  setFilter(conf: Array<any>, andOperator?: boolean, doEmit?: boolean) {
-    if (doEmit) {
-      this.emitOnChanged(SmartTableOnChangedEventName.filter);
-    }
+  setFilterEmit() {
+    this.emitOnChanged(SmartTableOnChangedEventName.filter);
   }
 
-  addFilter(fieldConf: {}, andOperator?: boolean, doEmit?: boolean) {
-    if (doEmit) {
-      this.emitOnChanged(SmartTableOnChangedEventName.filter);
-    }
+  addFilterEmit() {
+    this.emitOnChanged(SmartTableOnChangedEventName.filter);
   }
 
-  setPaging(page: number, perPage: number, doEmit?: boolean) {
-    if (doEmit) {
-      this.emitOnChanged(SmartTableOnChangedEventName.paging);
-    }
+  setPagingEmit() {
+    this.emitOnChanged(SmartTableOnChangedEventName.paging);
   }
 
-  setPage(page: number, doEmit?: boolean) {
-    if (doEmit) {
-      this.emitOnChanged(SmartTableOnChangedEventName.page);
-    }
+  setPageEmit() {
+    this.emitOnChanged(SmartTableOnChangedEventName.page);
   }
 
   protected emitOnRemoved(element: T) {

@@ -20,20 +20,22 @@ import { DefaultFilter } from './default-filter';
   `,
 })
 export class SelectFilterComponent extends DefaultFilter implements OnInit {
-
-  @ViewChild('inputControl', { read: NgControl, static: true }) inputControl: NgControl;
+  @ViewChild('inputControl', { read: NgControl, static: true }) inputControl!: NgControl;
 
   constructor() {
     super();
   }
 
   ngOnInit() {
-    this.inputControl.valueChanges
+    if (this.inputControl.valueChanges) {
+      this.inputControl.valueChanges
       .pipe(
         skip(1),
         distinctUntilChanged(),
         debounceTime(this.delay)
       )
       .subscribe((value: string) => this.setFilter());
+    }
+    
   }
 }

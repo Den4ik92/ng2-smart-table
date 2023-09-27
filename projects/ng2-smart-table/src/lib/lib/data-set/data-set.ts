@@ -1,16 +1,16 @@
 import { Row } from './row';
 import { Column } from './column';
+import { SmartTableColumnSettings } from '../interfaces/smart-table.models';
 
 export class DataSet {
-  newRow: Row;
+  newRow!: Row;
 
   protected data: Array<any> = [];
   protected columns: Array<Column> = [];
   protected rows: Array<Row> = [];
   protected selectedRows = new Set<Row>();
-  protected willSelect: string;
 
-  constructor(data: Array<any> = [], protected columnSettings: Object) {
+  constructor(data: any[] = [], protected columnSettings: SmartTableColumnSettings) {
     this.createColumns(columnSettings);
     this.setData(data);
 
@@ -38,7 +38,7 @@ export class DataSet {
     return this.rows[this.rows.length - 1];
   }
 
-  findRowByData(data: any): Row {
+  findRowByData(data: any): Row | undefined {
     return this.rows.find((row: Row) => row.getData() === data);
   }
 

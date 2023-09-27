@@ -6,8 +6,8 @@ import { Cell } from '../../../lib/data-set/cell';
   template: '',
 })
 export class DefaultEditor implements Editor {
-  @Input() cell: Cell;
-  @Input() inputClass: string;
+  @Input() cell!: Cell;
+  @Input() inputClass: string = '';
 
   @Output() onStopEditing = new EventEmitter<any>();
   @Output() onEdited = new EventEmitter<any>();

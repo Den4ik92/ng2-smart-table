@@ -1,9 +1,9 @@
-import { DataSource } from "../data-source/data-source";
+import { LocalDataSource } from "../data-source/local/local.data-source";
 import { Deferred } from "../helpers";
 
 export interface SelectOption {
-  title: string;
-  value: number | string;
+	title: string;
+	value: any;
 }
 
 interface ObjectAny {
@@ -22,40 +22,36 @@ export interface SmartTableSettings<T extends ObjectAny = any> {
 		inputClass: string;
 	};
 	edit?:
-		| {
-				inputClass?: string;
-				editButtonContent?: string;
-				saveButtonContent?: string;
-				cancelButtonContent?: string;
-				confirmSave?: boolean;
-		  }
-		| false;
+	| {
+		inputClass?: string;
+		editButtonContent?: string;
+		saveButtonContent?: string;
+		cancelButtonContent?: string;
+		confirmSave?: boolean;
+	}
+	| false;
 	add?:
-		| {
-				inputClass?: string;
-				addButtonContent?: string;
-				createButtonContent?: string;
-				cancelButtonContent?: string;
-				confirmCreate?: boolean;
-		  }
-		| false;
+	| {
+		inputClass?: string;
+		addButtonContent?: string;
+		createButtonContent?: string;
+		cancelButtonContent?: string;
+		confirmCreate?: boolean;
+	}
+	| false;
 	delete?:
-		| {
-				deleteButtonContent?: string;
-				confirmDelete?: boolean;
-		  }
-		| false;
+	| {
+		deleteButtonContent?: string;
+		confirmDelete?: boolean;
+	}
+	| false;
 	attr?: {
 		id?: string;
 		class?: string;
 	};
 	noDataMessage?: string;
-	columns: { [key in keyof T]?: SmartTableColumn<T> };
-	pager?: {
-		display: boolean;
-		page?: number;
-		perPage: number;
-	} | false;
+	columns: { [key in keyof T]?: SmartTableColumnSettings<T> };
+	pager?: SmartTablePagerSettings | false;
 	rowClassFunction?: (row: { data: T }) => string;
 }
 
@@ -73,7 +69,9 @@ export interface SmartTableCustomAction {
 	title: string; // insert html content to action button
 }
 
-export type SmartTableColumn<T> = SmartTableTextHtmlColumn<T> | SmartTableCustomColumn<T>;
+export type SmartTableColumnSettingsTypes = 'text' | 'html' | 'custom'
+
+export type SmartTableColumnSettings<T=any> = SmartTableTextHtmlColumn<T> | SmartTableCustomColumn<T>;
 
 interface SmartTableDefaultColumn<T> {
 	title: string;
@@ -100,12 +98,22 @@ interface SmartTableCustomColumn<T> extends SmartTableDefaultColumn<T> {
 	renderComponent: any;
 }
 
+export type SmartTableEditorAndFilterTypes = 'text' | 'textarea' | 'list' | 'custom' | 'checkbox';
+
 export type SmartTableEditorAndFilter =
-	| { type: 'text' | 'textarea' }
+	| SmartTableTextEditor
+	| SmartTableTextAreaEditor
 	| SmartTableEditorList
-	| SmartTableEditorCompleter
 	| SmartTableEditorCheckbox
 	| SmartTableEditorCustom;
+
+interface SmartTableTextEditor {
+	type: 'text' 
+}
+
+interface SmartTableTextAreaEditor {
+	type: 'textarea' 
+}
 
 interface SmartTableEditorList {
 	type: 'list';
@@ -127,19 +135,26 @@ interface SmartTableEditorCompleter {
 	};
 }
 
+interface SmartTableEditorCheckbox {
+	type: 'checkbox';
+	config?: {
+		true: any;
+		false: any;
+		resetText?: string;
+	};
+}
+
 interface SmartTableEditorCustom {
 	type: 'custom';
 	component: any;
 	config?: any;
 }
 
-export interface SmartTableEditorCheckbox {
-	type: 'checkbox';
-	config?: {
-		true: string;
-		false: string;
-		resetText?: string;
-	};
+interface SmartTablePagerSettings {
+	display: boolean;
+	page?: number;
+	perPage: number;
+	perPageSelect?: number[];
 }
 
 export interface SmartTableFilterItem {
@@ -148,7 +163,7 @@ export interface SmartTableFilterItem {
 	filter?: any;
 }
 
-export interface SmartTablePagingItem { 
+export interface SmartTablePagingItem {
 	page: number;
 	perPage: number;
 }
@@ -164,27 +179,27 @@ export interface SmartTableSortItem {
 interface SmartTableDefaultEvent<T> {
 	confirm: Deferred;
 	data: T;
-	source: DataSource;
+	source: LocalDataSource;
 }
 
-export type SmartTableConfirmDeleteEvent<T=any> = SmartTableDefaultEvent<T>;
+export type SmartTableConfirmDeleteEvent<T = any> = SmartTableDefaultEvent<T>;
 
-export type SmartTableRowClickedEvent<T=any> = Omit<SmartTableDefaultEvent<T>, "confirm">
+export type SmartTableRowClickedEvent<T = any> = Omit<SmartTableDefaultEvent<T>, "confirm">
 
-export interface SmartTableCustomEvent<T=any> extends Omit<SmartTableDefaultEvent<T>, "confirm"> {
+export interface SmartTableCustomEvent<T = any> extends Omit<SmartTableDefaultEvent<T>, "confirm"> {
 	action: string;
 }
 
-export interface SmartTableRowSelectEvent<T=any> extends Omit<SmartTableDefaultEvent<T>, "confirm"> {
+export interface SmartTableRowSelectEvent<T = any> extends Omit<SmartTableDefaultEvent<T>, "confirm"> {
 	isSelected: boolean;
 	selected: T[];
 }
 
-export interface SmartTableConfirmEditEvent<T=any> extends SmartTableDefaultEvent<T> {
-	newData: T;
+export interface SmartTableConfirmEditEvent<T = any, N = T> extends SmartTableDefaultEvent<T> {
+	newData: N;
 }
 
-export interface SmartTableCreateConfirm<T=any> extends Omit<SmartTableDefaultEvent<T>, "data"> {
+export interface SmartTableCreateConfirm<T = any> extends Omit<SmartTableDefaultEvent<T>, "data"> {
 	newData: T;
 }
 
@@ -213,7 +228,7 @@ export interface SmartTableOnChangedEvent<T extends ObjectAny = any> {
 	action: SmartTableOnChangedEventType;
 	elements: T[];
 	filter: SmartTableFilterConf;
-	paging: SmartTablePagingItem;
+	paging: SmartTablePagingItem | false;
 	sort: SmartTableSortItem[];
 }
 

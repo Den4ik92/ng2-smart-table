@@ -25,12 +25,11 @@ import { Subscription } from 'rxjs';
     `,
 })
 export class FilterComponent extends FilterDefault implements OnChanges {
-  query: string = '';
-  protected dataChangedSub: Subscription;
+  protected dataChangedSub?: Subscription;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.source) {
-      if (!changes.source.firstChange) {
+    if (changes['source']) {
+      if (!changes['source'].firstChange && this.dataChangedSub) {
         this.dataChangedSub.unsubscribe();
       }
       this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {

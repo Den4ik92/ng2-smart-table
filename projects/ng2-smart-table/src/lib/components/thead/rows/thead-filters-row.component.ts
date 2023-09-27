@@ -1,8 +1,8 @@
 import {Component, Input, Output, EventEmitter, OnChanges} from '@angular/core';
 
 import { Grid } from '../../../lib/grid';
-import { DataSource } from '../../../lib/data-source/data-source';
 import { Column } from "../../../lib/data-set/column";
+import { LocalDataSource } from '../../../lib/data-source/local/local.data-source';
 
 @Component({
   selector: '[ng2-st-thead-filters-row]',
@@ -28,22 +28,22 @@ import { Column } from "../../../lib/data-set/column";
 })
 export class TheadFitlersRowComponent implements OnChanges {
 
-  @Input() grid: Grid;
-  @Input() source: DataSource;
+  @Input() grid!: Grid;
+  @Input() source!: LocalDataSource;
 
   @Output() create = new EventEmitter<any>();
   @Output() filter = new EventEmitter<any>();
 
-  isMultiSelectVisible: boolean;
-  showActionColumnLeft: boolean;
-  showActionColumnRight: boolean;
-  filterInputClass: string;
+  isMultiSelectVisible: boolean = false;
+  showActionColumnLeft: boolean = false;
+  showActionColumnRight: boolean = false;
+  filterInputClass: string = '';
 
   ngOnChanges() {
     this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
     this.showActionColumnLeft = this.grid.showActionColumn('left');
     this.showActionColumnRight = this.grid.showActionColumn('right');
-    this.filterInputClass = this.grid.getSetting('filter.inputClass');
+    this.filterInputClass = this.grid.getSetting('filter.inputClass', '');
   }
 
   getVisibleColumns(columns: Array<Column>): Array<Column> {

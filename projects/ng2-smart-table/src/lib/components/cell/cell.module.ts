@@ -7,7 +7,6 @@ import { CustomEditComponent } from './cell-edit-mode/custom-edit.component';
 import { DefaultEditComponent } from './cell-edit-mode/default-edit.component';
 import { EditCellComponent } from './cell-edit-mode/edit-cell.component';
 import { CheckboxEditorComponent } from './cell-editors/checkbox-editor.component';
-import { CompleterEditorComponent } from './cell-editors/completer-editor.component';
 import { InputEditorComponent } from './cell-editors/input-editor.component';
 import { SelectEditorComponent } from './cell-editors/select-editor.component';
 import { TextareaEditorComponent } from './cell-editors/textarea-editor.component';
@@ -24,7 +23,6 @@ const CELL_COMPONENTS = [
   DefaultEditComponent,
   EditCellComponent,
   CheckboxEditorComponent,
-  CompleterEditorComponent,
   InputEditorComponent,
   SelectEditorComponent,
   TextareaEditorComponent,

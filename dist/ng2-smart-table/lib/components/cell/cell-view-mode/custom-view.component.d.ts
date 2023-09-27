@@ -11,7 +11,6 @@ export declare class CustomViewComponent implements OnInit, OnDestroy {
     ngOnInit(): void;
     ngOnDestroy(): void;
     protected createCustomComponent(): void;
-    protected callOnComponentInit(): void;
     protected patchInstance(): void;
     protected getPatch(): ViewCell;
     static ɵfac: i0.ɵɵFactoryDeclaration<CustomViewComponent, never>;

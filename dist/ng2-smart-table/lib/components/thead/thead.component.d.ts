@@ -1,10 +1,10 @@
+import { LocalDataSource } from './../../lib/data-source/local/local.data-source';
 import { EventEmitter, OnChanges } from '@angular/core';
 import { Grid } from '../../lib/grid';
-import { DataSource } from '../../lib/data-source/data-source';
 import * as i0 from "@angular/core";
 export declare class Ng2SmartTableTheadComponent implements OnChanges {
     grid: Grid;
-    source: DataSource;
+    source: LocalDataSource;
     createConfirm: EventEmitter<any>;
     sort: EventEmitter<any>;
     selectAllRows: EventEmitter<any>;

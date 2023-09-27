@@ -5,11 +5,11 @@ import { Directive, Input, Output, EventEmitter, HostListener, OnInit } from '@a
 })
 export class ScrollPositionDirective implements OnInit {
 
-  @Input() maxHeight: number;
+  @Input() maxHeight!: number;
 
   @Output() scrollChange = new EventEmitter<any>();
 
-  private isScrolled: boolean;
+  private isScrolled: boolean = true;
 
   ngOnInit() {
     this.onWindowScroll();

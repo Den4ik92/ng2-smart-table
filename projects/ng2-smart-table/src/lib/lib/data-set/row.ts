@@ -6,18 +6,18 @@ export class Row {
 
   isSelected: boolean = false;
   isInEditing: boolean = false;
-  cells: Array<Cell> = [];
+  cells: Cell[] = [];
 
 
   constructor(public index: number, protected data: any, protected _dataSet: DataSet) {
     this.process();
   }
 
-  getCell(column: Column): Cell {
+  getCell(column: Column): Cell | undefined {
     return this.cells.find(el => el.getColumn() === column);
   }
 
-  getCells() {
+  getCells(): Cell[] {
     return this.cells;
   }
 
@@ -35,12 +35,12 @@ export class Row {
     return values;
   }
 
-  setData(data: any): any {
+  setData<T=any>(data: T): void {
     this.data = data;
     this.process();
   }
 
-  process() {
+  process(): void {
     this.cells = [];
     this._dataSet.getColumns().forEach((column: Column) => {
       const cell = this.createCell(column);

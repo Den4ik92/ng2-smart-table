@@ -1,9 +1,10 @@
+import { SmartTableColumnSettings, SmartTableColumnSettingsTypes, SmartTableEditorAndFilterTypes, SmartTableSortDirection } from './../interfaces/smart-table.models';
+import { SmartTableEditorAndFilter } from '../interfaces/smart-table.models';
 import { DataSet } from './data-set';
 
 export class Column {
-
   title: string = '';
-  type: string = '';
+  type: SmartTableColumnSettingsTypes = 'text';
   class: string = '';
   width: string = '';
   hide: boolean = false;
@@ -11,38 +12,36 @@ export class Column {
   isEditable: boolean = true;
   isAddable: boolean = true;
   isFilterable: boolean = false;
-  sortDirection: string = '';
-  defaultSortDirection: string = '';
-  editor: { type: string, config: any, component: any } = { type: '', config: {}, component: null };
-  filter: { type: string, config: any, component: any } = { type: '', config: {}, component: null };
-  renderComponent: any = null;
-  compareFunction: Function;
-  valuePrepareFunction: Function;
-  filterFunction: Function;
-  onComponentInitFunction: Function;
+  sortDirection: SmartTableSortDirection = 'asc';
+  defaultSortDirection: SmartTableSortDirection | false = false;
+  editor: SmartTableEditorAndFilter | false = false;
+  filter: SmartTableEditorAndFilter | false = false;
+  renderComponent: any;
+  compareFunction: Function | undefined;
+  valuePrepareFunction: Function | undefined;
+  filterFunction: Function | undefined;
 
-  constructor(public id: string, protected settings: any, protected dataSet: DataSet) {
+  constructor(public id: string, protected settings: SmartTableColumnSettings, protected dataSet: DataSet) {
     this.process();
   }
 
-  getOnComponentInitFunction(): Function {
-    return this.onComponentInitFunction;
-  }
-
-  getCompareFunction(): Function {
+  getCompareFunction(): Function | undefined {
     return this.compareFunction;
   }
 
-  getValuePrepareFunction(): Function {
+  getValuePrepareFunction(): Function | undefined  {
     return this.valuePrepareFunction;
   }
 
-  getFilterFunction(): Function {
+  getFilterFunction(): Function | undefined  {
     return this.filterFunction;
   }
 
   getConfig(): any {
-    return this.editor && this.editor.config;
+    if (this.editor && (this.editor.type === 'checkbox' || this.editor.type === 'custom' || this.editor.type === 'list')) {
+      return this.editor?.config
+    }
+    return false
   }
 
   getFilterType(): any {
@@ -50,43 +49,40 @@ export class Column {
   }
 
   getFilterConfig(): any {
-    return this.filter && this.filter.config;
+    if (this.filter && (this.filter.type === 'checkbox' || this.filter.type === 'custom' || this.filter.type === 'list')) {
+      return this.filter?.config
+    }
+    return false;
   }
 
   protected process() {
-    this.title = this.settings['title'];
-    this.class = this.settings['class'];
-    this.width = this.settings['width'];
-    this.hide = !!this.settings['hide'];
-    this.type = this.prepareType();
-    this.editor = this.settings['editor'];
-    this.filter = this.settings['filter'];
-    this.renderComponent = this.settings['renderComponent'];
-
-    this.isFilterable = typeof this.settings['filter'] === 'undefined' ? true : !!this.settings['filter'];
-    this.defaultSortDirection = ['asc', 'desc']
-      .indexOf(this.settings['sortDirection']) !== -1 ? this.settings['sortDirection'] : '';
-    this.isSortable = typeof this.settings['sort'] === 'undefined' ? true : !!this.settings['sort'];
-    this.isEditable = typeof this.settings['editable'] === 'undefined' ? true : !!this.settings['editable'];
-    this.isAddable=typeof this.settings['addable'] === 'undefined' ? true : !!this.settings['addable'];
+    this.title = this.settings.title;
+    this.class = this.settings.class || '';
+    this.width = this.settings.width || '';
+    this.hide = !!this.settings.hide;
+    this.type = this.settings.type;
+    if (this.settings?.editor) {
+      this.editor = this.settings.editor;
+    }    
+    if (this.settings?.filter) {
+      this.filter = this.settings.filter;
+    }
+    if (this.settings.type === 'custom' && this.settings.renderComponent) {
+      this.renderComponent = this.settings.renderComponent;
+    }
+    this.isFilterable = typeof this.settings.filter === 'undefined' ? true : !!this.settings['filter'];
+    this.defaultSortDirection = this.settings?.sortDirection || false;
+    this.isSortable = typeof this.settings.sort === 'undefined' ? true : this.settings.sort;
+    this.isEditable = typeof this.settings.editable === 'undefined' ? true : this.settings.editable;
+    this.isAddable=typeof this.settings.addable === 'undefined' ? true : this.settings.addable;
     this.sortDirection = this.prepareSortDirection();
 
-    this.compareFunction = this.settings['compareFunction'];
-    this.valuePrepareFunction = this.settings['valuePrepareFunction'];
-    this.filterFunction = this.settings['filterFunction'];
-    this.onComponentInitFunction = this.settings['onComponentInitFunction'];
+    this.compareFunction = this.settings.compareFunction;
+    this.valuePrepareFunction = this.settings.valuePrepareFunction;
+    this.filterFunction = this.settings.filterFunction;
   }
 
-  prepareType(): string {
-    return this.settings['type'] || this.determineType();
-  }
-
-  prepareSortDirection(): string {
-    return this.settings['sort'] === 'desc' ? 'desc' : 'asc';
-  }
-
-  determineType(): string {
-    // TODO: determine type by data
-    return 'text';
+  prepareSortDirection(): SmartTableSortDirection {
+    return this.defaultSortDirection === 'desc' ? 'desc' : 'asc';
   }
 }
