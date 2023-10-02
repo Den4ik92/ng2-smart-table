@@ -103,17 +103,13 @@ export type SmartTableEditorAndFilterTypes = 'text' | 'textarea' | 'list' | 'cus
 
 export type SmartTableEditorAndFilter =
 	| SmartTableTextEditor
-	| SmartTableTextAreaEditor
 	| SmartTableEditorList
 	| SmartTableEditorCheckbox
 	| SmartTableEditorCustom;
 
 interface SmartTableTextEditor {
-	type: 'text' 
-}
-
-interface SmartTableTextAreaEditor {
-	type: 'textarea' 
+	type: 'text' | 'textarea';
+	config: any;
 }
 
 interface SmartTableEditorList {
@@ -124,6 +120,7 @@ interface SmartTableEditorList {
 	};
 }
 
+//deprecated
 interface SmartTableEditorCompleter {
 	type: 'completer';
 	config: {

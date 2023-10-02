@@ -87,12 +87,10 @@ interface SmartTableCustomColumn<T> extends SmartTableDefaultColumn<T> {
     renderComponent: any;
 }
 export type SmartTableEditorAndFilterTypes = 'text' | 'textarea' | 'list' | 'custom' | 'checkbox';
-export type SmartTableEditorAndFilter = SmartTableTextEditor | SmartTableTextAreaEditor | SmartTableEditorList | SmartTableEditorCheckbox | SmartTableEditorCustom;
+export type SmartTableEditorAndFilter = SmartTableTextEditor | SmartTableEditorList | SmartTableEditorCheckbox | SmartTableEditorCustom;
 interface SmartTableTextEditor {
-    type: 'text';
-}
-interface SmartTableTextAreaEditor {
-    type: 'textarea';
+    type: 'text' | 'textarea';
+    config: any;
 }
 interface SmartTableEditorList {
     type: 'list';
