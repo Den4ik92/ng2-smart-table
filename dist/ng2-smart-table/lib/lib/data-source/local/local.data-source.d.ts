@@ -9,6 +9,7 @@ export declare class LocalDataSource<T = any> extends DataSource<T> {
     constructor(data?: T[]);
     load(data: any): Promise<true>;
     prepend(element: T): Promise<true>;
+    appendMany(elements: T[]): Promise<true>;
     append(element: T): Promise<true>;
     add(element: T): Promise<true>;
     remove(element: T): Promise<true>;

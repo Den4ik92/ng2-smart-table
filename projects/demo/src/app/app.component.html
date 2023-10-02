@@ -1,1 +1,3 @@
-<ng2-smart-table [settings]="settings" (rowClicked)="clickEvent($event)" (multiRowSelect)="multiRowSelect($event)" [source]="source"></ng2-smart-table>
+
+<ng2-smart-table [settings]="settings" (listScrollEnd)="listScrollEnd()" (rowClicked)="clickEvent($event)" (multiRowSelect)="multiRowSelect($event)" [source]="source"></ng2-smart-table>
+  

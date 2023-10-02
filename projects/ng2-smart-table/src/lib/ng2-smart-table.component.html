@@ -8,7 +8,8 @@
                       (selectAllRows)="onSelectAllRows()">
   </thead>
 
-  <tbody ng2-st-tbody [grid]="grid"
+  <tbody ng2-st-tbody [ngStyle]="{'max-height': this.grid.getSetting('bodyHeight', '85vh')}"
+                      [grid]="grid"
                       [source]="source"
                       [deleteConfirm]="deleteConfirm"
                       [editConfirm]="editConfirm"
@@ -17,6 +18,7 @@
                       (editCancel)="editCancel.emit($event)"
                       (delete)="delete.emit($event)"
                       (custom)="custom.emit($event)"
+                      (scroll)="onScroll($any($event))"
                       (userClickedRow)="emitUserRowClicked($event)"
                       (multipleSelectRow)="multipleSelectRow($event)">
   </tbody>

@@ -1,6 +1,6 @@
 import { LocalDataSource } from './../../../ng2-smart-table/src/lib/lib/data-source/local/local.data-source';
 import { SmartTableSettings } from './../../../ng2-smart-table/src/lib/lib/interfaces/smart-table.models';
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -9,11 +9,9 @@ import { Component } from '@angular/core';
 export class AppComponent {
 
   settings: SmartTableSettings = {
-    pager: {
-      display:true,
-      perPage: 5,
-    },
+    pager: false,
     selectMode: 'multi',
+    bodyHeight: 'calc(100vh - 200px)',
     columns: {
       id: {
         title: 'ID',
@@ -103,8 +101,28 @@ export class AppComponent {
     },
   ];
 
-  source = new LocalDataSource(this.data)
+  source = new LocalDataSource(this.getGeneratedData(200))
 
+  getGeneratedData(count = 100, startId: number = 0): any {
+    const generatedData: any[] = []
+    for (let i= 0; i<=count; i++) {
+      const userIndex = this.randomInteger(0,10)
+      generatedData.push({...this.data[userIndex], id: i + startId})
+    }
+    return generatedData
+  }
+
+  listScrollEnd(): void {
+    const count = this.source.count();
+    const data = this.getGeneratedData(100, count)
+
+    this.source.appendMany(data)
+  }
+
+  randomInteger(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  
   clickEvent(event:any){
      console.log(event);
   }  

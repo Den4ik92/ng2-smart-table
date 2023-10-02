@@ -31,6 +31,12 @@ export class LocalDataSource<T = any> extends DataSource<T> {
     this.reset(true);
     this.data.unshift(element);
     return super.prependEmit(element);
+  }  
+  
+  appendMany(elements: T[]): Promise<true> {
+    this.reset(true);
+    this.data = [...this.data, ...elements];
+    return super.loadEmit();
   }
 
   append(element: T): Promise<true> {
