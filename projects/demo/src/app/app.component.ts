@@ -11,7 +11,6 @@ export class AppComponent {
   settings: SmartTableSettings = {
     pager: false,
     selectMode: 'multi',
-    bodyHeight: 'calc(100vh - 200px)',
     columns: {
       id: {
         title: 'ID',

@@ -9,7 +9,6 @@ export declare class Ng2SmartTableComponent implements OnChanges {
     settings: SmartTableSettings;
     multiRowSelect: EventEmitter<SmartTableRowSelectEvent<any>>;
     rowClicked: EventEmitter<SmartTableRowClickedEvent<any>>;
-    listScrollEnd: EventEmitter<boolean>;
     delete: EventEmitter<any>;
     edit: EventEmitter<any>;
     editCancel: EventEmitter<any>;
@@ -26,7 +25,6 @@ export declare class Ng2SmartTableComponent implements OnChanges {
     isHideSubHeader: boolean;
     isPagerDisplay: boolean;
     rowClassFunction: Function;
-    private currentScrollTop;
     grid: Grid;
     defaultSettings: SmartTableSettings;
     ngOnChanges(changes: {
@@ -36,13 +34,10 @@ export declare class Ng2SmartTableComponent implements OnChanges {
     protected onSelectAllRows(): void;
     protected onSelectRow(row: Row, state: boolean): void;
     protected emitUserRowClicked(row: Row): void;
-    protected onScroll(event: Event & {
-        target: HTMLElement;
-    }): void;
     private initGrid;
     private prepareSource;
     private prepareSettings;
     private emitUserSelectRow;
     static ɵfac: i0.ɵɵFactoryDeclaration<Ng2SmartTableComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<Ng2SmartTableComponent, "ng2-smart-table", never, { "source": "source"; "settings": "settings"; }, { "multiRowSelect": "multiRowSelect"; "rowClicked": "rowClicked"; "listScrollEnd": "listScrollEnd"; "delete": "delete"; "edit": "edit"; "editCancel": "editCancel"; "create": "create"; "custom": "custom"; "deleteConfirm": "deleteConfirm"; "editConfirm": "editConfirm"; "createConfirm": "createConfirm"; "rowHover": "rowHover"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<Ng2SmartTableComponent, "ng2-smart-table", never, { "source": "source"; "settings": "settings"; }, { "multiRowSelect": "multiRowSelect"; "rowClicked": "rowClicked"; "delete": "delete"; "edit": "edit"; "editCancel": "editCancel"; "create": "create"; "custom": "custom"; "deleteConfirm": "deleteConfirm"; "editConfirm": "editConfirm"; "createConfirm": "createConfirm"; "rowHover": "rowHover"; }, never, never, false, never>;
 }

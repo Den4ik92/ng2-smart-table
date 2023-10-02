@@ -25,17 +25,9 @@
       max-width: 100%;
       word-break: normal;
       word-break: keep-all;
-
-      tbody {
-        display: block;
-        max-height: 85vh;
-        overflow-y: scroll;
-      }
+      overflow:auto;
 
       tr {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
         th {
           font-weight: bold;
         }

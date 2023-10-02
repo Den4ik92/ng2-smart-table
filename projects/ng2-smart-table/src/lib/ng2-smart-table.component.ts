@@ -1,4 +1,4 @@
-import { Component, Input, Output, SimpleChange, EventEmitter, OnChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, SimpleChange, EventEmitter, OnChanges } from '@angular/core';
 
 import { Grid } from './lib/grid';
 import { Row } from './lib/data-set/row';
@@ -17,7 +17,6 @@ export class Ng2SmartTableComponent implements OnChanges {
 
   @Output() multiRowSelect = new EventEmitter<SmartTableRowSelectEvent>();
   @Output() rowClicked = new EventEmitter<SmartTableRowClickedEvent>();
-  @Output() listScrollEnd = new EventEmitter<boolean>();
   @Output() delete = new EventEmitter<any>();
   @Output() edit = new EventEmitter<any>();
   @Output() editCancel = new EventEmitter<any>();
@@ -35,7 +34,6 @@ export class Ng2SmartTableComponent implements OnChanges {
   isHideSubHeader = false;
   isPagerDisplay = false;
   rowClassFunction: Function = ()=>'';
-  private currentScrollTop = 0;
 
   grid!: Grid;
   defaultSettings: SmartTableSettings = {
@@ -43,7 +41,6 @@ export class Ng2SmartTableComponent implements OnChanges {
     selectMode: 'single', // single|multi
     selectedRowIndex: -1,
     switchPageToSelectedRowPage: false,
-    bodyHeight: '85vh',
     hideHeader: false,
     hideSubHeader: false,
     actions: {
@@ -126,15 +123,6 @@ export class Ng2SmartTableComponent implements OnChanges {
       data: row ? row.getData() : null,
       source: this.source,
     });
-  }
-
-  protected onScroll(event: Event & { target: HTMLElement}): void {
-    const {scrollHeight, scrollTop, clientHeight} = event.target;
-    const isListEnd = (clientHeight + Math.round(scrollTop)) >= scrollHeight;
-    if (isListEnd && this.currentScrollTop < scrollTop) {
-      this.listScrollEnd.emit(true);
-    }
-    this.currentScrollTop = scrollTop;
   }
 
   private initGrid(): void {

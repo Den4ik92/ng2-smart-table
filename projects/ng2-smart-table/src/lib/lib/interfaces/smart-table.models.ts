@@ -17,7 +17,6 @@ export interface SmartTableSettings<T extends ObjectAny = any> {
 	switchPageToSelectedRowPage?: boolean;
 	hideHeader?: boolean;
 	hideSubHeader?: boolean;
-	bodyHeight?: string;
 	actions?: SmartTableAction | false;
 	filter?: {
 		inputClass: string;
