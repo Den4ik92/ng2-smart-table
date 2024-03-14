@@ -66,16 +66,14 @@ export const deepExtend = function(...objects: Array<any>): any {
   return target;
 };
 
-export class Deferred {
-
-  promise: Promise<any>;
-
-  resolve: any;
-  reject: any;
+export class Deferred<T> {
+  promise: Promise<T>;
+  resolve!: (value?: T) => void;
+  reject!: (reason?: string) => void;
 
   constructor() {
-    this.promise = new Promise((resolve, reject) => {
-      this.resolve = resolve;
+    this.promise = new Promise<T>((resolve, reject) => {
+      this.resolve = resolve as any;
       this.reject = reject;
     });
   }

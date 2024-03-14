@@ -1,5 +1,5 @@
 import { LocalDataSource } from './../../../ng2-smart-table/src/lib/lib/data-source/local/local.data-source';
-import { SmartTableSettings } from './../../../ng2-smart-table/src/lib/lib/interfaces/smart-table.models';
+import { SmartTableSettings, SmartTableConfirmEditEvent, SmartTableConfirmDeleteEvent } from './../../../ng2-smart-table/src/lib/lib/interfaces/smart-table.models';
 import { Component, EventEmitter } from '@angular/core';
 
 @Component({
@@ -11,26 +11,43 @@ export class AppComponent {
   settings: SmartTableSettings = {
     pager: false,
     selectMode: 'multi',
-    columns: {
-      id: {
-        title: 'ID',
-        type: 'text'
-      },
-      name: {
+    actions: {
+      add: true,
+      delete: true,
+      edit: true,
+    },
+    delete: {
+      confirmDelete: true,
+    },
+    edit: {
+      confirmSave: true,
+    },
+    columns: [      {
+      key: 'username',
+      title: 'User Name',
+      type: 'text'
+    },
+
+      {
+        key: 'name',
         title: 'Full Name',
         type: 'text'
       },
-      username: {
-        title: 'User Name',
+      {
+        key: 'id',
+        title: 'ID',
         type: 'text'
       },
-      email: {
+
+
+      {
+        key: 'email',
         title: 'Email',
         type: 'text'
       },
-    },
+    ],
   };
-  
+
   data = [
     {
       id: 1,
@@ -118,14 +135,20 @@ export class AppComponent {
     this.source.appendMany(data)
   }
 
+  deleteConfirm(event: SmartTableConfirmDeleteEvent):void {
+    setTimeout(() => {
+      event.confirm.resolve()
+    },5000)
+  }
+
   randomInteger(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-  
+
   clickEvent(event:any){
      console.log(event);
-  }  
-  
+  }
+
   multiRowSelect(event:any){
      console.log('multiRowSelect', event);
   }

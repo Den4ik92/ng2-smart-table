@@ -4,6 +4,7 @@ import { DataSet } from './data-set';
 
 export class Row {
 
+  pending: boolean = false;
   isSelected: boolean = false;
   isInEditing: boolean = false;
   cells: Cell[] = [];

@@ -50,7 +50,7 @@ export interface SmartTableSettings<T extends ObjectAny = any> {
 		class?: string;
 	};
 	noDataMessage?: string;
-	columns: { [key in keyof T]?: SmartTableColumnSettings<T> };
+	columns: SmartTableColumnSettings<T>[];
 	pager?: SmartTablePagerSettings | false;
 	rowClassFunction?: (row: { data: T }) => string;
 }
@@ -74,6 +74,7 @@ export type SmartTableColumnSettingsTypes = 'text' | 'html' | 'custom'
 export type SmartTableColumnSettings<T=any> = SmartTableTextHtmlColumn<T> | SmartTableCustomColumn<T>;
 
 interface SmartTableDefaultColumn<T> {
+	key: keyof T;
 	title: string;
 	width?: string; //example: '20px', '20%'
 	class?: string;
@@ -174,7 +175,7 @@ export interface SmartTableSortItem {
 }
 
 interface SmartTableDefaultEvent<T> {
-	confirm: Deferred;
+	confirm: Deferred<T>;
 	data: T;
 	source: LocalDataSource;
 }

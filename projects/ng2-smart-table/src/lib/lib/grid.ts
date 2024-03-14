@@ -1,16 +1,19 @@
-import { LocalDataSource } from './data-source/local/local.data-source';
-import { Subject, Subscription } from 'rxjs';
-import { Observable } from 'rxjs';
-import { EventEmitter } from '@angular/core';
+import { LocalDataSource } from "./data-source/local/local.data-source";
+import { Subject, Subscription } from "rxjs";
+import { Observable } from "rxjs";
+import { EventEmitter } from "@angular/core";
 
-import { Deferred, getDeepFromObject, getPageForRowIndex } from './helpers';
-import { Column } from './data-set/column';
-import { Row } from './data-set/row';
-import { DataSet } from './data-set/data-set';
-import { SmartTableSettings, SmartTableColumnSettings, SmartTableSortItem } from './interfaces/smart-table.models';
+import { Deferred, getDeepFromObject } from "./helpers";
+import { Column } from "./data-set/column";
+import { Row } from "./data-set/row";
+import { DataSet } from "./data-set/data-set";
+import {
+  SmartTableSettings,
+  SmartTableColumnSettings,
+  SmartTableSortItem,
+} from "./interfaces/smart-table.models";
 
 export class Grid {
-
   createFormShown: boolean = false;
 
   source!: LocalDataSource;
@@ -42,15 +45,20 @@ export class Grid {
   }
 
   isCurrentActionsPosition(position: string): boolean {
-    return position == this.getSetting('actions.position');
+    return position == this.getSetting("actions.position");
   }
 
   isActionsVisible(): boolean {
-    return this.getSetting<boolean>('actions.add', false) || this.getSetting<boolean>('actions.edit', false) || this.getSetting<boolean>('actions.delete', false) || !!this.getSetting<[]>('actions.custom', [])?.length;
+    return (
+      this.getSetting<boolean>("actions.add", false) ||
+      this.getSetting<boolean>("actions.edit", false) ||
+      this.getSetting<boolean>("actions.delete", false) ||
+      !!this.getSetting<[]>("actions.custom", [])?.length
+    );
   }
 
   isMultiSelectVisible(): boolean {
-    return this.getSetting('selectMode') === 'multi';
+    return this.getSetting("selectMode") === "multi";
   }
 
   getNewRow(): Row {
@@ -59,7 +67,10 @@ export class Grid {
 
   setSettings(settings: SmartTableSettings) {
     this.settings = settings;
-    this.dataSet = new DataSet([], this.getSetting<SmartTableColumnSettings>('columns'));
+    this.dataSet = new DataSet(
+      [],
+      this.getSetting<SmartTableColumnSettings[]>("columns")
+    );
 
     if (this.source) {
       this.source.refresh();
@@ -74,14 +85,18 @@ export class Grid {
     this.source = this.prepareSource(source);
     this.detach();
 
-    this.sourceOnChangedSubscription = this.source.onChanged().subscribe((changes: any) => this.processDataChange(changes));
+    this.sourceOnChangedSubscription = this.source
+      .onChanged()
+      .subscribe((changes: any) => this.processDataChange(changes));
 
-    this.sourceOnUpdatedSubscription = this.source.onUpdated().subscribe((data: any) => {
-      const changedRow = this.dataSet.findRowByData(data);
-      if (changedRow) {
-        changedRow.setData(data);
-      }
-    });
+    this.sourceOnUpdatedSubscription = this.source
+      .onUpdated()
+      .subscribe((data: any) => {
+        const changedRow = this.dataSet.findRowByData(data);
+        if (changedRow) {
+          changedRow.setData(data);
+        }
+      });
   }
 
   getSetting<T>(name: string, defaultValue?: any): T {
@@ -117,50 +132,48 @@ export class Grid {
   }
 
   create(row: Row, confirmEmitter: EventEmitter<any>) {
-
+    row.pending = true;
     const deferred = new Deferred();
-    deferred.promise.then((newData) => {
-      newData = newData ? newData : row.getNewData();
-      if (deferred.resolve.skipAdd) {
-        this.createFormShown = false;
-      } else {
+    deferred.promise
+      .then((newData) => {
+        row.pending = false;
+        newData = newData ? newData : row.getNewData();
         this.source.prepend(newData).then(() => {
           this.createFormShown = false;
           this.dataSet.createNewRow();
         });
-      }
-    }).catch((err) => {
-      // doing nothing
-    });
+      })
+      .catch((err) => {
+        row.pending = false;
+      });
 
-    if (this.getSetting('add.confirmCreate')) {
+    if (this.getSetting("add.confirmCreate")) {
       confirmEmitter.emit({
         newData: row.getNewData(),
         source: this.source,
         confirm: deferred,
       });
     } else {
-      deferred.resolve();
+      deferred.resolve(false);
     }
   }
 
   save(row: Row, confirmEmitter: EventEmitter<any>) {
-
+    row.pending = true;
     const deferred = new Deferred();
-    deferred.promise.then((newData) => {
-      newData = newData ? newData : row.getNewData();
-      if (deferred.resolve.skipEdit) {
-        row.isInEditing = false;
-      } else {
+    deferred.promise
+      .then((newData) => {
+        row.pending = false;
+        newData = newData ? newData : row.getNewData();
         this.source.update(row.getData(), newData).then(() => {
           row.isInEditing = false;
         });
-      }
-    }).catch((err) => {
-      // doing nothing
-    });
+      })
+      .catch((err) => {
+        row.pending = false;
+      });
 
-    if (this.getSetting('edit.confirmSave')) {
+    if (this.getSetting("edit.confirmSave")) {
       confirmEmitter.emit({
         data: row.getData(),
         newData: row.getNewData(),
@@ -168,26 +181,30 @@ export class Grid {
         confirm: deferred,
       });
     } else {
-      deferred.resolve();
+      deferred.resolve(false);
     }
   }
 
   delete(row: Row, confirmEmitter: EventEmitter<any>) {
+    row.pending = true;
     const deferred = new Deferred();
-    deferred.promise.then(() => {
-      this.source.remove(row.getData());
-    }).catch((err) => {
-      // doing nothing
-    });
-
-    if (this.getSetting('delete.confirmDelete')) {
+    deferred.promise
+      .then(() => {
+        row.pending = false;
+        this.source.remove(row.getData());
+      })
+      .catch((err) => {
+        row.pending = false;
+        // doing nothing
+      });
+    if (this.getSetting("delete.confirmDelete")) {
       confirmEmitter.emit({
         data: row.getData(),
         source: this.source,
         confirm: deferred,
       });
     } else {
-      deferred.resolve();
+      deferred.resolve(false);
     }
     if (row.isSelected) {
       this.dataSet.selectRow(row, false);
@@ -196,17 +213,24 @@ export class Grid {
 
   processDataChange(changes: any) {
     if (this.shouldProcessChange(changes)) {
-      if (changes['action'] === 'load') {
-        this.dataSet.deselectAll()
+      if (changes["action"] === "load") {
+        this.dataSet.deselectAll();
       }
-      this.dataSet.setData(changes['elements']);
+      this.dataSet.setData(changes["elements"]);
     }
   }
 
   shouldProcessChange(changes: any): boolean {
-    if (['filter', 'sort', 'page', 'remove', 'refresh', 'load', 'paging'].indexOf(changes['action']) !== -1) {
+    if (
+      ["filter", "sort", "page", "remove", "refresh", "load", "paging"].indexOf(
+        changes["action"]
+      ) !== -1
+    ) {
       return true;
-    } else if (['prepend', 'append'].indexOf(changes['action']) !== -1 && !this.getSetting('pager.display')) {
+    } else if (
+      ["prepend", "append"].indexOf(changes["action"]) !== -1 &&
+      !this.getSetting("pager.display")
+    ) {
       return true;
     }
     return false;
@@ -217,8 +241,8 @@ export class Grid {
     if (initialSort) {
       source.setSort([initialSort], false);
     }
-    if (this.getSetting('pager.display') === true) {
-      source.setPaging(1, this.getSetting('pager.perPage'), false);
+    if (this.getSetting("pager.display") === true) {
+      source.setPaging(1, this.getSetting("pager.perPage"), false);
     }
 
     source.refresh();
@@ -226,19 +250,21 @@ export class Grid {
   }
 
   getInitialSort(): SmartTableSortItem | false {
-    const defaultSortColumn = this.getColumns().find((column: Column) => column.isSortable && column.defaultSortDirection);
+    const defaultSortColumn = this.getColumns().find(
+      (column: Column) => column.isSortable && column.defaultSortDirection
+    );
     if (!defaultSortColumn) {
       return false;
     }
     return {
       field: defaultSortColumn.id,
-      direction: defaultSortColumn.defaultSortDirection || 'asc',
+      direction: defaultSortColumn.defaultSortDirection || "asc",
       compare: defaultSortColumn.getCompareFunction(),
-    }
+    };
   }
 
   getSelectedRowsData(): Array<any> {
-    return this.dataSet.getRows()
+    return this.dataSet.getRows();
   }
 
   selectAllRows(status: boolean) {

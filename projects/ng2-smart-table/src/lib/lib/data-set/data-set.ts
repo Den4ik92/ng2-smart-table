@@ -10,7 +10,7 @@ export class DataSet {
   protected rows: Array<Row> = [];
   protected selectedRows = new Set<Row>();
 
-  constructor(data: any[] = [], protected columnSettings: SmartTableColumnSettings) {
+  constructor(data: any[] = [], protected columnSettings: SmartTableColumnSettings[]) {
     this.createColumns(columnSettings);
     this.setData(data);
 
@@ -83,12 +83,10 @@ export class DataSet {
    * @param settings
    * @private
    */
-  createColumns(settings: any) {
-    for (const id in settings) {
-      if (settings.hasOwnProperty(id)) {
-        this.columns.push(new Column(id, settings[id], this));
-      }
-    }
+  createColumns(settings: SmartTableColumnSettings[]) {
+    settings.forEach((columnSettings) => {
+      this.columns.push(new Column(columnSettings.key as string, columnSettings, this));
+    })
   }
 
   /**

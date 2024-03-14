@@ -22,7 +22,7 @@ export class EditCellDefault {
     return false;
   }
 
-  onClick(event: any) {
+  onClick(event: MouseEvent) {
     event.stopPropagation();
   }
 }
