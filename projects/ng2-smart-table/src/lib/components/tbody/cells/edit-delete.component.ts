@@ -1,10 +1,9 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   OnChanges,
-  Output,
+  Output
 } from "@angular/core";
 
 import { Row } from "../../../lib/data-set/row";
@@ -13,7 +12,6 @@ import { Grid } from "../../../lib/grid";
 
 @Component({
   selector: "ng2-st-tbody-edit-delete",
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-container *ngIf="!row.pending; else loader">
       <a

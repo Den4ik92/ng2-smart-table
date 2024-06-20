@@ -2446,13 +2446,12 @@ class TbodyEditDeleteComponent {
         </svg>
       </div>
     </ng-template>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }] }); }
 }
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TbodyEditDeleteComponent, decorators: [{
             type: Component,
             args: [{
                     selector: "ng2-st-tbody-edit-delete",
-                    changeDetection: ChangeDetectionStrategy.OnPush,
                     template: `
     <ng-container *ngIf="!row.pending; else loader">
       <a
