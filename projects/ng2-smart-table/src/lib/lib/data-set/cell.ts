@@ -9,7 +9,7 @@ export class Cell {
   newValue: any = '';
   protected static PREPARE = prepareValue;
 
-  constructor(protected value: any, protected row: Row, protected column: any, protected dataSet: DataSet) {
+  constructor(protected value: any, protected row: Row, protected column: Column, protected dataSet: DataSet) {
     this.newValue = value;
   }
 
@@ -17,13 +17,16 @@ export class Cell {
     return this.column;
   }
 
+  getColumnClass(): string | undefined {
+    return this.column.class;
+  }
+
   getRow(): Row {
     return this.row;
   }
 
   getValue(): any {
-    const valid = this.column.getValuePrepareFunction() instanceof Function;
-    const prepare = valid ? this.column.getValuePrepareFunction() : Cell.PREPARE;
+    const prepare = this.column.getValuePrepareFunction() || Cell.PREPARE;
     return prepare.call(null, this.value, this.row.getData(), this);
   }
 

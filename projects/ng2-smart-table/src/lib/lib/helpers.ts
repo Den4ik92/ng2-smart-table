@@ -89,7 +89,6 @@ export function getDeepFromObject(object = {}, name: string, defaultValue: any =
       level = level[k];
     }
   });
-
   return typeof level === 'undefined' ? defaultValue : level;
 }
 

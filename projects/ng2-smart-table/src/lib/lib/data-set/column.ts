@@ -1,5 +1,5 @@
-import { SmartTableColumnSettings, SmartTableColumnSettingsTypes, SmartTableEditorAndFilterTypes, SmartTableSortDirection } from './../interfaces/smart-table.models';
 import { SmartTableEditorAndFilter } from '../interfaces/smart-table.models';
+import { SmartTableColumnSettings, SmartTableColumnSettingsTypes, SmartTableSortDirection } from './../interfaces/smart-table.models';
 import { DataSet } from './data-set';
 
 export class Column {
@@ -21,8 +21,8 @@ export class Column {
   valuePrepareFunction: Function | undefined;
   filterFunction: Function | undefined;
 
-  constructor(public id: string, protected settings: SmartTableColumnSettings, protected dataSet: DataSet) {
-    this.process();
+  constructor(public id: string, private settings: SmartTableColumnSettings, protected dataSet: DataSet) {
+    this.process(this.settings);
   }
 
   getCompareFunction(): Function | undefined {
@@ -55,31 +55,31 @@ export class Column {
     return false;
   }
 
-  protected process() {
-    this.title = this.settings.title;
-    this.class = this.settings.class || '';
-    this.width = this.settings.width || '';
-    this.hide = !!this.settings.hide;
-    this.type = this.settings.type;
-    if (this.settings?.editor) {
-      this.editor = this.settings.editor;
-    }    
-    if (this.settings?.filter) {
-      this.filter = this.settings.filter;
+  protected process(settings: SmartTableColumnSettings) {
+    this.title = settings.title;
+    this.class = settings.class || '';
+    this.width = settings.width || '';
+    this.hide = !!settings.hide;
+    this.type = settings.type;
+    if (settings?.editor) {
+      this.editor = settings.editor;
     }
-    if (this.settings.type === 'custom' && this.settings.renderComponent) {
-      this.renderComponent = this.settings.renderComponent;
+    if (settings?.filter) {
+      this.filter = settings.filter;
     }
-    this.isFilterable = typeof this.settings.filter === 'undefined' ? true : !!this.settings['filter'];
-    this.defaultSortDirection = this.settings?.sortDirection || false;
-    this.isSortable = typeof this.settings.sort === 'undefined' ? true : this.settings.sort;
-    this.isEditable = typeof this.settings.editable === 'undefined' ? true : this.settings.editable;
-    this.isAddable=typeof this.settings.addable === 'undefined' ? true : this.settings.addable;
+    if (settings.type === 'custom' && settings.renderComponent) {
+      this.renderComponent = settings.renderComponent;
+    }
+    this.isFilterable = typeof settings.filter === 'undefined' ? true : !!settings['filter'];
+    this.defaultSortDirection = settings?.sortDirection || false;
+    this.isSortable = typeof settings.sort === 'undefined' ? true : settings.sort;
+    this.isEditable = typeof settings.editable === 'undefined' ? true : settings.editable;
+    this.isAddable=typeof settings.addable === 'undefined' ? true : settings.addable;
     this.sortDirection = this.prepareSortDirection();
 
-    this.compareFunction = this.settings.compareFunction;
-    this.valuePrepareFunction = this.settings.valuePrepareFunction;
-    this.filterFunction = this.settings.filterFunction;
+    this.compareFunction = settings.compareFunction;
+    this.valuePrepareFunction = settings.valuePrepareFunction;
+    this.filterFunction = settings.filterFunction;
   }
 
   prepareSortDirection(): SmartTableSortDirection {

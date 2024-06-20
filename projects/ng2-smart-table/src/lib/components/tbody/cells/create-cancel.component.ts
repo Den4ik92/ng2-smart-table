@@ -1,7 +1,7 @@
-import { Component, Input, EventEmitter, OnChanges } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges } from "@angular/core";
 
-import { Grid } from "../../../lib/grid";
 import { Row } from "../../../lib/data-set/row";
+import { Grid } from "../../../lib/grid";
 
 @Component({
   selector: "ng2-st-tbody-create-cancel",
@@ -9,12 +9,14 @@ import { Row } from "../../../lib/data-set/row";
     <ng-container *ngIf="!row.pending; else loader">
       <a
         href="#"
+        [id]="'row-' + row.index + '_editing-confirm-button'"
         class="ng2-smart-action ng2-smart-action-edit-save"
         [innerHTML]="saveButtonContent"
         (click)="onSave($event)"
       ></a>
       <a
         href="#"
+        [id]="'row-' + row.index + '_editing-cancel-button'"
         class="ng2-smart-action ng2-smart-action-edit-cancel"
         [innerHTML]="cancelButtonContent"
         (click)="onCancelEdit($event)"

@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { Grid } from '../../lib/grid';
 import { Cell } from '../../lib/data-set/cell';
 import { Row } from '../../lib/data-set/row';
+import { Grid } from '../../lib/grid';
 
 @Component({
   selector: 'ng2-smart-table-cell',

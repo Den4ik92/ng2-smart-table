@@ -1,15 +1,15 @@
 import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
 } from "@angular/core";
 
-import { Grid } from "../../../lib/grid";
 import { Row } from "../../../lib/data-set/row";
 import { LocalDataSource } from "../../../lib/data-source/local/local.data-source";
+import { Grid } from "../../../lib/grid";
 
 @Component({
   selector: "ng2-st-tbody-edit-delete",
@@ -19,6 +19,7 @@ import { LocalDataSource } from "../../../lib/data-source/local/local.data-sourc
       <a
         href="#"
         *ngIf="isActionEdit"
+        [id]="'row-' + row.index + '_action-edit-button'"
         class="ng2-smart-action ng2-smart-action-edit-edit"
         [innerHTML]="editRowButtonContent"
         (click)="onEdit($event)"
@@ -26,6 +27,7 @@ import { LocalDataSource } from "../../../lib/data-source/local/local.data-sourc
       <a
         href="#"
         *ngIf="isActionDelete"
+        [id]="'row-' + row.index + '_action-delete-button'"
         class="ng2-smart-action ng2-smart-action-delete-delete"
         [innerHTML]="deleteRowButtonContent"
         (click)="onDelete($event)"

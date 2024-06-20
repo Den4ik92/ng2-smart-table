@@ -1,0 +1,38 @@
+import { EventEmitter } from '@angular/core';
+import { Grid } from '../../lib/grid';
+import { Cell } from '../../lib/data-set/cell';
+import { LocalDataSource } from '../../lib/data-source/local/local.data-source';
+import * as i0 from "@angular/core";
+export declare class Ng2SmartTableTbodyComponent {
+    grid: Grid;
+    source: LocalDataSource;
+    deleteConfirm: EventEmitter<any>;
+    editConfirm: EventEmitter<any>;
+    rowClassFunction: Function;
+    save: EventEmitter<any>;
+    cancel: EventEmitter<any>;
+    edit: EventEmitter<any>;
+    editCancel: EventEmitter<any>;
+    delete: EventEmitter<any>;
+    custom: EventEmitter<any>;
+    edited: EventEmitter<any>;
+    userSelectRow: EventEmitter<any>;
+    userClickedRow: EventEmitter<any>;
+    editRowSelect: EventEmitter<any>;
+    multipleSelectRow: EventEmitter<any>;
+    isMultiSelectVisible: boolean;
+    showActionColumnLeft: boolean;
+    showActionColumnRight: boolean;
+    mode: 'inline' | 'external' | 'click-to-edit';
+    editInputClass: string;
+    isActionAdd: boolean;
+    isActionEdit: boolean;
+    isActionDelete: boolean;
+    noDataMessage: boolean;
+    get tableColumnsCount(): number;
+    ngOnChanges(): void;
+    getVisibleCells(cells: Cell[]): Cell[];
+    protected trackByIdOrIndex(index: number, item: any): string | number;
+    static ɵfac: i0.ɵɵFactoryDeclaration<Ng2SmartTableTbodyComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<Ng2SmartTableTbodyComponent, "[ng2-st-tbody]", never, { "grid": { "alias": "grid"; "required": false; }; "source": { "alias": "source"; "required": false; }; "deleteConfirm": { "alias": "deleteConfirm"; "required": false; }; "editConfirm": { "alias": "editConfirm"; "required": false; }; "rowClassFunction": { "alias": "rowClassFunction"; "required": false; }; }, { "save": "save"; "cancel": "cancel"; "edit": "edit"; "editCancel": "editCancel"; "delete": "delete"; "custom": "custom"; "edited": "edited"; "userSelectRow": "userSelectRow"; "userClickedRow": "userClickedRow"; "editRowSelect": "editRowSelect"; "multipleSelectRow": "multipleSelectRow"; }, never, never, false, never>;
+}
