@@ -9,8 +9,8 @@ import { THeadModule } from './components/thead/thead.module';
 import { Ng2SmartTableComponent } from './ng2-smart-table.component';
 import * as i0 from "@angular/core";
 export class Ng2SmartTableModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableModule, declarations: [Ng2SmartTableComponent], imports: [CommonModule,
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableModule, declarations: [Ng2SmartTableComponent], imports: [CommonModule,
             FormsModule,
             ReactiveFormsModule,
             CellModule,
@@ -18,7 +18,7 @@ export class Ng2SmartTableModule {
             PagerModule,
             TBodyModule,
             THeadModule], exports: [Ng2SmartTableComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableModule, imports: [CommonModule,
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableModule, imports: [CommonModule,
             FormsModule,
             ReactiveFormsModule,
             CellModule,
@@ -27,7 +27,7 @@ export class Ng2SmartTableModule {
             TBodyModule,
             THeadModule] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [

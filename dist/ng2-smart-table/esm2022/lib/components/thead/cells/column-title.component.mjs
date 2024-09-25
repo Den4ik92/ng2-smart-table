@@ -7,14 +7,14 @@ export class ColumnTitleComponent {
     constructor() {
         this.sort = new EventEmitter();
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ColumnTitleComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: ColumnTitleComponent, selector: "ng2-st-column-title", inputs: { column: "column", source: "source" }, outputs: { sort: "sort" }, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ColumnTitleComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: ColumnTitleComponent, selector: "ng2-st-column-title", inputs: { column: "column", source: "source" }, outputs: { sort: "sort" }, ngImport: i0, template: `
     <div class="ng2-smart-title">
       <ng2-smart-table-title [source]="source" [column]="column" (sort)="sort.emit($event)"></ng2-smart-table-title>
     </div>
   `, isInline: true, dependencies: [{ kind: "component", type: i1.TitleComponent, selector: "ng2-smart-table-title", inputs: ["column", "source"], outputs: ["sort"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ColumnTitleComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ColumnTitleComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'ng2-st-column-title',

@@ -4,12 +4,12 @@ import { LocalDataSource } from '../../../lib/data-source/local/local.data-sourc
 import * as i0 from "@angular/core";
 import * as i1 from "@angular/forms";
 export class CheckboxSelectAllComponent {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CheckboxSelectAllComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: CheckboxSelectAllComponent, selector: "[ng2-st-checkbox-select-all]", inputs: { grid: "grid", source: "source" }, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxSelectAllComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: CheckboxSelectAllComponent, selector: "[ng2-st-checkbox-select-all]", inputs: { grid: "grid", source: "source" }, ngImport: i0, template: `
     <input type="checkbox" [ngModel]="this.grid.dataSet.isAllSelected">
   `, isInline: true, dependencies: [{ kind: "directive", type: i1.CheckboxControlValueAccessor, selector: "input[type=checkbox][formControlName],input[type=checkbox][formControl],input[type=checkbox][ngModel]" }, { kind: "directive", type: i1.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i1.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CheckboxSelectAllComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxSelectAllComponent, decorators: [{
             type: Component,
             args: [{
                     selector: '[ng2-st-checkbox-select-all]',

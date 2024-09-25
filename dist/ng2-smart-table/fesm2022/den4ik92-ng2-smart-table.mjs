@@ -579,10 +579,10 @@ class EditCellDefault {
     onClick(event) {
         event.stopPropagation();
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: EditCellDefault, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: EditCellDefault, selector: "ng-component", inputs: { cell: "cell", inputClass: "inputClass" }, outputs: { edited: "edited" }, ngImport: i0, template: '', isInline: true }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: EditCellDefault, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: EditCellDefault, selector: "ng-component", inputs: { cell: "cell", inputClass: "inputClass" }, outputs: { edited: "edited" }, ngImport: i0, template: '', isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: EditCellDefault, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: EditCellDefault, decorators: [{
             type: Component,
             args: [{
                     template: ''
@@ -618,12 +618,12 @@ class CustomEditComponent extends EditCellDefault {
             this.customComponent.destroy();
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CustomEditComponent, deps: [{ token: i0.ComponentFactoryResolver }], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: CustomEditComponent, selector: "table-cell-custom-editor", viewQueries: [{ propertyName: "dynamicTarget", first: true, predicate: ["dynamicTarget"], descendants: true, read: ViewContainerRef, static: true }], usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CustomEditComponent, deps: [{ token: i0.ComponentFactoryResolver }], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: CustomEditComponent, selector: "table-cell-custom-editor", viewQueries: [{ propertyName: "dynamicTarget", first: true, predicate: ["dynamicTarget"], descendants: true, read: ViewContainerRef, static: true }], usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `
     <ng-template #dynamicTarget></ng-template>
   `, isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CustomEditComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CustomEditComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'table-cell-custom-editor',
@@ -631,7 +631,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
     <ng-template #dynamicTarget></ng-template>
   `,
                 }]
-        }], ctorParameters: function () { return [{ type: i0.ComponentFactoryResolver }]; }, propDecorators: { dynamicTarget: [{
+        }], ctorParameters: () => [{ type: i0.ComponentFactoryResolver }], propDecorators: { dynamicTarget: [{
                 type: ViewChild,
                 args: ['dynamicTarget', { read: ViewContainerRef, static: true }]
             }] } });
@@ -643,10 +643,10 @@ class DefaultEditor {
         this.onEdited = new EventEmitter();
         this.onClick = new EventEmitter();
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: DefaultEditor, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: DefaultEditor, selector: "ng-component", inputs: { cell: "cell", inputClass: "inputClass" }, outputs: { onStopEditing: "onStopEditing", onEdited: "onEdited", onClick: "onClick" }, ngImport: i0, template: '', isInline: true }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultEditor, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: DefaultEditor, selector: "ng-component", inputs: { cell: "cell", inputClass: "inputClass" }, outputs: { onStopEditing: "onStopEditing", onEdited: "onEdited", onClick: "onClick" }, ngImport: i0, template: '', isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: DefaultEditor, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultEditor, decorators: [{
             type: Component,
             args: [{
                     template: '',
@@ -673,8 +673,8 @@ class CheckboxEditorComponent extends DefaultEditor {
         const falseVal = (config && config?.false) || false;
         this.cell.newValue = event.target.checked ? trueVal : falseVal;
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CheckboxEditorComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: CheckboxEditorComponent, selector: "checkbox-editor", usesInheritance: true, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxEditorComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: CheckboxEditorComponent, selector: "checkbox-editor", usesInheritance: true, ngImport: i0, template: `
     <input [ngClass]="inputClass"
            type="checkbox"
            class="form-control"
@@ -685,7 +685,7 @@ class CheckboxEditorComponent extends DefaultEditor {
            (change)="onChange($event)">
     `, isInline: true, styles: [":host input,:host textarea{width:100%;line-height:normal;padding:.375em .75em}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CheckboxEditorComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxEditorComponent, decorators: [{
             type: Component,
             args: [{ selector: 'checkbox-editor', template: `
     <input [ngClass]="inputClass"
@@ -697,14 +697,14 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
            (click)="onClick.emit($event)"
            (change)="onChange($event)">
     `, styles: [":host input,:host textarea{width:100%;line-height:normal;padding:.375em .75em}\n"] }]
-        }], ctorParameters: function () { return []; } });
+        }], ctorParameters: () => [] });
 
 class InputEditorComponent extends DefaultEditor {
     constructor() {
         super();
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: InputEditorComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: InputEditorComponent, selector: "input-editor", usesInheritance: true, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: InputEditorComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: InputEditorComponent, selector: "input-editor", usesInheritance: true, ngImport: i0, template: `
     <input [ngClass]="inputClass"
            class="form-control"
            [(ngModel)]="cell.newValue"
@@ -716,7 +716,7 @@ class InputEditorComponent extends DefaultEditor {
            (keydown.esc)="onStopEditing.emit()">
     `, isInline: true, styles: [":host input,:host textarea{width:100%;line-height:normal;padding:.375em .75em}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.DefaultValueAccessor, selector: "input:not([type=checkbox])[formControlName],textarea[formControlName],input:not([type=checkbox])[formControl],textarea[formControl],input:not([type=checkbox])[ngModel],textarea[ngModel],[ngDefaultControl]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: InputEditorComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: InputEditorComponent, decorators: [{
             type: Component,
             args: [{ selector: 'input-editor', template: `
     <input [ngClass]="inputClass"
@@ -729,57 +729,61 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
            (keydown.enter)="onEdited.emit($event)"
            (keydown.esc)="onStopEditing.emit()">
     `, styles: [":host input,:host textarea{width:100%;line-height:normal;padding:.375em .75em}\n"] }]
-        }], ctorParameters: function () { return []; } });
+        }], ctorParameters: () => [] });
 
 class SelectEditorComponent extends DefaultEditor {
     constructor() {
         super();
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: SelectEditorComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: SelectEditorComponent, selector: "select-editor", usesInheritance: true, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: SelectEditorComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: SelectEditorComponent, selector: "select-editor", usesInheritance: true, ngImport: i0, template: `
     <select [ngClass]="inputClass"
-            class="form-control"
-            [(ngModel)]="cell.newValue"
-            [name]="cell.getId()"
-            [disabled]="!cell.isEditable()"
-            (click)="onClick.emit($event)"
-            (keydown.enter)="onEdited.emit($event)"
-            (keydown.esc)="onStopEditing.emit()">
-
-        <option *ngFor="let option of cell.getColumn().getConfig()?.list" [value]="option.value"
-                [selected]="option.value === cell.getValue()">{{ option.title }}
+      class="form-control"
+      [(ngModel)]="cell.newValue"
+      [name]="cell.getId()"
+      [disabled]="!cell.isEditable()"
+      (click)="onClick.emit($event)"
+      (keydown.enter)="onEdited.emit($event)"
+      (keydown.esc)="onStopEditing.emit()">
+    
+      @for (option of cell.getColumn().getConfig()?.list; track option) {
+        <option [value]="option.value"
+          [selected]="option.value === cell.getValue()">{{ option.title }}
         </option>
+      }
     </select>
-    `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { kind: "directive", type: i2.NgSelectOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.ɵNgSelectMultipleOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.SelectControlValueAccessor, selector: "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]", inputs: ["compareWith"] }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
+    `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.NgSelectOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.ɵNgSelectMultipleOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.SelectControlValueAccessor, selector: "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]", inputs: ["compareWith"] }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: SelectEditorComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: SelectEditorComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'select-editor',
                     template: `
     <select [ngClass]="inputClass"
-            class="form-control"
-            [(ngModel)]="cell.newValue"
-            [name]="cell.getId()"
-            [disabled]="!cell.isEditable()"
-            (click)="onClick.emit($event)"
-            (keydown.enter)="onEdited.emit($event)"
-            (keydown.esc)="onStopEditing.emit()">
-
-        <option *ngFor="let option of cell.getColumn().getConfig()?.list" [value]="option.value"
-                [selected]="option.value === cell.getValue()">{{ option.title }}
+      class="form-control"
+      [(ngModel)]="cell.newValue"
+      [name]="cell.getId()"
+      [disabled]="!cell.isEditable()"
+      (click)="onClick.emit($event)"
+      (keydown.enter)="onEdited.emit($event)"
+      (keydown.esc)="onStopEditing.emit()">
+    
+      @for (option of cell.getColumn().getConfig()?.list; track option) {
+        <option [value]="option.value"
+          [selected]="option.value === cell.getValue()">{{ option.title }}
         </option>
+      }
     </select>
     `,
                 }]
-        }], ctorParameters: function () { return []; } });
+        }], ctorParameters: () => [] });
 
 class TextareaEditorComponent extends DefaultEditor {
     constructor() {
         super();
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TextareaEditorComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: TextareaEditorComponent, selector: "textarea-editor", usesInheritance: true, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TextareaEditorComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: TextareaEditorComponent, selector: "textarea-editor", usesInheritance: true, ngImport: i0, template: `
     <textarea [ngClass]="inputClass"
               class="form-control"
               [(ngModel)]="cell.newValue"
@@ -792,7 +796,7 @@ class TextareaEditorComponent extends DefaultEditor {
     </textarea>
     `, isInline: true, styles: [":host input,:host textarea{width:100%;line-height:normal;padding:.375em .75em}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.DefaultValueAccessor, selector: "input:not([type=checkbox])[formControlName],textarea[formControlName],input:not([type=checkbox])[formControl],textarea[formControl],input:not([type=checkbox])[ngModel],textarea[ngModel],[ngDefaultControl]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TextareaEditorComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TextareaEditorComponent, decorators: [{
             type: Component,
             args: [{ selector: 'textarea-editor', template: `
     <textarea [ngClass]="inputClass"
@@ -806,7 +810,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
               (keydown.esc)="onStopEditing.emit()">
     </textarea>
     `, styles: [":host input,:host textarea{width:100%;line-height:normal;padding:.375em .75em}\n"] }]
-        }], ctorParameters: function () { return []; } });
+        }], ctorParameters: () => [] });
 
 class DefaultEditComponent extends EditCellDefault {
     constructor() {
@@ -819,13 +823,13 @@ class DefaultEditComponent extends EditCellDefault {
         }
         return 'text';
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: DefaultEditComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: DefaultEditComponent, selector: "table-cell-default-editor", usesInheritance: true, ngImport: i0, template: "<div [ngSwitch]=\"getEditorType()\">\n    <select-editor *ngSwitchCase=\"'list'\"\n                   [cell]=\"cell\"\n                   [inputClass]=\"inputClass\"\n                   (onClick)=\"onClick($event)\"\n                   (onEdited)=\"onEdited($event)\"\n                   (onStopEditing)=\"onStopEditing()\">\n    </select-editor>\n\n    <textarea-editor *ngSwitchCase=\"'textarea'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\"\n                     (onEdited)=\"onEdited($event)\"\n                     (onStopEditing)=\"onStopEditing()\">\n    </textarea-editor>\n\n    <checkbox-editor *ngSwitchCase=\"'checkbox'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\">\n    </checkbox-editor>\n\n    <input-editor *ngSwitchDefault\n                  [cell]=\"cell\"\n                  [inputClass]=\"inputClass\"\n                  (onClick)=\"onClick($event)\"\n                  (onEdited)=\"onEdited($event)\"\n                  (onStopEditing)=\"onStopEditing()\">\n    </input-editor>\n</div>", dependencies: [{ kind: "directive", type: i1.NgSwitch, selector: "[ngSwitch]", inputs: ["ngSwitch"] }, { kind: "directive", type: i1.NgSwitchCase, selector: "[ngSwitchCase]", inputs: ["ngSwitchCase"] }, { kind: "directive", type: i1.NgSwitchDefault, selector: "[ngSwitchDefault]" }, { kind: "component", type: CheckboxEditorComponent, selector: "checkbox-editor" }, { kind: "component", type: InputEditorComponent, selector: "input-editor" }, { kind: "component", type: SelectEditorComponent, selector: "select-editor" }, { kind: "component", type: TextareaEditorComponent, selector: "textarea-editor" }] }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultEditComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: DefaultEditComponent, selector: "table-cell-default-editor", usesInheritance: true, ngImport: i0, template: "<div>\n  @switch (getEditorType()) {\n    @case ('list') {\n      <select-editor\n        [cell]=\"cell\"\n        [inputClass]=\"inputClass\"\n        (onClick)=\"onClick($event)\"\n        (onEdited)=\"onEdited($event)\"\n        (onStopEditing)=\"onStopEditing()\">\n      </select-editor>\n    }\n    @case ('textarea') {\n      <textarea-editor\n        [cell]=\"cell\"\n        [inputClass]=\"inputClass\"\n        (onClick)=\"onClick($event)\"\n        (onEdited)=\"onEdited($event)\"\n        (onStopEditing)=\"onStopEditing()\">\n      </textarea-editor>\n    }\n    @case ('checkbox') {\n      <checkbox-editor\n        [cell]=\"cell\"\n        [inputClass]=\"inputClass\"\n        (onClick)=\"onClick($event)\">\n      </checkbox-editor>\n    }\n    @default {\n      <input-editor\n        [cell]=\"cell\"\n        [inputClass]=\"inputClass\"\n        (onClick)=\"onClick($event)\"\n        (onEdited)=\"onEdited($event)\"\n        (onStopEditing)=\"onStopEditing()\">\n    </input-editor>\n  }\n}\n</div>", dependencies: [{ kind: "component", type: CheckboxEditorComponent, selector: "checkbox-editor" }, { kind: "component", type: InputEditorComponent, selector: "input-editor" }, { kind: "component", type: SelectEditorComponent, selector: "select-editor" }, { kind: "component", type: TextareaEditorComponent, selector: "textarea-editor" }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: DefaultEditComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultEditComponent, decorators: [{
             type: Component,
-            args: [{ selector: 'table-cell-default-editor', template: "<div [ngSwitch]=\"getEditorType()\">\n    <select-editor *ngSwitchCase=\"'list'\"\n                   [cell]=\"cell\"\n                   [inputClass]=\"inputClass\"\n                   (onClick)=\"onClick($event)\"\n                   (onEdited)=\"onEdited($event)\"\n                   (onStopEditing)=\"onStopEditing()\">\n    </select-editor>\n\n    <textarea-editor *ngSwitchCase=\"'textarea'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\"\n                     (onEdited)=\"onEdited($event)\"\n                     (onStopEditing)=\"onStopEditing()\">\n    </textarea-editor>\n\n    <checkbox-editor *ngSwitchCase=\"'checkbox'\"\n                     [cell]=\"cell\"\n                     [inputClass]=\"inputClass\"\n                     (onClick)=\"onClick($event)\">\n    </checkbox-editor>\n\n    <input-editor *ngSwitchDefault\n                  [cell]=\"cell\"\n                  [inputClass]=\"inputClass\"\n                  (onClick)=\"onClick($event)\"\n                  (onEdited)=\"onEdited($event)\"\n                  (onStopEditing)=\"onStopEditing()\">\n    </input-editor>\n</div>" }]
-        }], ctorParameters: function () { return []; } });
+            args: [{ selector: 'table-cell-default-editor', template: "<div>\n  @switch (getEditorType()) {\n    @case ('list') {\n      <select-editor\n        [cell]=\"cell\"\n        [inputClass]=\"inputClass\"\n        (onClick)=\"onClick($event)\"\n        (onEdited)=\"onEdited($event)\"\n        (onStopEditing)=\"onStopEditing()\">\n      </select-editor>\n    }\n    @case ('textarea') {\n      <textarea-editor\n        [cell]=\"cell\"\n        [inputClass]=\"inputClass\"\n        (onClick)=\"onClick($event)\"\n        (onEdited)=\"onEdited($event)\"\n        (onStopEditing)=\"onStopEditing()\">\n      </textarea-editor>\n    }\n    @case ('checkbox') {\n      <checkbox-editor\n        [cell]=\"cell\"\n        [inputClass]=\"inputClass\"\n        (onClick)=\"onClick($event)\">\n      </checkbox-editor>\n    }\n    @default {\n      <input-editor\n        [cell]=\"cell\"\n        [inputClass]=\"inputClass\"\n        (onClick)=\"onClick($event)\"\n        (onEdited)=\"onEdited($event)\"\n        (onStopEditing)=\"onStopEditing()\">\n    </input-editor>\n  }\n}\n</div>" }]
+        }], ctorParameters: () => [] });
 
 class EditCellComponent {
     constructor() {
@@ -843,40 +847,52 @@ class EditCellComponent {
         }
         return 'text';
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: EditCellComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: EditCellComponent, selector: "table-cell-edit-mode", inputs: { cell: "cell", inputClass: "inputClass" }, outputs: { edited: "edited" }, ngImport: i0, template: `
-      <div [ngSwitch]="getEditorType()">
-        <table-cell-custom-editor *ngSwitchCase="'custom'"
-                                  [cell]="cell"
-                                  [inputClass]="inputClass"
-                                  (edited)="onEdited($event)">
-        </table-cell-custom-editor>
-        <table-cell-default-editor *ngSwitchDefault
-                                  [cell]="cell"
-                                  [inputClass]="inputClass"
-                                  (edited)="onEdited($event)">
-        </table-cell-default-editor>
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: EditCellComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: EditCellComponent, selector: "table-cell-edit-mode", inputs: { cell: "cell", inputClass: "inputClass" }, outputs: { edited: "edited" }, ngImport: i0, template: `
+      <div>
+        @switch (getEditorType()) {
+          @case ('custom') {
+            <table-cell-custom-editor
+              [cell]="cell"
+              [inputClass]="inputClass"
+              (edited)="onEdited($event)">
+            </table-cell-custom-editor>
+          }
+          @default {
+            <table-cell-default-editor
+              [cell]="cell"
+              [inputClass]="inputClass"
+              (edited)="onEdited($event)">
+            </table-cell-default-editor>
+          }
+        }
       </div>
-    `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgSwitch, selector: "[ngSwitch]", inputs: ["ngSwitch"] }, { kind: "directive", type: i1.NgSwitchCase, selector: "[ngSwitchCase]", inputs: ["ngSwitchCase"] }, { kind: "directive", type: i1.NgSwitchDefault, selector: "[ngSwitchDefault]" }, { kind: "component", type: CustomEditComponent, selector: "table-cell-custom-editor" }, { kind: "component", type: DefaultEditComponent, selector: "table-cell-default-editor" }] }); }
+      `, isInline: true, dependencies: [{ kind: "component", type: CustomEditComponent, selector: "table-cell-custom-editor" }, { kind: "component", type: DefaultEditComponent, selector: "table-cell-default-editor" }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: EditCellComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: EditCellComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'table-cell-edit-mode',
                     template: `
-      <div [ngSwitch]="getEditorType()">
-        <table-cell-custom-editor *ngSwitchCase="'custom'"
-                                  [cell]="cell"
-                                  [inputClass]="inputClass"
-                                  (edited)="onEdited($event)">
-        </table-cell-custom-editor>
-        <table-cell-default-editor *ngSwitchDefault
-                                  [cell]="cell"
-                                  [inputClass]="inputClass"
-                                  (edited)="onEdited($event)">
-        </table-cell-default-editor>
+      <div>
+        @switch (getEditorType()) {
+          @case ('custom') {
+            <table-cell-custom-editor
+              [cell]="cell"
+              [inputClass]="inputClass"
+              (edited)="onEdited($event)">
+            </table-cell-custom-editor>
+          }
+          @default {
+            <table-cell-default-editor
+              [cell]="cell"
+              [inputClass]="inputClass"
+              (edited)="onEdited($event)">
+            </table-cell-default-editor>
+          }
+        }
       </div>
-    `,
+      `,
                 }]
         }], propDecorators: { cell: [{
                 type: Input
@@ -887,73 +903,52 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
             }] } });
 
 class CustomViewComponent {
-    constructor(resolver) {
-        this.resolver = resolver;
-    }
-    ngOnInit() {
-        if (this.cell && !this.customComponent) {
-            this.createCustomComponent();
-            this.patchInstance();
-        }
-    }
-    ngOnDestroy() {
-        if (this.customComponent) {
-            this.customComponent.destroy();
-        }
-    }
-    createCustomComponent() {
-        const componentFactory = this.resolver.resolveComponentFactory(this.cell.getColumn().renderComponent);
-        this.customComponent = this.dynamicTarget.createComponent(componentFactory);
-    }
-    patchInstance() {
-        Object.assign(this.customComponent.instance, this.getPatch());
-    }
-    getPatch() {
-        return {
-            value: this.cell.getValue(),
-            rowData: this.cell.getRow().getData()
-        };
-    }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CustomViewComponent, deps: [{ token: i0.ComponentFactoryResolver }], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: CustomViewComponent, selector: "custom-view-component", inputs: { cell: "cell" }, viewQueries: [{ propertyName: "dynamicTarget", first: true, predicate: ["dynamicTarget"], descendants: true, read: ViewContainerRef, static: true }], ngImport: i0, template: `
-    <ng-template #dynamicTarget></ng-template>
-  `, isInline: true }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CustomViewComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: CustomViewComponent, selector: "custom-view-component", inputs: { cell: "cell" }, ngImport: i0, template: "<ng-template\n  *ngComponentOutlet=\"\n    cell.getColumn().renderComponent;\n    inputs: { rowData: cell.getRow().getData(), value: cell.getValue() }\n  \"\n></ng-template>\n", dependencies: [{ kind: "directive", type: i1.NgComponentOutlet, selector: "[ngComponentOutlet]", inputs: ["ngComponentOutlet", "ngComponentOutletInputs", "ngComponentOutletInjector", "ngComponentOutletContent", "ngComponentOutletNgModule", "ngComponentOutletNgModuleFactory"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CustomViewComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CustomViewComponent, decorators: [{
             type: Component,
-            args: [{
-                    selector: 'custom-view-component',
-                    template: `
-    <ng-template #dynamicTarget></ng-template>
-  `,
-                }]
-        }], ctorParameters: function () { return [{ type: i0.ComponentFactoryResolver }]; }, propDecorators: { cell: [{
+            args: [{ selector: "custom-view-component", template: "<ng-template\n  *ngComponentOutlet=\"\n    cell.getColumn().renderComponent;\n    inputs: { rowData: cell.getRow().getData(), value: cell.getValue() }\n  \"\n></ng-template>\n" }]
+        }], propDecorators: { cell: [{
                 type: Input
-            }], dynamicTarget: [{
-                type: ViewChild,
-                args: ['dynamicTarget', { read: ViewContainerRef, static: true }]
             }] } });
 
 class ViewCellComponent {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ViewCellComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: ViewCellComponent, selector: "table-cell-view-mode", inputs: { cell: "cell" }, ngImport: i0, template: `
-    <div [ngSwitch]="cell.getColumn().type">
-        <custom-view-component *ngSwitchCase="'custom'" [cell]="cell"></custom-view-component>
-        <div *ngSwitchCase="'html'" [innerHTML]="cell.getValue()"></div>
-        <div *ngSwitchDefault>{{ cell.getValue() }}</div>
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ViewCellComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: ViewCellComponent, selector: "table-cell-view-mode", inputs: { cell: "cell" }, ngImport: i0, template: `
+    <div>
+      @switch (cell.getColumn().type) {
+        @case ('custom') {
+          <custom-view-component [cell]="cell"></custom-view-component>
+        }
+        @case ('html') {
+          <div [innerHTML]="cell.getValue()"></div>
+        }
+        @default {
+          <div>{{ cell.getValue() }}</div>
+        }
+      }
     </div>
-    `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgSwitch, selector: "[ngSwitch]", inputs: ["ngSwitch"] }, { kind: "directive", type: i1.NgSwitchCase, selector: "[ngSwitchCase]", inputs: ["ngSwitchCase"] }, { kind: "directive", type: i1.NgSwitchDefault, selector: "[ngSwitchDefault]" }, { kind: "component", type: CustomViewComponent, selector: "custom-view-component", inputs: ["cell"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+    `, isInline: true, dependencies: [{ kind: "component", type: CustomViewComponent, selector: "custom-view-component", inputs: ["cell"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ViewCellComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ViewCellComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'table-cell-view-mode',
                     changeDetection: ChangeDetectionStrategy.OnPush,
                     template: `
-    <div [ngSwitch]="cell.getColumn().type">
-        <custom-view-component *ngSwitchCase="'custom'" [cell]="cell"></custom-view-component>
-        <div *ngSwitchCase="'html'" [innerHTML]="cell.getValue()"></div>
-        <div *ngSwitchDefault>{{ cell.getValue() }}</div>
+    <div>
+      @switch (cell.getColumn().type) {
+        @case ('custom') {
+          <custom-view-component [cell]="cell"></custom-view-component>
+        }
+        @case ('html') {
+          <div [innerHTML]="cell.getValue()"></div>
+        }
+        @default {
+          <div>{{ cell.getValue() }}</div>
+        }
+      }
     </div>
     `,
                 }]
@@ -976,26 +971,34 @@ class CellComponent {
             this.grid.save(this.row, this.editConfirm);
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CellComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: CellComponent, selector: "ng2-smart-table-cell", inputs: { grid: "grid", row: "row", editConfirm: "editConfirm", createConfirm: "createConfirm", isNew: "isNew", cell: "cell", inputClass: "inputClass", mode: "mode", isInEditing: "isInEditing" }, outputs: { edited: "edited" }, ngImport: i0, template: `
-    <table-cell-view-mode *ngIf="!isInEditing" [cell]="cell"></table-cell-view-mode>
-    <table-cell-edit-mode *ngIf="isInEditing" [cell]="cell"
-                          [inputClass]="inputClass"
-                          (edited)="onEdited($event)">
-    </table-cell-edit-mode>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "component", type: EditCellComponent, selector: "table-cell-edit-mode", inputs: ["cell", "inputClass"], outputs: ["edited"] }, { kind: "component", type: ViewCellComponent, selector: "table-cell-view-mode", inputs: ["cell"] }] }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CellComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: CellComponent, selector: "ng2-smart-table-cell", inputs: { grid: "grid", row: "row", editConfirm: "editConfirm", createConfirm: "createConfirm", isNew: "isNew", cell: "cell", inputClass: "inputClass", mode: "mode", isInEditing: "isInEditing" }, outputs: { edited: "edited" }, ngImport: i0, template: `
+    @if (!isInEditing) {
+      <table-cell-view-mode [cell]="cell"></table-cell-view-mode>
+    }
+    @if (isInEditing) {
+      <table-cell-edit-mode [cell]="cell"
+        [inputClass]="inputClass"
+        (edited)="onEdited($event)">
+      </table-cell-edit-mode>
+    }
+    `, isInline: true, dependencies: [{ kind: "component", type: EditCellComponent, selector: "table-cell-edit-mode", inputs: ["cell", "inputClass"], outputs: ["edited"] }, { kind: "component", type: ViewCellComponent, selector: "table-cell-view-mode", inputs: ["cell"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CellComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CellComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'ng2-smart-table-cell',
                     template: `
-    <table-cell-view-mode *ngIf="!isInEditing" [cell]="cell"></table-cell-view-mode>
-    <table-cell-edit-mode *ngIf="isInEditing" [cell]="cell"
-                          [inputClass]="inputClass"
-                          (edited)="onEdited($event)">
-    </table-cell-edit-mode>
-  `,
+    @if (!isInEditing) {
+      <table-cell-view-mode [cell]="cell"></table-cell-view-mode>
+    }
+    @if (isInEditing) {
+      <table-cell-edit-mode [cell]="cell"
+        [inputClass]="inputClass"
+        (edited)="onEdited($event)">
+      </table-cell-edit-mode>
+    }
+    `,
                 }]
         }], propDecorators: { grid: [{
                 type: Input
@@ -1034,8 +1037,8 @@ const CELL_COMPONENTS = [
     ViewCellComponent,
 ];
 class CellModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CellModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.2.12", ngImport: i0, type: CellModule, declarations: [CellComponent,
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CellModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: CellModule, declarations: [CellComponent,
             EditCellDefault,
             DefaultEditor,
             CustomEditComponent,
@@ -1059,10 +1062,10 @@ class CellModule {
             TextareaEditorComponent,
             CustomViewComponent,
             ViewCellComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CellModule, imports: [CommonModule,
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CellModule, imports: [CommonModule,
             FormsModule] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CellModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CellModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [
@@ -1493,10 +1496,10 @@ class FilterDefault {
             filter: this.column.getFilterFunction(),
         });
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: FilterDefault, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: FilterDefault, selector: "ng-component", inputs: { column: "column", source: "source", inputClass: "inputClass", query: "query" }, outputs: { filter: "filter" }, ngImport: i0, template: '', isInline: true }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterDefault, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: FilterDefault, selector: "ng-component", inputs: { column: "column", source: "source", inputClass: "inputClass", query: "query" }, outputs: { filter: "filter" }, ngImport: i0, template: '', isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: FilterDefault, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterDefault, decorators: [{
             type: Component,
             args: [{
                     template: '',
@@ -1528,10 +1531,10 @@ class DefaultFilter {
     setFilter() {
         this.filter.emit(this.query);
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: DefaultFilter, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: DefaultFilter, selector: "ng-component", inputs: { query: "query", inputClass: "inputClass", column: "column" }, outputs: { filter: "filter" }, ngImport: i0, template: '', isInline: true }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilter, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: DefaultFilter, selector: "ng-component", inputs: { query: "query", inputClass: "inputClass", column: "column" }, outputs: { filter: "filter" }, ngImport: i0, template: '', isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: DefaultFilter, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilter, decorators: [{
             type: Component,
             args: [{
                     template: '',
@@ -1570,24 +1573,28 @@ class CheckboxFilterComponent extends DefaultFilter {
         this.filterActive = false;
         this.setFilter();
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CheckboxFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: CheckboxFilterComponent, selector: "checkbox-filter", usesInheritance: true, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: CheckboxFilterComponent, selector: "checkbox-filter", usesInheritance: true, ngImport: i0, template: `
     <input type="checkbox" [formControl]="inputControl" [ngClass]="inputClass" class="form-control">
-    <a href="#" *ngIf="filterActive"
-                (click)="resetFilter($event)">{{column.getFilterConfig()?.resetText || 'reset'}}</a>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "directive", type: i2.CheckboxControlValueAccessor, selector: "input[type=checkbox][formControlName],input[type=checkbox][formControl],input[type=checkbox][ngModel]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.FormControlDirective, selector: "[formControl]", inputs: ["formControl", "disabled", "ngModel"], outputs: ["ngModelChange"], exportAs: ["ngForm"] }] }); }
+    @if (filterActive) {
+      <a href="#"
+      (click)="resetFilter($event)">{{column.getFilterConfig()?.resetText || 'reset'}}</a>
+    }
+    `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.CheckboxControlValueAccessor, selector: "input[type=checkbox][formControlName],input[type=checkbox][formControl],input[type=checkbox][ngModel]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.FormControlDirective, selector: "[formControl]", inputs: ["formControl", "disabled", "ngModel"], outputs: ["ngModelChange"], exportAs: ["ngForm"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CheckboxFilterComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxFilterComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'checkbox-filter',
                     template: `
     <input type="checkbox" [formControl]="inputControl" [ngClass]="inputClass" class="form-control">
-    <a href="#" *ngIf="filterActive"
-                (click)="resetFilter($event)">{{column.getFilterConfig()?.resetText || 'reset'}}</a>
-  `,
+    @if (filterActive) {
+      <a href="#"
+      (click)="resetFilter($event)">{{column.getFilterConfig()?.resetText || 'reset'}}</a>
+    }
+    `,
                 }]
-        }], ctorParameters: function () { return []; } });
+        }], ctorParameters: () => [] });
 
 class InputFilterComponent extends DefaultFilter {
     constructor() {
@@ -1610,8 +1617,8 @@ class InputFilterComponent extends DefaultFilter {
             this.inputControl.setValue(this.query);
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: InputFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: InputFilterComponent, selector: "input-filter", usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: InputFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: InputFilterComponent, selector: "input-filter", usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `
     <input
       [ngClass]="inputClass"
       [formControl]="inputControl"
@@ -1620,7 +1627,7 @@ class InputFilterComponent extends DefaultFilter {
       placeholder="{{ column.title }}"/>
   `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.DefaultValueAccessor, selector: "input:not([type=checkbox])[formControlName],textarea[formControlName],input:not([type=checkbox])[formControl],textarea[formControl],input:not([type=checkbox])[ngModel],textarea[ngModel],[ngDefaultControl]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.FormControlDirective, selector: "[formControl]", inputs: ["formControl", "disabled", "ngModel"], outputs: ["ngModelChange"], exportAs: ["ngForm"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: InputFilterComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: InputFilterComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'input-filter',
@@ -1633,7 +1640,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
       placeholder="{{ column.title }}"/>
   `,
                 }]
-        }], ctorParameters: function () { return []; } });
+        }], ctorParameters: () => [] });
 
 class SelectFilterComponent extends DefaultFilter {
     constructor() {
@@ -1646,93 +1653,109 @@ class SelectFilterComponent extends DefaultFilter {
                 .subscribe((value) => this.setFilter());
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: SelectFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: SelectFilterComponent, selector: "select-filter", viewQueries: [{ propertyName: "inputControl", first: true, predicate: ["inputControl"], descendants: true, read: NgControl, static: true }], usesInheritance: true, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: SelectFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: SelectFilterComponent, selector: "select-filter", viewQueries: [{ propertyName: "inputControl", first: true, predicate: ["inputControl"], descendants: true, read: NgControl, static: true }], usesInheritance: true, ngImport: i0, template: `
     <select [ngClass]="inputClass"
-            class="form-control"
-            #inputControl
-            [(ngModel)]="query">
-
-        <option value="">{{ column.getFilterConfig().selectText }}</option>
-        <option *ngFor="let option of column.getFilterConfig().list" [value]="option.value">
+      class="form-control"
+      #inputControl
+      [(ngModel)]="query">
+    
+      <option value="">{{ column.getFilterConfig().selectText }}</option>
+      @for (option of column.getFilterConfig().list; track option) {
+        <option [value]="option.value">
           {{ option.title }}
         </option>
+      }
     </select>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { kind: "directive", type: i2.NgSelectOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.ɵNgSelectMultipleOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.SelectControlValueAccessor, selector: "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]", inputs: ["compareWith"] }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
+    `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.NgSelectOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.ɵNgSelectMultipleOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.SelectControlValueAccessor, selector: "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]", inputs: ["compareWith"] }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: SelectFilterComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: SelectFilterComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'select-filter',
                     template: `
     <select [ngClass]="inputClass"
-            class="form-control"
-            #inputControl
-            [(ngModel)]="query">
-
-        <option value="">{{ column.getFilterConfig().selectText }}</option>
-        <option *ngFor="let option of column.getFilterConfig().list" [value]="option.value">
+      class="form-control"
+      #inputControl
+      [(ngModel)]="query">
+    
+      <option value="">{{ column.getFilterConfig().selectText }}</option>
+      @for (option of column.getFilterConfig().list; track option) {
+        <option [value]="option.value">
           {{ option.title }}
         </option>
+      }
     </select>
-  `,
+    `,
                 }]
-        }], ctorParameters: function () { return []; }, propDecorators: { inputControl: [{
+        }], ctorParameters: () => [], propDecorators: { inputControl: [{
                 type: ViewChild,
                 args: ['inputControl', { read: NgControl, static: true }]
             }] } });
 
 class DefaultFilterComponent extends FilterDefault {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: DefaultFilterComponent, deps: null, target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: DefaultFilterComponent, selector: "default-table-filter", usesInheritance: true, ngImport: i0, template: `
-    <ng-container [ngSwitch]="column.getFilterType()">
-      <select-filter *ngSwitchCase="'list'"
-                     [query]="query"
-                     [ngClass]="inputClass"
-                     [column]="column"
-                     (filter)="onFilter($event)">
-      </select-filter>
-      <checkbox-filter *ngSwitchCase="'checkbox'"
-                       [query]="query"
-                       [ngClass]="inputClass"
-                       [column]="column"
-                       (filter)="onFilter($event)">
-      </checkbox-filter>
-      <input-filter *ngSwitchDefault
-                    [query]="query"
-                    [ngClass]="inputClass"
-                    [column]="column"
-                    (filter)="onFilter($event)">
-      </input-filter>
-    </ng-container>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgSwitch, selector: "[ngSwitch]", inputs: ["ngSwitch"] }, { kind: "directive", type: i1.NgSwitchCase, selector: "[ngSwitchCase]", inputs: ["ngSwitchCase"] }, { kind: "directive", type: i1.NgSwitchDefault, selector: "[ngSwitchDefault]" }, { kind: "component", type: CheckboxFilterComponent, selector: "checkbox-filter" }, { kind: "component", type: InputFilterComponent, selector: "input-filter" }, { kind: "component", type: SelectFilterComponent, selector: "select-filter" }] }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilterComponent, deps: null, target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: DefaultFilterComponent, selector: "default-table-filter", usesInheritance: true, ngImport: i0, template: `
+@switch (column.getFilterType()) {
+  @case ('list') {
+    <select-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+    </select-filter>
+  }
+  @case ('checkbox') {
+    <checkbox-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+    </checkbox-filter>
+  }
+  @default {
+    <input-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+  </input-filter>
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: DefaultFilterComponent, decorators: [{
+}
+`, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "component", type: CheckboxFilterComponent, selector: "checkbox-filter" }, { kind: "component", type: InputFilterComponent, selector: "input-filter" }, { kind: "component", type: SelectFilterComponent, selector: "select-filter" }] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilterComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'default-table-filter',
                     template: `
-    <ng-container [ngSwitch]="column.getFilterType()">
-      <select-filter *ngSwitchCase="'list'"
-                     [query]="query"
-                     [ngClass]="inputClass"
-                     [column]="column"
-                     (filter)="onFilter($event)">
-      </select-filter>
-      <checkbox-filter *ngSwitchCase="'checkbox'"
-                       [query]="query"
-                       [ngClass]="inputClass"
-                       [column]="column"
-                       (filter)="onFilter($event)">
-      </checkbox-filter>
-      <input-filter *ngSwitchDefault
-                    [query]="query"
-                    [ngClass]="inputClass"
-                    [column]="column"
-                    (filter)="onFilter($event)">
-      </input-filter>
-    </ng-container>
-  `,
+@switch (column.getFilterType()) {
+  @case ('list') {
+    <select-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+    </select-filter>
+  }
+  @case ('checkbox') {
+    <checkbox-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+    </checkbox-filter>
+  }
+  @default {
+    <input-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+  </input-filter>
+}
+}
+`,
                 }]
         }] });
 
@@ -1762,16 +1785,16 @@ class CustomFilterComponent extends FilterDefault {
             this.customComponent.destroy();
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CustomFilterComponent, deps: [{ token: i0.ComponentFactoryResolver }], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: CustomFilterComponent, selector: "custom-table-filter", viewQueries: [{ propertyName: "dynamicTarget", first: true, predicate: ["dynamicTarget"], descendants: true, read: ViewContainerRef, static: true }], usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `<ng-template #dynamicTarget></ng-template>`, isInline: true }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CustomFilterComponent, deps: [{ token: i0.ComponentFactoryResolver }], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: CustomFilterComponent, selector: "custom-table-filter", viewQueries: [{ propertyName: "dynamicTarget", first: true, predicate: ["dynamicTarget"], descendants: true, read: ViewContainerRef, static: true }], usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `<ng-template #dynamicTarget></ng-template>`, isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CustomFilterComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CustomFilterComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'custom-table-filter',
                     template: `<ng-template #dynamicTarget></ng-template>`,
                 }]
-        }], ctorParameters: function () { return [{ type: i0.ComponentFactoryResolver }]; }, propDecorators: { dynamicTarget: [{
+        }], ctorParameters: () => [{ type: i0.ComponentFactoryResolver }], propDecorators: { dynamicTarget: [{
                 type: ViewChild,
                 args: ['dynamicTarget', { read: ViewContainerRef, static: true }]
             }] } });
@@ -1799,46 +1822,62 @@ class FilterComponent extends FilterDefault {
             });
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: FilterComponent, deps: null, target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: FilterComponent, selector: "ng2-smart-table-filter", usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `
-      <div class="ng2-smart-filter" *ngIf="column.isFilterable" [ngSwitch]="column.getFilterType()">
-        <custom-table-filter *ngSwitchCase="'custom'"
-                             [query]="query"
-                             [column]="column"
-                             [source]="source"
-                             [inputClass]="inputClass"
-                             (filter)="onFilter($event)">
-        </custom-table-filter>
-        <default-table-filter *ngSwitchDefault
-                              [query]="query"
-                              [column]="column"
-                              [source]="source"
-                              [inputClass]="inputClass"
-                              (filter)="onFilter($event)">
-        </default-table-filter>
-      </div>
-    `, isInline: true, styles: [":host .ng2-smart-filter ::ng-deep input,:host .ng2-smart-filter ::ng-deep select{width:100%;line-height:normal;padding:.375em .75em;font-weight:400}:host .ng2-smart-filter ::ng-deep input[type=search]{box-sizing:inherit}:host .ng2-smart-filter ::ng-deep .completer-dropdown-holder{font-weight:400}:host .ng2-smart-filter ::ng-deep a{font-weight:400}\n"], dependencies: [{ kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "directive", type: i1.NgSwitch, selector: "[ngSwitch]", inputs: ["ngSwitch"] }, { kind: "directive", type: i1.NgSwitchCase, selector: "[ngSwitchCase]", inputs: ["ngSwitchCase"] }, { kind: "directive", type: i1.NgSwitchDefault, selector: "[ngSwitchDefault]" }, { kind: "component", type: DefaultFilterComponent, selector: "default-table-filter" }, { kind: "component", type: CustomFilterComponent, selector: "custom-table-filter" }] }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterComponent, deps: null, target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: FilterComponent, selector: "ng2-smart-table-filter", usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `
+      @if (column.isFilterable) {
+        <div class="ng2-smart-filter">
+          @switch (column.getFilterType()) {
+            @case ('custom') {
+              <custom-table-filter
+                [query]="query"
+                [column]="column"
+                [source]="source"
+                [inputClass]="inputClass"
+                (filter)="onFilter($event)">
+              </custom-table-filter>
+            }
+            @default {
+              <default-table-filter
+                [query]="query"
+                [column]="column"
+                [source]="source"
+                [inputClass]="inputClass"
+                (filter)="onFilter($event)">
+              </default-table-filter>
+            }
+          }
+        </div>
+      }
+      `, isInline: true, styles: [":host .ng2-smart-filter ::ng-deep input,:host .ng2-smart-filter ::ng-deep select{width:100%;line-height:normal;padding:.375em .75em;font-weight:400}:host .ng2-smart-filter ::ng-deep input[type=search]{box-sizing:inherit}:host .ng2-smart-filter ::ng-deep .completer-dropdown-holder{font-weight:400}:host .ng2-smart-filter ::ng-deep a{font-weight:400}\n"], dependencies: [{ kind: "component", type: DefaultFilterComponent, selector: "default-table-filter" }, { kind: "component", type: CustomFilterComponent, selector: "custom-table-filter" }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: FilterComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ng2-smart-table-filter', template: `
-      <div class="ng2-smart-filter" *ngIf="column.isFilterable" [ngSwitch]="column.getFilterType()">
-        <custom-table-filter *ngSwitchCase="'custom'"
-                             [query]="query"
-                             [column]="column"
-                             [source]="source"
-                             [inputClass]="inputClass"
-                             (filter)="onFilter($event)">
-        </custom-table-filter>
-        <default-table-filter *ngSwitchDefault
-                              [query]="query"
-                              [column]="column"
-                              [source]="source"
-                              [inputClass]="inputClass"
-                              (filter)="onFilter($event)">
-        </default-table-filter>
-      </div>
-    `, styles: [":host .ng2-smart-filter ::ng-deep input,:host .ng2-smart-filter ::ng-deep select{width:100%;line-height:normal;padding:.375em .75em;font-weight:400}:host .ng2-smart-filter ::ng-deep input[type=search]{box-sizing:inherit}:host .ng2-smart-filter ::ng-deep .completer-dropdown-holder{font-weight:400}:host .ng2-smart-filter ::ng-deep a{font-weight:400}\n"] }]
+      @if (column.isFilterable) {
+        <div class="ng2-smart-filter">
+          @switch (column.getFilterType()) {
+            @case ('custom') {
+              <custom-table-filter
+                [query]="query"
+                [column]="column"
+                [source]="source"
+                [inputClass]="inputClass"
+                (filter)="onFilter($event)">
+              </custom-table-filter>
+            }
+            @default {
+              <default-table-filter
+                [query]="query"
+                [column]="column"
+                [source]="source"
+                [inputClass]="inputClass"
+                (filter)="onFilter($event)">
+              </default-table-filter>
+            }
+          }
+        </div>
+      }
+      `, styles: [":host .ng2-smart-filter ::ng-deep input,:host .ng2-smart-filter ::ng-deep select{width:100%;line-height:normal;padding:.375em .75em;font-weight:400}:host .ng2-smart-filter ::ng-deep input[type=search]{box-sizing:inherit}:host .ng2-smart-filter ::ng-deep .completer-dropdown-holder{font-weight:400}:host .ng2-smart-filter ::ng-deep a{font-weight:400}\n"] }]
         }] });
 
 const FILTER_COMPONENTS = [
@@ -1852,8 +1891,8 @@ const FILTER_COMPONENTS = [
     SelectFilterComponent,
 ];
 class FilterModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: FilterModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.2.12", ngImport: i0, type: FilterModule, declarations: [FilterDefault,
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, declarations: [FilterDefault,
             DefaultFilter,
             FilterComponent,
             DefaultFilterComponent,
@@ -1870,11 +1909,11 @@ class FilterModule {
             CheckboxFilterComponent,
             InputFilterComponent,
             SelectFilterComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: FilterModule, imports: [CommonModule,
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, imports: [CommonModule,
             FormsModule,
             ReactiveFormsModule] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: FilterModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [
@@ -1987,118 +2026,138 @@ class PagerComponent {
         this.source.refresh();
         this.initPages();
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: PagerComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: PagerComponent, selector: "ng2-smart-table-pager", inputs: { source: "source", perPageSelect: "perPageSelect" }, outputs: { changePage: "changePage" }, usesOnChanges: true, ngImport: i0, template: `
-    <nav *ngIf="shouldShow()" class="ng2-smart-pagination-nav">
-      <ul class="ng2-smart-pagination pagination">
-        <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
-          <a class="ng2-smart-page-link page-link" href="#"
-          (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
-            <span aria-hidden="true">&laquo;</span>
-            <span class="sr-only">First</span>
-          </a>
-        </li>
-        <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
-          <a class="ng2-smart-page-link page-link page-link-prev" href="#"
-             (click)="getPage() == 1 ? false : prev()" aria-label="Prev">
-            <span aria-hidden="true">&lt;</span>
-            <span class="sr-only">Prev</span>
-          </a>
-        </li>
-        <li class="ng2-smart-page-item page-item"
-        [ngClass]="{active: getPage() == page}" *ngFor="let page of getPages()">
-          <span class="ng2-smart-page-link page-link"
-          *ngIf="getPage() == page">{{ page }} <span class="sr-only">(current)</span></span>
-          <a class="ng2-smart-page-link page-link" href="#"
-          (click)="paginate(page)" *ngIf="getPage() != page">{{ page }}</a>
-        </li>
-
-        <li class="ng2-smart-page-item page-item"
-            [ngClass]="{disabled: getPage() == getLast()}">
-          <a class="ng2-smart-page-link page-link page-link-next" href="#"
-             (click)="getPage() == getLast() ? false : next()" aria-label="Next">
-            <span aria-hidden="true">&gt;</span>
-            <span class="sr-only">Next</span>
-          </a>
-        </li>
-        
-        <li class="ng2-smart-page-item page-item"
-        [ngClass]="{disabled: getPage() == getLast()}">
-          <a class="ng2-smart-page-link page-link" href="#"
-          (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
-            <span aria-hidden="true">&raquo;</span>
-            <span class="sr-only">Last</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: PagerComponent, selector: "ng2-smart-table-pager", inputs: { source: "source", perPageSelect: "perPageSelect" }, outputs: { changePage: "changePage" }, usesOnChanges: true, ngImport: i0, template: `
+    @if (shouldShow()) {
+      <nav class="ng2-smart-pagination-nav">
+        <ul class="ng2-smart-pagination pagination">
+          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
+            <a class="ng2-smart-page-link page-link" href="#"
+              (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">First</span>
+            </a>
+          </li>
+          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
+            <a class="ng2-smart-page-link page-link page-link-prev" href="#"
+              (click)="getPage() == 1 ? false : prev()" aria-label="Prev">
+              <span aria-hidden="true">&lt;</span>
+              <span class="sr-only">Prev</span>
+            </a>
+          </li>
+          @for (page of getPages(); track page) {
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{active: getPage() == page}">
+              @if (getPage() == page) {
+                <span class="ng2-smart-page-link page-link"
+                  >{{ page }} <span class="sr-only">(current)</span></span>
+                }
+                @if (getPage() != page) {
+                  <a class="ng2-smart-page-link page-link" href="#"
+                  (click)="paginate(page)">{{ page }}</a>
+                }
+              </li>
+            }
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{disabled: getPage() == getLast()}">
+              <a class="ng2-smart-page-link page-link page-link-next" href="#"
+                (click)="getPage() == getLast() ? false : next()" aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{disabled: getPage() == getLast()}">
+              <a class="ng2-smart-page-link page-link" href="#"
+                (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Last</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      }
     
-    <nav *ngIf="perPageSelect && perPageSelect.length > 0" class="ng2-smart-pagination-per-page">
-      <label for="per-page">
-        Per Page:
-      </label>
-      <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
-        <option *ngFor="let item of perPageSelect" [value]="item">{{ item }}</option>
-      </select>
-    </nav>
-  `, isInline: true, styles: [".ng2-smart-pagination{display:inline-flex;font-size:.875em;padding:0}.ng2-smart-pagination .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}.ng2-smart-pagination .ng2-smart-page-item{display:inline}.ng2-smart-pagination .page-link-next,.ng2-smart-pagination .page-link-prev{font-size:10px}:host{display:flex;justify-content:space-between}:host select{margin:1rem 0 1rem 1rem}:host label{margin:1rem 0 1rem 1rem;line-height:2.5rem}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "directive", type: i2.NgSelectOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.ɵNgSelectMultipleOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.SelectControlValueAccessor, selector: "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]", inputs: ["compareWith"] }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
+      @if (perPageSelect && perPageSelect.length > 0) {
+        <nav class="ng2-smart-pagination-per-page">
+          <label for="per-page">
+            Per Page:
+          </label>
+          <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
+            @for (item of perPageSelect; track item) {
+              <option [value]="item">{{ item }}</option>
+            }
+          </select>
+        </nav>
+      }
+    `, isInline: true, styles: [".ng2-smart-pagination{display:inline-flex;font-size:.875em;padding:0}.ng2-smart-pagination .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}.ng2-smart-pagination .ng2-smart-page-item{display:inline}.ng2-smart-pagination .page-link-next,.ng2-smart-pagination .page-link-prev{font-size:10px}:host{display:flex;justify-content:space-between}:host select{margin:1rem 0 1rem 1rem}:host label{margin:1rem 0 1rem 1rem;line-height:2.5rem}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.NgSelectOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.ɵNgSelectMultipleOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.SelectControlValueAccessor, selector: "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]", inputs: ["compareWith"] }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: PagerComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ng2-smart-table-pager', template: `
-    <nav *ngIf="shouldShow()" class="ng2-smart-pagination-nav">
-      <ul class="ng2-smart-pagination pagination">
-        <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
-          <a class="ng2-smart-page-link page-link" href="#"
-          (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
-            <span aria-hidden="true">&laquo;</span>
-            <span class="sr-only">First</span>
-          </a>
-        </li>
-        <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
-          <a class="ng2-smart-page-link page-link page-link-prev" href="#"
-             (click)="getPage() == 1 ? false : prev()" aria-label="Prev">
-            <span aria-hidden="true">&lt;</span>
-            <span class="sr-only">Prev</span>
-          </a>
-        </li>
-        <li class="ng2-smart-page-item page-item"
-        [ngClass]="{active: getPage() == page}" *ngFor="let page of getPages()">
-          <span class="ng2-smart-page-link page-link"
-          *ngIf="getPage() == page">{{ page }} <span class="sr-only">(current)</span></span>
-          <a class="ng2-smart-page-link page-link" href="#"
-          (click)="paginate(page)" *ngIf="getPage() != page">{{ page }}</a>
-        </li>
-
-        <li class="ng2-smart-page-item page-item"
-            [ngClass]="{disabled: getPage() == getLast()}">
-          <a class="ng2-smart-page-link page-link page-link-next" href="#"
-             (click)="getPage() == getLast() ? false : next()" aria-label="Next">
-            <span aria-hidden="true">&gt;</span>
-            <span class="sr-only">Next</span>
-          </a>
-        </li>
-        
-        <li class="ng2-smart-page-item page-item"
-        [ngClass]="{disabled: getPage() == getLast()}">
-          <a class="ng2-smart-page-link page-link" href="#"
-          (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
-            <span aria-hidden="true">&raquo;</span>
-            <span class="sr-only">Last</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+    @if (shouldShow()) {
+      <nav class="ng2-smart-pagination-nav">
+        <ul class="ng2-smart-pagination pagination">
+          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
+            <a class="ng2-smart-page-link page-link" href="#"
+              (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">First</span>
+            </a>
+          </li>
+          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
+            <a class="ng2-smart-page-link page-link page-link-prev" href="#"
+              (click)="getPage() == 1 ? false : prev()" aria-label="Prev">
+              <span aria-hidden="true">&lt;</span>
+              <span class="sr-only">Prev</span>
+            </a>
+          </li>
+          @for (page of getPages(); track page) {
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{active: getPage() == page}">
+              @if (getPage() == page) {
+                <span class="ng2-smart-page-link page-link"
+                  >{{ page }} <span class="sr-only">(current)</span></span>
+                }
+                @if (getPage() != page) {
+                  <a class="ng2-smart-page-link page-link" href="#"
+                  (click)="paginate(page)">{{ page }}</a>
+                }
+              </li>
+            }
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{disabled: getPage() == getLast()}">
+              <a class="ng2-smart-page-link page-link page-link-next" href="#"
+                (click)="getPage() == getLast() ? false : next()" aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{disabled: getPage() == getLast()}">
+              <a class="ng2-smart-page-link page-link" href="#"
+                (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Last</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      }
     
-    <nav *ngIf="perPageSelect && perPageSelect.length > 0" class="ng2-smart-pagination-per-page">
-      <label for="per-page">
-        Per Page:
-      </label>
-      <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
-        <option *ngFor="let item of perPageSelect" [value]="item">{{ item }}</option>
-      </select>
-    </nav>
-  `, styles: [".ng2-smart-pagination{display:inline-flex;font-size:.875em;padding:0}.ng2-smart-pagination .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}.ng2-smart-pagination .ng2-smart-page-item{display:inline}.ng2-smart-pagination .page-link-next,.ng2-smart-pagination .page-link-prev{font-size:10px}:host{display:flex;justify-content:space-between}:host select{margin:1rem 0 1rem 1rem}:host label{margin:1rem 0 1rem 1rem;line-height:2.5rem}\n"] }]
+      @if (perPageSelect && perPageSelect.length > 0) {
+        <nav class="ng2-smart-pagination-per-page">
+          <label for="per-page">
+            Per Page:
+          </label>
+          <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
+            @for (item of perPageSelect; track item) {
+              <option [value]="item">{{ item }}</option>
+            }
+          </select>
+        </nav>
+      }
+    `, styles: [".ng2-smart-pagination{display:inline-flex;font-size:.875em;padding:0}.ng2-smart-pagination .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}.ng2-smart-pagination .ng2-smart-page-item{display:inline}.ng2-smart-pagination .page-link-next,.ng2-smart-pagination .page-link-prev{font-size:10px}:host{display:flex;justify-content:space-between}:host select{margin:1rem 0 1rem 1rem}:host label{margin:1rem 0 1rem 1rem;line-height:2.5rem}\n"] }]
         }], propDecorators: { source: [{
                 type: Input
             }], perPageSelect: [{
@@ -2108,13 +2167,13 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
             }] } });
 
 class PagerModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: PagerModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.2.12", ngImport: i0, type: PagerModule, declarations: [PagerComponent], imports: [CommonModule,
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, declarations: [PagerComponent], imports: [CommonModule,
             FormsModule], exports: [PagerComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: PagerModule, imports: [CommonModule,
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, imports: [CommonModule,
             FormsModule] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: PagerModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [
@@ -2150,9 +2209,9 @@ class TbodyCreateCancelComponent {
         this.saveButtonContent = this.grid.getSetting("edit.saveButtonContent", "save");
         this.cancelButtonContent = this.grid.getSetting("edit.cancelButtonContent", "cancel");
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TbodyCreateCancelComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: TbodyCreateCancelComponent, selector: "ng2-st-tbody-create-cancel", inputs: { grid: "grid", row: "row", editConfirm: "editConfirm", editCancel: "editCancel" }, usesOnChanges: true, ngImport: i0, template: `
-    <ng-container *ngIf="!row.pending; else loader">
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TbodyCreateCancelComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: TbodyCreateCancelComponent, selector: "ng2-st-tbody-create-cancel", inputs: { grid: "grid", row: "row", editConfirm: "editConfirm", editCancel: "editCancel" }, usesOnChanges: true, ngImport: i0, template: `
+    @if (!row.pending) {
       <a
         href="#"
         [id]="'row-' + row.index + '_editing-confirm-button'"
@@ -2167,8 +2226,7 @@ class TbodyCreateCancelComponent {
         [innerHTML]="cancelButtonContent"
         (click)="onCancelEdit($event)"
       ></a>
-    </ng-container>
-    <ng-template #loader>
+    } @else {
       <div style="display: flex;">
         <svg
           (click)="$event.stopPropagation()"
@@ -2182,11 +2240,11 @@ class TbodyCreateCancelComponent {
           viewBox="0 0 100 100"
           enable-background="new 0 0 0 0"
           xml:space="preserve"
-        >
+          >
           <path
             fill="#e9e9e9"
             d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
+            >
             <animateTransform
               attributeName="transform"
               attributeType="XML"
@@ -2195,7 +2253,7 @@ class TbodyCreateCancelComponent {
               from="0 50 50"
               to="360 50 50"
               repeatCount="indefinite"
-            />
+              />
           </path>
         </svg>
         <svg
@@ -2210,11 +2268,11 @@ class TbodyCreateCancelComponent {
           viewBox="0 0 100 100"
           enable-background="new 0 0 0 0"
           xml:space="preserve"
-        >
+          >
           <path
             fill="#e9e9e9"
             d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
+            >
             <animateTransform
               attributeName="transform"
               attributeType="XML"
@@ -2223,19 +2281,19 @@ class TbodyCreateCancelComponent {
               from="0 50 50"
               to="360 50 50"
               repeatCount="indefinite"
-            />
+              />
           </path>
         </svg>
       </div>
-    </ng-template>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }] }); }
+    }
+    `, isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TbodyCreateCancelComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TbodyCreateCancelComponent, decorators: [{
             type: Component,
             args: [{
                     selector: "ng2-st-tbody-create-cancel",
                     template: `
-    <ng-container *ngIf="!row.pending; else loader">
+    @if (!row.pending) {
       <a
         href="#"
         [id]="'row-' + row.index + '_editing-confirm-button'"
@@ -2250,8 +2308,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
         [innerHTML]="cancelButtonContent"
         (click)="onCancelEdit($event)"
       ></a>
-    </ng-container>
-    <ng-template #loader>
+    } @else {
       <div style="display: flex;">
         <svg
           (click)="$event.stopPropagation()"
@@ -2265,11 +2322,11 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
           viewBox="0 0 100 100"
           enable-background="new 0 0 0 0"
           xml:space="preserve"
-        >
+          >
           <path
             fill="#e9e9e9"
             d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
+            >
             <animateTransform
               attributeName="transform"
               attributeType="XML"
@@ -2278,7 +2335,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
               from="0 50 50"
               to="360 50 50"
               repeatCount="indefinite"
-            />
+              />
           </path>
         </svg>
         <svg
@@ -2293,11 +2350,11 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
           viewBox="0 0 100 100"
           enable-background="new 0 0 0 0"
           xml:space="preserve"
-        >
+          >
           <path
             fill="#e9e9e9"
             d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
+            >
             <animateTransform
               attributeName="transform"
               attributeType="XML"
@@ -2306,12 +2363,12 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
               from="0 50 50"
               to="360 50 50"
               repeatCount="indefinite"
-            />
+              />
           </path>
         </svg>
       </div>
-    </ng-template>
-  `,
+    }
+    `,
                 }]
         }], propDecorators: { grid: [{
                 type: Input
@@ -2364,176 +2421,182 @@ class TbodyEditDeleteComponent {
         this.editRowButtonContent = this.grid.getSetting("edit.editButtonContent");
         this.deleteRowButtonContent = this.grid.getSetting("delete.deleteButtonContent");
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TbodyEditDeleteComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: TbodyEditDeleteComponent, selector: "ng2-st-tbody-edit-delete", inputs: { grid: "grid", row: "row", source: "source", deleteConfirm: "deleteConfirm", editConfirm: "editConfirm" }, outputs: { edit: "edit", delete: "delete", editRowSelect: "editRowSelect" }, usesOnChanges: true, ngImport: i0, template: `
-    <ng-container *ngIf="!row.pending; else loader">
-      <a
-        href="#"
-        *ngIf="isActionEdit"
-        [id]="'row-' + row.index + '_action-edit-button'"
-        class="ng2-smart-action ng2-smart-action-edit-edit"
-        [innerHTML]="editRowButtonContent"
-        (click)="onEdit($event)"
-      ></a>
-      <a
-        href="#"
-        *ngIf="isActionDelete"
-        [id]="'row-' + row.index + '_action-delete-button'"
-        class="ng2-smart-action ng2-smart-action-delete-delete"
-        [innerHTML]="deleteRowButtonContent"
-        (click)="onDelete($event)"
-      ></a>
-    </ng-container>
-    <ng-template #loader>
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TbodyEditDeleteComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: TbodyEditDeleteComponent, selector: "ng2-st-tbody-edit-delete", inputs: { grid: "grid", row: "row", source: "source", deleteConfirm: "deleteConfirm", editConfirm: "editConfirm" }, outputs: { edit: "edit", delete: "delete", editRowSelect: "editRowSelect" }, usesOnChanges: true, ngImport: i0, template: `
+    @if (!row.pending) {
+      @if (isActionEdit) {
+        <a
+          href="#"
+          [id]="'row-' + row.index + '_action-edit-button'"
+          class="ng2-smart-action ng2-smart-action-edit-edit"
+          [innerHTML]="editRowButtonContent"
+          (click)="onEdit($event)"
+        ></a>
+      }
+      @if (isActionDelete) {
+        <a
+          href="#"
+          [id]="'row-' + row.index + '_action-delete-button'"
+          class="ng2-smart-action ng2-smart-action-delete-delete"
+          [innerHTML]="deleteRowButtonContent"
+          (click)="onDelete($event)"
+        ></a>
+      }
+    } @else {
       <div style="display: flex;">
-        <svg
-          *ngIf="isActionEdit"
-          (click)="$event.stopPropagation()"
-          style="height: 2rem; width: 2rem;"
-          version="1.1"
-          id="L9"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          viewBox="0 0 100 100"
-          enable-background="new 0 0 0 0"
-          xml:space="preserve"
-        >
-          <path
-            fill="#e9e9e9"
-            d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
-            <animateTransform
-              attributeName="transform"
-              attributeType="XML"
-              type="rotate"
-              dur="1s"
-              from="0 50 50"
-              to="360 50 50"
-              repeatCount="indefinite"
-            />
-          </path>
-        </svg>
-        <svg
-          *ngIf="isActionDelete"
-          (click)="$event.stopPropagation()"
-          style="height: 2rem; width: 2rem;"
-          version="1.1"
-          id="L9"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          viewBox="0 0 100 100"
-          enable-background="new 0 0 0 0"
-          xml:space="preserve"
-        >
-          <path
-            fill="#e9e9e9"
-            d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
-            <animateTransform
-              attributeName="transform"
-              attributeType="XML"
-              type="rotate"
-              dur="1s"
-              from="0 50 50"
-              to="360 50 50"
-              repeatCount="indefinite"
-            />
-          </path>
-        </svg>
+        @if (isActionEdit) {
+          <svg
+            (click)="$event.stopPropagation()"
+            style="height: 2rem; width: 2rem;"
+            version="1.1"
+            id="L9"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            viewBox="0 0 100 100"
+            enable-background="new 0 0 0 0"
+            xml:space="preserve"
+            >
+            <path
+              fill="#e9e9e9"
+              d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
+              >
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                dur="1s"
+                from="0 50 50"
+                to="360 50 50"
+                repeatCount="indefinite"
+                />
+            </path>
+          </svg>
+        }
+        @if (isActionDelete) {
+          <svg
+            (click)="$event.stopPropagation()"
+            style="height: 2rem; width: 2rem;"
+            version="1.1"
+            id="L9"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            viewBox="0 0 100 100"
+            enable-background="new 0 0 0 0"
+            xml:space="preserve"
+            >
+            <path
+              fill="#e9e9e9"
+              d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
+              >
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                dur="1s"
+                from="0 50 50"
+                to="360 50 50"
+                repeatCount="indefinite"
+                />
+            </path>
+          </svg>
+        }
       </div>
-    </ng-template>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }] }); }
+    }
+    `, isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TbodyEditDeleteComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TbodyEditDeleteComponent, decorators: [{
             type: Component,
             args: [{
                     selector: "ng2-st-tbody-edit-delete",
                     template: `
-    <ng-container *ngIf="!row.pending; else loader">
-      <a
-        href="#"
-        *ngIf="isActionEdit"
-        [id]="'row-' + row.index + '_action-edit-button'"
-        class="ng2-smart-action ng2-smart-action-edit-edit"
-        [innerHTML]="editRowButtonContent"
-        (click)="onEdit($event)"
-      ></a>
-      <a
-        href="#"
-        *ngIf="isActionDelete"
-        [id]="'row-' + row.index + '_action-delete-button'"
-        class="ng2-smart-action ng2-smart-action-delete-delete"
-        [innerHTML]="deleteRowButtonContent"
-        (click)="onDelete($event)"
-      ></a>
-    </ng-container>
-    <ng-template #loader>
+    @if (!row.pending) {
+      @if (isActionEdit) {
+        <a
+          href="#"
+          [id]="'row-' + row.index + '_action-edit-button'"
+          class="ng2-smart-action ng2-smart-action-edit-edit"
+          [innerHTML]="editRowButtonContent"
+          (click)="onEdit($event)"
+        ></a>
+      }
+      @if (isActionDelete) {
+        <a
+          href="#"
+          [id]="'row-' + row.index + '_action-delete-button'"
+          class="ng2-smart-action ng2-smart-action-delete-delete"
+          [innerHTML]="deleteRowButtonContent"
+          (click)="onDelete($event)"
+        ></a>
+      }
+    } @else {
       <div style="display: flex;">
-        <svg
-          *ngIf="isActionEdit"
-          (click)="$event.stopPropagation()"
-          style="height: 2rem; width: 2rem;"
-          version="1.1"
-          id="L9"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          viewBox="0 0 100 100"
-          enable-background="new 0 0 0 0"
-          xml:space="preserve"
-        >
-          <path
-            fill="#e9e9e9"
-            d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
-            <animateTransform
-              attributeName="transform"
-              attributeType="XML"
-              type="rotate"
-              dur="1s"
-              from="0 50 50"
-              to="360 50 50"
-              repeatCount="indefinite"
-            />
-          </path>
-        </svg>
-        <svg
-          *ngIf="isActionDelete"
-          (click)="$event.stopPropagation()"
-          style="height: 2rem; width: 2rem;"
-          version="1.1"
-          id="L9"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          x="0px"
-          y="0px"
-          viewBox="0 0 100 100"
-          enable-background="new 0 0 0 0"
-          xml:space="preserve"
-        >
-          <path
-            fill="#e9e9e9"
-            d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
-            <animateTransform
-              attributeName="transform"
-              attributeType="XML"
-              type="rotate"
-              dur="1s"
-              from="0 50 50"
-              to="360 50 50"
-              repeatCount="indefinite"
-            />
-          </path>
-        </svg>
+        @if (isActionEdit) {
+          <svg
+            (click)="$event.stopPropagation()"
+            style="height: 2rem; width: 2rem;"
+            version="1.1"
+            id="L9"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            viewBox="0 0 100 100"
+            enable-background="new 0 0 0 0"
+            xml:space="preserve"
+            >
+            <path
+              fill="#e9e9e9"
+              d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
+              >
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                dur="1s"
+                from="0 50 50"
+                to="360 50 50"
+                repeatCount="indefinite"
+                />
+            </path>
+          </svg>
+        }
+        @if (isActionDelete) {
+          <svg
+            (click)="$event.stopPropagation()"
+            style="height: 2rem; width: 2rem;"
+            version="1.1"
+            id="L9"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            viewBox="0 0 100 100"
+            enable-background="new 0 0 0 0"
+            xml:space="preserve"
+            >
+            <path
+              fill="#e9e9e9"
+              d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
+              >
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                dur="1s"
+                from="0 50 50"
+                to="360 50 50"
+                repeatCount="indefinite"
+                />
+            </path>
+          </svg>
+        }
       </div>
-    </ng-template>
-  `,
+    }
+    `,
                 }]
         }], propDecorators: { grid: [{
                 type: Input
@@ -2567,33 +2630,35 @@ class TbodyCustomComponent {
     customActions() {
         return this.grid.getSetting("actions.custom");
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TbodyCustomComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: TbodyCustomComponent, selector: "ng2-st-tbody-custom", inputs: { grid: "grid", row: "row", source: "source" }, outputs: { custom: "custom" }, ngImport: i0, template: `
-    <a
-      *ngFor="let action of customActions()"
-      [id]="'row-' + row.index + '_action-' + action.name + '-button'"
-      href="#"
-      class="ng2-smart-action ng2-smart-action-custom-custom"
-      [innerHTML]="action.title"
-      (click)="$event.stopPropagation(); $event.preventDefault(); onCustom(action)"
-    ></a>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TbodyCustomComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: TbodyCustomComponent, selector: "ng2-st-tbody-custom", inputs: { grid: "grid", row: "row", source: "source" }, outputs: { custom: "custom" }, ngImport: i0, template: `
+    @for (action of customActions(); track action) {
+      <a
+        [id]="'row-' + row.index + '_action-' + action.name + '-button'"
+        href="#"
+        class="ng2-smart-action ng2-smart-action-custom-custom"
+        [innerHTML]="action.title"
+        (click)="$event.stopPropagation(); $event.preventDefault(); onCustom(action)"
+      ></a>
+    }
+    `, isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TbodyCustomComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TbodyCustomComponent, decorators: [{
             type: Component,
             args: [{
                     selector: "ng2-st-tbody-custom",
                     changeDetection: ChangeDetectionStrategy.OnPush,
                     template: `
-    <a
-      *ngFor="let action of customActions()"
-      [id]="'row-' + row.index + '_action-' + action.name + '-button'"
-      href="#"
-      class="ng2-smart-action ng2-smart-action-custom-custom"
-      [innerHTML]="action.title"
-      (click)="$event.stopPropagation(); $event.preventDefault(); onCustom(action)"
-    ></a>
-  `,
+    @for (action of customActions(); track action) {
+      <a
+        [id]="'row-' + row.index + '_action-' + action.name + '-button'"
+        href="#"
+        class="ng2-smart-action ng2-smart-action-custom-custom"
+        [innerHTML]="action.title"
+        (click)="$event.stopPropagation(); $event.preventDefault(); onCustom(action)"
+      ></a>
+    }
+    `,
                 }]
         }], propDecorators: { grid: [{
                 type: Input
@@ -2650,12 +2715,12 @@ class Ng2SmartTableTbodyComponent {
     trackByIdOrIndex(index, item) {
         return item?.id || index;
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableTbodyComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: Ng2SmartTableTbodyComponent, selector: "[ng2-st-tbody]", inputs: { grid: "grid", source: "source", deleteConfirm: "deleteConfirm", editConfirm: "editConfirm", rowClassFunction: "rowClassFunction" }, outputs: { save: "save", cancel: "cancel", edit: "edit", editCancel: "editCancel", delete: "delete", custom: "custom", edited: "edited", userSelectRow: "userSelectRow", userClickedRow: "userClickedRow", editRowSelect: "editRowSelect", multipleSelectRow: "multipleSelectRow" }, usesOnChanges: true, ngImport: i0, template: "<ng-container *ngIf=\"grid.getRows()?.length; noRows\">\n  <tr\n    *ngFor=\"let row of grid.getRows(); trackBy: trackByIdOrIndex\"\n    (click)=\"userClickedRow.emit(row)\"\n    class=\"ng2-smart-row\"\n    [className]=\"rowClassFunction(row)\"\n    [ngClass]=\"{ selected: row.isSelected }\"\n  >\n    <td\n      *ngIf=\"isMultiSelectVisible\"\n      class=\"ng2-smart-actions ng2-smart-action-multiple-select\"\n      (click)=\"$event.stopPropagation(); multipleSelectRow.emit(row)\"\n    >\n      <input\n        type=\"checkbox\"\n        [id]=\"'row-' + row.index + '_select-checkbox'\"\n        class=\"form-control\"\n        [ngModel]=\"row.isSelected\"\n      />\n    </td>\n    <td\n      *ngIf=\"!row.isInEditing && showActionColumnLeft\"\n      class=\"ng2-smart-actions\"\n      (click)=\"$event.stopPropagation()\"\n    >\n      <ng2-st-tbody-custom\n        [grid]=\"grid\"\n        (custom)=\"custom.emit($event)\"\n        [row]=\"row\"\n        [source]=\"source\"\n      ></ng2-st-tbody-custom>\n\n      <ng2-st-tbody-edit-delete\n        [grid]=\"grid\"\n        [deleteConfirm]=\"deleteConfirm\"\n        [editConfirm]=\"editConfirm\"\n        (edit)=\"edit.emit(row)\"\n        (delete)=\"delete.emit(row)\"\n        (editRowSelect)=\"editRowSelect.emit($event)\"\n        [row]=\"row\"\n        [source]=\"source\"\n      >\n      </ng2-st-tbody-edit-delete>\n    </td>\n    <td\n      *ngIf=\"row.isInEditing && showActionColumnLeft\"\n      class=\"ng2-smart-actions\"\n    >\n      <ng2-st-tbody-create-cancel\n        [grid]=\"grid\"\n        [row]=\"row\"\n        [editConfirm]=\"editConfirm\"\n        [editCancel]=\"editCancel\"\n      ></ng2-st-tbody-create-cancel>\n    </td>\n    <td\n      *ngFor=\"let cell of getVisibleCells(row.cells)\"\n      [ngClass]=\"cell.getColumnClass()\"\n    >\n      <ng2-smart-table-cell\n        [cell]=\"cell\"\n        [grid]=\"grid\"\n        [row]=\"row\"\n        [isNew]=\"false\"\n        [mode]=\"mode\"\n        [editConfirm]=\"editConfirm\"\n        [inputClass]=\"editInputClass\"\n        [isInEditing]=\"row.isInEditing\"\n      >\n      </ng2-smart-table-cell>\n    </td>\n\n    <td\n      *ngIf=\"row.isInEditing && showActionColumnRight\"\n      class=\"ng2-smart-actions\"\n    >\n      <ng2-st-tbody-create-cancel\n        [grid]=\"grid\"\n        [row]=\"row\"\n        [editConfirm]=\"editConfirm\"\n      ></ng2-st-tbody-create-cancel>\n    </td>\n\n    <td\n      *ngIf=\"!row.isInEditing && showActionColumnRight\"\n      class=\"ng2-smart-actions\"\n    >\n      <ng2-st-tbody-custom\n        [grid]=\"grid\"\n        (custom)=\"custom.emit($event)\"\n        [row]=\"row\"\n        [source]=\"source\"\n      ></ng2-st-tbody-custom>\n\n      <ng2-st-tbody-edit-delete\n        [grid]=\"grid\"\n        [deleteConfirm]=\"deleteConfirm\"\n        [editConfirm]=\"editConfirm\"\n        [row]=\"row\"\n        [source]=\"source\"\n        (edit)=\"edit.emit(row)\"\n        (delete)=\"delete.emit(row)\"\n        (editRowSelect)=\"editRowSelect.emit($event)\"\n      >\n      </ng2-st-tbody-edit-delete>\n    </td>\n  </tr>\n</ng-container>\n\n<ng-template #noRows>\n  <tr>\n    <td [attr.colspan]=\"tableColumnsCount\">\n      {{ noDataMessage }}\n    </td>\n  </tr>\n</ng-template>\n", styles: [":host .ng2-smart-row.selected{background:#0000000d}:host .ng2-smart-row .ng2-smart-actions.ng2-smart-action-multiple-select{text-align:center}:host ::ng-deep ng2-st-tbody-edit-delete a:first-child,:host ::ng-deep ng2-st-tbody-create-cancel a:first-child{margin-right:.25rem}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "directive", type: i2.CheckboxControlValueAccessor, selector: "input[type=checkbox][formControlName],input[type=checkbox][formControl],input[type=checkbox][ngModel]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }, { kind: "component", type: CellComponent, selector: "ng2-smart-table-cell", inputs: ["grid", "row", "editConfirm", "createConfirm", "isNew", "cell", "inputClass", "mode", "isInEditing"], outputs: ["edited"] }, { kind: "component", type: TbodyCreateCancelComponent, selector: "ng2-st-tbody-create-cancel", inputs: ["grid", "row", "editConfirm", "editCancel"] }, { kind: "component", type: TbodyEditDeleteComponent, selector: "ng2-st-tbody-edit-delete", inputs: ["grid", "row", "source", "deleteConfirm", "editConfirm"], outputs: ["edit", "delete", "editRowSelect"] }, { kind: "component", type: TbodyCustomComponent, selector: "ng2-st-tbody-custom", inputs: ["grid", "row", "source"], outputs: ["custom"] }] }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableTbodyComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: Ng2SmartTableTbodyComponent, selector: "[ng2-st-tbody]", inputs: { grid: "grid", source: "source", deleteConfirm: "deleteConfirm", editConfirm: "editConfirm", rowClassFunction: "rowClassFunction" }, outputs: { save: "save", cancel: "cancel", edit: "edit", editCancel: "editCancel", delete: "delete", custom: "custom", edited: "edited", userSelectRow: "userSelectRow", userClickedRow: "userClickedRow", editRowSelect: "editRowSelect", multipleSelectRow: "multipleSelectRow" }, usesOnChanges: true, ngImport: i0, template: "@if (grid.getRows().length) { @for (row of grid.getRows(); track\ntrackByIdOrIndex($index, row)) {\n<tr\n  (click)=\"userClickedRow.emit(row)\"\n  class=\"ng2-smart-row\"\n  [className]=\"rowClassFunction(row)\"\n  [ngClass]=\"{ selected: row.isSelected }\"\n>\n  @if (isMultiSelectVisible) {\n  <td\n    class=\"ng2-smart-actions ng2-smart-action-multiple-select\"\n    (click)=\"$event.stopPropagation(); multipleSelectRow.emit(row)\"\n  >\n    <input\n      type=\"checkbox\"\n      [id]=\"'row-' + row.index + '_select-checkbox'\"\n      class=\"form-control\"\n      [ngModel]=\"row.isSelected\"\n    />\n  </td>\n  } @if (!row.isInEditing && showActionColumnLeft) {\n  <td class=\"ng2-smart-actions\" (click)=\"$event.stopPropagation()\">\n    <ng2-st-tbody-custom\n      [grid]=\"grid\"\n      (custom)=\"custom.emit($event)\"\n      [row]=\"row\"\n      [source]=\"source\"\n    ></ng2-st-tbody-custom>\n    <ng2-st-tbody-edit-delete\n      [grid]=\"grid\"\n      [deleteConfirm]=\"deleteConfirm\"\n      [editConfirm]=\"editConfirm\"\n      (edit)=\"edit.emit(row)\"\n      (delete)=\"delete.emit(row)\"\n      (editRowSelect)=\"editRowSelect.emit($event)\"\n      [row]=\"row\"\n      [source]=\"source\"\n    >\n    </ng2-st-tbody-edit-delete>\n  </td>\n  } @if (row.isInEditing && showActionColumnLeft) {\n  <td class=\"ng2-smart-actions\">\n    <ng2-st-tbody-create-cancel\n      [grid]=\"grid\"\n      [row]=\"row\"\n      [editConfirm]=\"editConfirm\"\n      [editCancel]=\"editCancel\"\n    ></ng2-st-tbody-create-cancel>\n  </td>\n  } @for (cell of getVisibleCells(row.cells); track cell) {\n  <td [ngClass]=\"cell.getColumnClass()\">\n    <ng2-smart-table-cell\n      [cell]=\"cell\"\n      [grid]=\"grid\"\n      [row]=\"row\"\n      [isNew]=\"false\"\n      [mode]=\"mode\"\n      [editConfirm]=\"editConfirm\"\n      [inputClass]=\"editInputClass\"\n      [isInEditing]=\"row.isInEditing\"\n    >\n    </ng2-smart-table-cell>\n  </td>\n  } @if (row.isInEditing && showActionColumnRight) {\n  <td class=\"ng2-smart-actions\">\n    <ng2-st-tbody-create-cancel\n      [grid]=\"grid\"\n      [row]=\"row\"\n      [editConfirm]=\"editConfirm\"\n    ></ng2-st-tbody-create-cancel>\n  </td>\n  } @if (!row.isInEditing && showActionColumnRight) {\n  <td class=\"ng2-smart-actions\">\n    <ng2-st-tbody-custom\n      [grid]=\"grid\"\n      (custom)=\"custom.emit($event)\"\n      [row]=\"row\"\n      [source]=\"source\"\n    ></ng2-st-tbody-custom>\n    <ng2-st-tbody-edit-delete\n      [grid]=\"grid\"\n      [deleteConfirm]=\"deleteConfirm\"\n      [editConfirm]=\"editConfirm\"\n      [row]=\"row\"\n      [source]=\"source\"\n      (edit)=\"edit.emit(row)\"\n      (delete)=\"delete.emit(row)\"\n      (editRowSelect)=\"editRowSelect.emit($event)\"\n    >\n    </ng2-st-tbody-edit-delete>\n  </td>\n  }\n</tr>\n} } @else {\n<tr>\n  <td [attr.colspan]=\"tableColumnsCount\">\n    {{ noDataMessage }}\n  </td>\n</tr>\n}\n", styles: [":host .ng2-smart-row.selected{background:#0000000d}:host .ng2-smart-row .ng2-smart-actions.ng2-smart-action-multiple-select{text-align:center}:host ::ng-deep ng2-st-tbody-edit-delete a:first-child,:host ::ng-deep ng2-st-tbody-create-cancel a:first-child{margin-right:.25rem}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.CheckboxControlValueAccessor, selector: "input[type=checkbox][formControlName],input[type=checkbox][formControl],input[type=checkbox][ngModel]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }, { kind: "component", type: CellComponent, selector: "ng2-smart-table-cell", inputs: ["grid", "row", "editConfirm", "createConfirm", "isNew", "cell", "inputClass", "mode", "isInEditing"], outputs: ["edited"] }, { kind: "component", type: TbodyCreateCancelComponent, selector: "ng2-st-tbody-create-cancel", inputs: ["grid", "row", "editConfirm", "editCancel"] }, { kind: "component", type: TbodyEditDeleteComponent, selector: "ng2-st-tbody-edit-delete", inputs: ["grid", "row", "source", "deleteConfirm", "editConfirm"], outputs: ["edit", "delete", "editRowSelect"] }, { kind: "component", type: TbodyCustomComponent, selector: "ng2-st-tbody-custom", inputs: ["grid", "row", "source"], outputs: ["custom"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableTbodyComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableTbodyComponent, decorators: [{
             type: Component,
-            args: [{ selector: '[ng2-st-tbody]', template: "<ng-container *ngIf=\"grid.getRows()?.length; noRows\">\n  <tr\n    *ngFor=\"let row of grid.getRows(); trackBy: trackByIdOrIndex\"\n    (click)=\"userClickedRow.emit(row)\"\n    class=\"ng2-smart-row\"\n    [className]=\"rowClassFunction(row)\"\n    [ngClass]=\"{ selected: row.isSelected }\"\n  >\n    <td\n      *ngIf=\"isMultiSelectVisible\"\n      class=\"ng2-smart-actions ng2-smart-action-multiple-select\"\n      (click)=\"$event.stopPropagation(); multipleSelectRow.emit(row)\"\n    >\n      <input\n        type=\"checkbox\"\n        [id]=\"'row-' + row.index + '_select-checkbox'\"\n        class=\"form-control\"\n        [ngModel]=\"row.isSelected\"\n      />\n    </td>\n    <td\n      *ngIf=\"!row.isInEditing && showActionColumnLeft\"\n      class=\"ng2-smart-actions\"\n      (click)=\"$event.stopPropagation()\"\n    >\n      <ng2-st-tbody-custom\n        [grid]=\"grid\"\n        (custom)=\"custom.emit($event)\"\n        [row]=\"row\"\n        [source]=\"source\"\n      ></ng2-st-tbody-custom>\n\n      <ng2-st-tbody-edit-delete\n        [grid]=\"grid\"\n        [deleteConfirm]=\"deleteConfirm\"\n        [editConfirm]=\"editConfirm\"\n        (edit)=\"edit.emit(row)\"\n        (delete)=\"delete.emit(row)\"\n        (editRowSelect)=\"editRowSelect.emit($event)\"\n        [row]=\"row\"\n        [source]=\"source\"\n      >\n      </ng2-st-tbody-edit-delete>\n    </td>\n    <td\n      *ngIf=\"row.isInEditing && showActionColumnLeft\"\n      class=\"ng2-smart-actions\"\n    >\n      <ng2-st-tbody-create-cancel\n        [grid]=\"grid\"\n        [row]=\"row\"\n        [editConfirm]=\"editConfirm\"\n        [editCancel]=\"editCancel\"\n      ></ng2-st-tbody-create-cancel>\n    </td>\n    <td\n      *ngFor=\"let cell of getVisibleCells(row.cells)\"\n      [ngClass]=\"cell.getColumnClass()\"\n    >\n      <ng2-smart-table-cell\n        [cell]=\"cell\"\n        [grid]=\"grid\"\n        [row]=\"row\"\n        [isNew]=\"false\"\n        [mode]=\"mode\"\n        [editConfirm]=\"editConfirm\"\n        [inputClass]=\"editInputClass\"\n        [isInEditing]=\"row.isInEditing\"\n      >\n      </ng2-smart-table-cell>\n    </td>\n\n    <td\n      *ngIf=\"row.isInEditing && showActionColumnRight\"\n      class=\"ng2-smart-actions\"\n    >\n      <ng2-st-tbody-create-cancel\n        [grid]=\"grid\"\n        [row]=\"row\"\n        [editConfirm]=\"editConfirm\"\n      ></ng2-st-tbody-create-cancel>\n    </td>\n\n    <td\n      *ngIf=\"!row.isInEditing && showActionColumnRight\"\n      class=\"ng2-smart-actions\"\n    >\n      <ng2-st-tbody-custom\n        [grid]=\"grid\"\n        (custom)=\"custom.emit($event)\"\n        [row]=\"row\"\n        [source]=\"source\"\n      ></ng2-st-tbody-custom>\n\n      <ng2-st-tbody-edit-delete\n        [grid]=\"grid\"\n        [deleteConfirm]=\"deleteConfirm\"\n        [editConfirm]=\"editConfirm\"\n        [row]=\"row\"\n        [source]=\"source\"\n        (edit)=\"edit.emit(row)\"\n        (delete)=\"delete.emit(row)\"\n        (editRowSelect)=\"editRowSelect.emit($event)\"\n      >\n      </ng2-st-tbody-edit-delete>\n    </td>\n  </tr>\n</ng-container>\n\n<ng-template #noRows>\n  <tr>\n    <td [attr.colspan]=\"tableColumnsCount\">\n      {{ noDataMessage }}\n    </td>\n  </tr>\n</ng-template>\n", styles: [":host .ng2-smart-row.selected{background:#0000000d}:host .ng2-smart-row .ng2-smart-actions.ng2-smart-action-multiple-select{text-align:center}:host ::ng-deep ng2-st-tbody-edit-delete a:first-child,:host ::ng-deep ng2-st-tbody-create-cancel a:first-child{margin-right:.25rem}\n"] }]
+            args: [{ selector: '[ng2-st-tbody]', template: "@if (grid.getRows().length) { @for (row of grid.getRows(); track\ntrackByIdOrIndex($index, row)) {\n<tr\n  (click)=\"userClickedRow.emit(row)\"\n  class=\"ng2-smart-row\"\n  [className]=\"rowClassFunction(row)\"\n  [ngClass]=\"{ selected: row.isSelected }\"\n>\n  @if (isMultiSelectVisible) {\n  <td\n    class=\"ng2-smart-actions ng2-smart-action-multiple-select\"\n    (click)=\"$event.stopPropagation(); multipleSelectRow.emit(row)\"\n  >\n    <input\n      type=\"checkbox\"\n      [id]=\"'row-' + row.index + '_select-checkbox'\"\n      class=\"form-control\"\n      [ngModel]=\"row.isSelected\"\n    />\n  </td>\n  } @if (!row.isInEditing && showActionColumnLeft) {\n  <td class=\"ng2-smart-actions\" (click)=\"$event.stopPropagation()\">\n    <ng2-st-tbody-custom\n      [grid]=\"grid\"\n      (custom)=\"custom.emit($event)\"\n      [row]=\"row\"\n      [source]=\"source\"\n    ></ng2-st-tbody-custom>\n    <ng2-st-tbody-edit-delete\n      [grid]=\"grid\"\n      [deleteConfirm]=\"deleteConfirm\"\n      [editConfirm]=\"editConfirm\"\n      (edit)=\"edit.emit(row)\"\n      (delete)=\"delete.emit(row)\"\n      (editRowSelect)=\"editRowSelect.emit($event)\"\n      [row]=\"row\"\n      [source]=\"source\"\n    >\n    </ng2-st-tbody-edit-delete>\n  </td>\n  } @if (row.isInEditing && showActionColumnLeft) {\n  <td class=\"ng2-smart-actions\">\n    <ng2-st-tbody-create-cancel\n      [grid]=\"grid\"\n      [row]=\"row\"\n      [editConfirm]=\"editConfirm\"\n      [editCancel]=\"editCancel\"\n    ></ng2-st-tbody-create-cancel>\n  </td>\n  } @for (cell of getVisibleCells(row.cells); track cell) {\n  <td [ngClass]=\"cell.getColumnClass()\">\n    <ng2-smart-table-cell\n      [cell]=\"cell\"\n      [grid]=\"grid\"\n      [row]=\"row\"\n      [isNew]=\"false\"\n      [mode]=\"mode\"\n      [editConfirm]=\"editConfirm\"\n      [inputClass]=\"editInputClass\"\n      [isInEditing]=\"row.isInEditing\"\n    >\n    </ng2-smart-table-cell>\n  </td>\n  } @if (row.isInEditing && showActionColumnRight) {\n  <td class=\"ng2-smart-actions\">\n    <ng2-st-tbody-create-cancel\n      [grid]=\"grid\"\n      [row]=\"row\"\n      [editConfirm]=\"editConfirm\"\n    ></ng2-st-tbody-create-cancel>\n  </td>\n  } @if (!row.isInEditing && showActionColumnRight) {\n  <td class=\"ng2-smart-actions\">\n    <ng2-st-tbody-custom\n      [grid]=\"grid\"\n      (custom)=\"custom.emit($event)\"\n      [row]=\"row\"\n      [source]=\"source\"\n    ></ng2-st-tbody-custom>\n    <ng2-st-tbody-edit-delete\n      [grid]=\"grid\"\n      [deleteConfirm]=\"deleteConfirm\"\n      [editConfirm]=\"editConfirm\"\n      [row]=\"row\"\n      [source]=\"source\"\n      (edit)=\"edit.emit(row)\"\n      (delete)=\"delete.emit(row)\"\n      (editRowSelect)=\"editRowSelect.emit($event)\"\n    >\n    </ng2-st-tbody-edit-delete>\n  </td>\n  }\n</tr>\n} } @else {\n<tr>\n  <td [attr.colspan]=\"tableColumnsCount\">\n    {{ noDataMessage }}\n  </td>\n</tr>\n}\n", styles: [":host .ng2-smart-row.selected{background:#0000000d}:host .ng2-smart-row .ng2-smart-actions.ng2-smart-action-multiple-select{text-align:center}:host ::ng-deep ng2-st-tbody-edit-delete a:first-child,:host ::ng-deep ng2-st-tbody-create-cancel a:first-child{margin-right:.25rem}\n"] }]
         }], propDecorators: { grid: [{
                 type: Input
             }], source: [{
@@ -2697,8 +2762,8 @@ const TBODY_COMPONENTS = [
     Ng2SmartTableTbodyComponent
 ];
 class TBodyModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TBodyModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.2.12", ngImport: i0, type: TBodyModule, declarations: [TbodyCreateCancelComponent,
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, declarations: [TbodyCreateCancelComponent,
             TbodyEditDeleteComponent,
             TbodyCustomComponent,
             Ng2SmartTableTbodyComponent], imports: [CommonModule,
@@ -2707,11 +2772,11 @@ class TBodyModule {
             TbodyEditDeleteComponent,
             TbodyCustomComponent,
             Ng2SmartTableTbodyComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TBodyModule, imports: [CommonModule,
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, imports: [CommonModule,
             FormsModule,
             CellModule] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TBodyModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [
@@ -2754,22 +2819,26 @@ class AddButtonComponent {
             this.grid.createFormShown = true;
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: AddButtonComponent, deps: [{ token: i0.ElementRef }], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: AddButtonComponent, selector: "[ng2-st-add-button]", inputs: { grid: "grid", source: "source" }, outputs: { create: "create" }, usesOnChanges: true, ngImport: i0, template: `
-    <a *ngIf="isActionAdd" href="#" class="ng2-smart-action ng2-smart-action-add-add"
-        [innerHTML]="addNewButtonContent" (click)="onAdd($event)"></a>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }] }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: AddButtonComponent, deps: [{ token: i0.ElementRef }], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: AddButtonComponent, selector: "[ng2-st-add-button]", inputs: { grid: "grid", source: "source" }, outputs: { create: "create" }, usesOnChanges: true, ngImport: i0, template: `
+    @if (isActionAdd) {
+      <a href="#" class="ng2-smart-action ng2-smart-action-add-add"
+      [innerHTML]="addNewButtonContent" (click)="onAdd($event)"></a>
+    }
+    `, isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: AddButtonComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: AddButtonComponent, decorators: [{
             type: Component,
             args: [{
                     selector: '[ng2-st-add-button]',
                     template: `
-    <a *ngIf="isActionAdd" href="#" class="ng2-smart-action ng2-smart-action-add-add"
-        [innerHTML]="addNewButtonContent" (click)="onAdd($event)"></a>
-  `,
+    @if (isActionAdd) {
+      <a href="#" class="ng2-smart-action ng2-smart-action-add-add"
+      [innerHTML]="addNewButtonContent" (click)="onAdd($event)"></a>
+    }
+    `,
                 }]
-        }], ctorParameters: function () { return [{ type: i0.ElementRef }]; }, propDecorators: { grid: [{
+        }], ctorParameters: () => [{ type: i0.ElementRef }], propDecorators: { grid: [{
                 type: Input
             }], source: [{
                 type: Input
@@ -2795,50 +2864,66 @@ class TheadFitlersRowComponent {
     getVisibleColumns(columns) {
         return (columns || []).filter((column) => !column.hide);
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TheadFitlersRowComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: TheadFitlersRowComponent, selector: "[ng2-st-thead-filters-row]", inputs: { grid: "grid", source: "source" }, outputs: { create: "create", filter: "filter" }, usesOnChanges: true, ngImport: i0, template: `
-    <th *ngIf="isMultiSelectVisible"></th>
-    <th ng2-st-add-button *ngIf="showActionColumnLeft"
-                          [grid]="grid"
-                          (create)="create.emit($event)">
-    </th>
-    <th *ngFor="let column of getVisibleColumns(grid.getColumns())" class="ng2-smart-th {{ column.id }}">
-      <ng2-smart-table-filter [source]="source"
-                              [column]="column"
-                              [inputClass]="filterInputClass"
-                              (filter)="filter.emit($event)">
-      </ng2-smart-table-filter>
-    </th>
-    <th ng2-st-add-button *ngIf="showActionColumnRight"
-                          [grid]="grid"
-                          [source]="source"
-                          (create)="create.emit($event)">
-    </th>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "component", type: FilterComponent, selector: "ng2-smart-table-filter" }, { kind: "component", type: AddButtonComponent, selector: "[ng2-st-add-button]", inputs: ["grid", "source"], outputs: ["create"] }] }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TheadFitlersRowComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: TheadFitlersRowComponent, selector: "[ng2-st-thead-filters-row]", inputs: { grid: "grid", source: "source" }, outputs: { create: "create", filter: "filter" }, usesOnChanges: true, ngImport: i0, template: `
+    @if (isMultiSelectVisible) {
+      <th></th>
+    }
+    @if (showActionColumnLeft) {
+      <th ng2-st-add-button
+        [grid]="grid"
+        (create)="create.emit($event)">
+      </th>
+    }
+    @for (column of getVisibleColumns(grid.getColumns()); track column) {
+      <th class="ng2-smart-th {{ column.id }}">
+        <ng2-smart-table-filter [source]="source"
+          [column]="column"
+          [inputClass]="filterInputClass"
+          (filter)="filter.emit($event)">
+        </ng2-smart-table-filter>
+      </th>
+    }
+    @if (showActionColumnRight) {
+      <th ng2-st-add-button
+        [grid]="grid"
+        [source]="source"
+        (create)="create.emit($event)">
+      </th>
+    }
+    `, isInline: true, dependencies: [{ kind: "component", type: FilterComponent, selector: "ng2-smart-table-filter" }, { kind: "component", type: AddButtonComponent, selector: "[ng2-st-add-button]", inputs: ["grid", "source"], outputs: ["create"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TheadFitlersRowComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TheadFitlersRowComponent, decorators: [{
             type: Component,
             args: [{
                     selector: '[ng2-st-thead-filters-row]',
                     template: `
-    <th *ngIf="isMultiSelectVisible"></th>
-    <th ng2-st-add-button *ngIf="showActionColumnLeft"
-                          [grid]="grid"
-                          (create)="create.emit($event)">
-    </th>
-    <th *ngFor="let column of getVisibleColumns(grid.getColumns())" class="ng2-smart-th {{ column.id }}">
-      <ng2-smart-table-filter [source]="source"
-                              [column]="column"
-                              [inputClass]="filterInputClass"
-                              (filter)="filter.emit($event)">
-      </ng2-smart-table-filter>
-    </th>
-    <th ng2-st-add-button *ngIf="showActionColumnRight"
-                          [grid]="grid"
-                          [source]="source"
-                          (create)="create.emit($event)">
-    </th>
-  `,
+    @if (isMultiSelectVisible) {
+      <th></th>
+    }
+    @if (showActionColumnLeft) {
+      <th ng2-st-add-button
+        [grid]="grid"
+        (create)="create.emit($event)">
+      </th>
+    }
+    @for (column of getVisibleColumns(grid.getColumns()); track column) {
+      <th class="ng2-smart-th {{ column.id }}">
+        <ng2-smart-table-filter [source]="source"
+          [column]="column"
+          [inputClass]="filterInputClass"
+          (filter)="filter.emit($event)">
+        </ng2-smart-table-filter>
+      </th>
+    }
+    @if (showActionColumnRight) {
+      <th ng2-st-add-button
+        [grid]="grid"
+        [source]="source"
+        (create)="create.emit($event)">
+      </th>
+    }
+    `,
                 }]
         }], propDecorators: { grid: [{
                 type: Input
@@ -2860,8 +2945,8 @@ class ActionsComponent {
         this.createButtonContent = this.grid.getSetting('add.createButtonContent');
         this.cancelButtonContent = this.grid.getSetting('add.cancelButtonContent');
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ActionsComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: ActionsComponent, selector: "ng2-st-actions", inputs: { grid: "grid" }, outputs: { create: "create" }, usesOnChanges: true, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ActionsComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: ActionsComponent, selector: "ng2-st-actions", inputs: { grid: "grid" }, outputs: { create: "create" }, usesOnChanges: true, ngImport: i0, template: `
     <a href="#" class="ng2-smart-action ng2-smart-action-add-create"
         [innerHTML]="createButtonContent"
         (click)="$event.preventDefault();create.emit($event)"></a>
@@ -2870,7 +2955,7 @@ class ActionsComponent {
         (click)="$event.preventDefault();grid.createFormShown = false;"></a>
   `, isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ActionsComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ActionsComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'ng2-st-actions',
@@ -2895,7 +2980,7 @@ class TheadFormRowComponent {
         this.isMultiSelectVisible = false;
         this.showActionColumnLeft = false;
         this.showActionColumnRight = false;
-        this.addInputClass = '';
+        this.addInputClass = "";
     }
     onCreate(event) {
         event.stopPropagation();
@@ -2903,56 +2988,82 @@ class TheadFormRowComponent {
     }
     ngOnChanges() {
         this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
-        this.showActionColumnLeft = this.grid.showActionColumn('left');
-        this.showActionColumnRight = this.grid.showActionColumn('right');
-        this.addInputClass = this.grid.getSetting('add.inputClass', '');
+        this.showActionColumnLeft = this.grid.showActionColumn("left");
+        this.showActionColumnRight = this.grid.showActionColumn("right");
+        this.addInputClass = this.grid.getSetting("add.inputClass", "");
     }
     getVisibleCells(cells) {
         return (cells || []).filter((cell) => !cell.getColumn().hide);
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TheadFormRowComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: TheadFormRowComponent, selector: "[ng2-st-thead-form-row]", inputs: { grid: "grid", row: "row", createConfirm: "createConfirm" }, outputs: { create: "create" }, usesOnChanges: true, ngImport: i0, template: `
-      <td *ngIf="grid.isMultiSelectVisible"></td>
-      <td  *ngIf="showActionColumnLeft"  class="ng2-smart-actions">
-        <ng2-st-actions [grid]="grid" (create)="onCreate($event)"></ng2-st-actions>
-      </td>
-      <td *ngFor="let cell of getVisibleCells(grid.getNewRow().getCells())">
-        <ng2-smart-table-cell [cell]="cell"
-                              [grid]="grid"
-                              [isNew]="true"
-                              [createConfirm]="createConfirm"
-                              [inputClass]="addInputClass"
-                              [isInEditing]="grid.getNewRow().isInEditing"
-                              (edited)="onCreate($event)">
-        </ng2-smart-table-cell>
-      </td>
-      <td  *ngIf="showActionColumnRight"  class="ng2-smart-actions">
-        <ng2-st-actions [grid]="grid" (create)="onCreate($event)"></ng2-st-actions>
-      </td>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "component", type: CellComponent, selector: "ng2-smart-table-cell", inputs: ["grid", "row", "editConfirm", "createConfirm", "isNew", "cell", "inputClass", "mode", "isInEditing"], outputs: ["edited"] }, { kind: "component", type: ActionsComponent, selector: "ng2-st-actions", inputs: ["grid"], outputs: ["create"] }] }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TheadFormRowComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: TheadFormRowComponent, selector: "[ng2-st-thead-form-row]", inputs: { grid: "grid", row: "row", createConfirm: "createConfirm" }, outputs: { create: "create" }, usesOnChanges: true, ngImport: i0, template: `
+    @if (grid.isMultiSelectVisible()) {
+    <td></td>
+    } @if (showActionColumnLeft) {
+    <td class="ng2-smart-actions">
+      <ng2-st-actions
+        [grid]="grid"
+        (create)="onCreate($event)"
+      ></ng2-st-actions>
+    </td>
+    } @for (cell of getVisibleCells(grid.getNewRow().getCells()); track cell) {
+    <td>
+      <ng2-smart-table-cell
+        [cell]="cell"
+        [grid]="grid"
+        [isNew]="true"
+        [createConfirm]="createConfirm"
+        [inputClass]="addInputClass"
+        [isInEditing]="grid.getNewRow().isInEditing"
+        (edited)="onCreate($event)"
+      >
+      </ng2-smart-table-cell>
+    </td>
+    } @if (showActionColumnRight) {
+    <td class="ng2-smart-actions">
+      <ng2-st-actions
+        [grid]="grid"
+        (create)="onCreate($event)"
+      ></ng2-st-actions>
+    </td>
+    }
+  `, isInline: true, dependencies: [{ kind: "component", type: CellComponent, selector: "ng2-smart-table-cell", inputs: ["grid", "row", "editConfirm", "createConfirm", "isNew", "cell", "inputClass", "mode", "isInEditing"], outputs: ["edited"] }, { kind: "component", type: ActionsComponent, selector: "ng2-st-actions", inputs: ["grid"], outputs: ["create"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TheadFormRowComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TheadFormRowComponent, decorators: [{
             type: Component,
             args: [{
-                    selector: '[ng2-st-thead-form-row]',
+                    selector: "[ng2-st-thead-form-row]",
                     template: `
-      <td *ngIf="grid.isMultiSelectVisible"></td>
-      <td  *ngIf="showActionColumnLeft"  class="ng2-smart-actions">
-        <ng2-st-actions [grid]="grid" (create)="onCreate($event)"></ng2-st-actions>
-      </td>
-      <td *ngFor="let cell of getVisibleCells(grid.getNewRow().getCells())">
-        <ng2-smart-table-cell [cell]="cell"
-                              [grid]="grid"
-                              [isNew]="true"
-                              [createConfirm]="createConfirm"
-                              [inputClass]="addInputClass"
-                              [isInEditing]="grid.getNewRow().isInEditing"
-                              (edited)="onCreate($event)">
-        </ng2-smart-table-cell>
-      </td>
-      <td  *ngIf="showActionColumnRight"  class="ng2-smart-actions">
-        <ng2-st-actions [grid]="grid" (create)="onCreate($event)"></ng2-st-actions>
-      </td>
+    @if (grid.isMultiSelectVisible()) {
+    <td></td>
+    } @if (showActionColumnLeft) {
+    <td class="ng2-smart-actions">
+      <ng2-st-actions
+        [grid]="grid"
+        (create)="onCreate($event)"
+      ></ng2-st-actions>
+    </td>
+    } @for (cell of getVisibleCells(grid.getNewRow().getCells()); track cell) {
+    <td>
+      <ng2-smart-table-cell
+        [cell]="cell"
+        [grid]="grid"
+        [isNew]="true"
+        [createConfirm]="createConfirm"
+        [inputClass]="addInputClass"
+        [isInEditing]="grid.getNewRow().isInEditing"
+        (edited)="onCreate($event)"
+      >
+      </ng2-smart-table-cell>
+    </td>
+    } @if (showActionColumnRight) {
+    <td class="ng2-smart-actions">
+      <ng2-st-actions
+        [grid]="grid"
+        (create)="onCreate($event)"
+      ></ng2-st-actions>
+    </td>
+    }
   `,
                 }]
         }], propDecorators: { grid: [{
@@ -2976,12 +3087,12 @@ class ActionsTitleComponent {
     ngOnChanges() {
         this.actionsColumnTitle = this.grid.getSetting('actions.columnTitle');
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ActionsTitleComponent, deps: [{ token: i0.ElementRef }], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: ActionsTitleComponent, selector: "[ng2-st-actions-title]", inputs: { grid: "grid" }, usesOnChanges: true, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ActionsTitleComponent, deps: [{ token: i0.ElementRef }], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: ActionsTitleComponent, selector: "[ng2-st-actions-title]", inputs: { grid: "grid" }, usesOnChanges: true, ngImport: i0, template: `
     <div class="ng2-smart-title">{{ actionsColumnTitle }}</div>
   `, isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ActionsTitleComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ActionsTitleComponent, decorators: [{
             type: Component,
             args: [{
                     selector: '[ng2-st-actions-title]',
@@ -2989,17 +3100,17 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
     <div class="ng2-smart-title">{{ actionsColumnTitle }}</div>
   `,
                 }]
-        }], ctorParameters: function () { return [{ type: i0.ElementRef }]; }, propDecorators: { grid: [{
+        }], ctorParameters: () => [{ type: i0.ElementRef }], propDecorators: { grid: [{
                 type: Input
             }] } });
 
 class CheckboxSelectAllComponent {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CheckboxSelectAllComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: CheckboxSelectAllComponent, selector: "[ng2-st-checkbox-select-all]", inputs: { grid: "grid", source: "source" }, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxSelectAllComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: CheckboxSelectAllComponent, selector: "[ng2-st-checkbox-select-all]", inputs: { grid: "grid", source: "source" }, ngImport: i0, template: `
     <input type="checkbox" [ngModel]="this.grid.dataSet.isAllSelected">
   `, isInline: true, dependencies: [{ kind: "directive", type: i2.CheckboxControlValueAccessor, selector: "input[type=checkbox][formControlName],input[type=checkbox][formControl],input[type=checkbox][ngModel]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: CheckboxSelectAllComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxSelectAllComponent, decorators: [{
             type: Component,
             args: [{
                     selector: '[ng2-st-checkbox-select-all]',
@@ -3057,28 +3168,36 @@ class TitleComponent {
         }
         return this.currentDirection;
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TitleComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: TitleComponent, selector: "ng2-smart-table-title", inputs: { column: "column", source: "source" }, outputs: { sort: "sort" }, usesOnChanges: true, ngImport: i0, template: `
-    <a href="#" *ngIf="column.isSortable"
-                (click)="_sort($event)"
-                class="ng2-smart-sort-link sort"
-                [ngClass]="currentDirection">
-      {{ column.title }}
-    </a>
-    <span class="ng2-smart-sort" *ngIf="!column.isSortable">{{ column.title }}</span>
-  `, isInline: true, styles: ["a.sort.asc,a.sort.desc{font-weight:700}a.sort.asc:after,a.sort.desc:after{content:\"\";display:inline-block;width:0;height:0;border-bottom:4px solid rgba(0,0,0,.3);border-top:4px solid transparent;border-left:4px solid transparent;border-right:4px solid transparent;margin-bottom:2px}a.sort.desc:after{transform:rotate(-180deg);margin-bottom:-2px}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }] }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TitleComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: TitleComponent, selector: "ng2-smart-table-title", inputs: { column: "column", source: "source" }, outputs: { sort: "sort" }, usesOnChanges: true, ngImport: i0, template: `
+    @if (column.isSortable) {
+      <a href="#"
+        (click)="_sort($event)"
+        class="ng2-smart-sort-link sort"
+        [ngClass]="currentDirection">
+        {{ column.title }}
+      </a>
+    }
+    @if (!column.isSortable) {
+      <span class="ng2-smart-sort">{{ column.title }}</span>
+    }
+    `, isInline: true, styles: ["a.sort.asc,a.sort.desc{font-weight:700}a.sort.asc:after,a.sort.desc:after{content:\"\";display:inline-block;width:0;height:0;border-bottom:4px solid rgba(0,0,0,.3);border-top:4px solid transparent;border-left:4px solid transparent;border-right:4px solid transparent;margin-bottom:2px}a.sort.desc:after{-webkit-transform:rotate(-180deg);transform:rotate(-180deg);margin-bottom:-2px}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TitleComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TitleComponent, decorators: [{
             type: Component,
             args: [{ selector: 'ng2-smart-table-title', template: `
-    <a href="#" *ngIf="column.isSortable"
-                (click)="_sort($event)"
-                class="ng2-smart-sort-link sort"
-                [ngClass]="currentDirection">
-      {{ column.title }}
-    </a>
-    <span class="ng2-smart-sort" *ngIf="!column.isSortable">{{ column.title }}</span>
-  `, styles: ["a.sort.asc,a.sort.desc{font-weight:700}a.sort.asc:after,a.sort.desc:after{content:\"\";display:inline-block;width:0;height:0;border-bottom:4px solid rgba(0,0,0,.3);border-top:4px solid transparent;border-left:4px solid transparent;border-right:4px solid transparent;margin-bottom:2px}a.sort.desc:after{transform:rotate(-180deg);margin-bottom:-2px}\n"] }]
+    @if (column.isSortable) {
+      <a href="#"
+        (click)="_sort($event)"
+        class="ng2-smart-sort-link sort"
+        [ngClass]="currentDirection">
+        {{ column.title }}
+      </a>
+    }
+    @if (!column.isSortable) {
+      <span class="ng2-smart-sort">{{ column.title }}</span>
+    }
+    `, styles: ["a.sort.asc,a.sort.desc{font-weight:700}a.sort.asc:after,a.sort.desc:after{content:\"\";display:inline-block;width:0;height:0;border-bottom:4px solid rgba(0,0,0,.3);border-top:4px solid transparent;border-left:4px solid transparent;border-right:4px solid transparent;margin-bottom:2px}a.sort.desc:after{-webkit-transform:rotate(-180deg);transform:rotate(-180deg);margin-bottom:-2px}\n"] }]
         }], propDecorators: { column: [{
                 type: Input
             }], source: [{
@@ -3091,14 +3210,14 @@ class ColumnTitleComponent {
     constructor() {
         this.sort = new EventEmitter();
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ColumnTitleComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: ColumnTitleComponent, selector: "ng2-st-column-title", inputs: { column: "column", source: "source" }, outputs: { sort: "sort" }, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ColumnTitleComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: ColumnTitleComponent, selector: "ng2-st-column-title", inputs: { column: "column", source: "source" }, outputs: { sort: "sort" }, ngImport: i0, template: `
     <div class="ng2-smart-title">
       <ng2-smart-table-title [source]="source" [column]="column" (sort)="sort.emit($event)"></ng2-smart-table-title>
     </div>
   `, isInline: true, dependencies: [{ kind: "component", type: TitleComponent, selector: "ng2-smart-table-title", inputs: ["column", "source"], outputs: ["sort"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ColumnTitleComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ColumnTitleComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'ng2-st-column-title',
@@ -3132,42 +3251,58 @@ class TheadTitlesRowComponent {
     getVisibleColumns(columns) {
         return (columns || []).filter((column) => !column.hide);
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TheadTitlesRowComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: TheadTitlesRowComponent, selector: "[ng2-st-thead-titles-row]", inputs: { grid: "grid", source: "source" }, outputs: { sort: "sort", selectAllRows: "selectAllRows" }, usesOnChanges: true, ngImport: i0, template: `
-    <th ng2-st-checkbox-select-all *ngIf="isMultiSelectVisible"
-                                   [grid]="grid"
-                                   [source]="source"
-                                   (click)="selectAllRows.emit($event)">
-    </th>
-    <th ng2-st-actions-title *ngIf="showActionColumnLeft" [grid]="grid"></th>
-    <th *ngFor="let column of getVisibleColumns(grid.getColumns())"
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TheadTitlesRowComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: TheadTitlesRowComponent, selector: "[ng2-st-thead-titles-row]", inputs: { grid: "grid", source: "source" }, outputs: { sort: "sort", selectAllRows: "selectAllRows" }, usesOnChanges: true, ngImport: i0, template: `
+    @if (isMultiSelectVisible) {
+      <th ng2-st-checkbox-select-all
+        [grid]="grid"
+        [source]="source"
+        (click)="selectAllRows.emit($event)">
+      </th>
+    }
+    @if (showActionColumnLeft) {
+      <th ng2-st-actions-title [grid]="grid"></th>
+    }
+    @for (column of getVisibleColumns(grid.getColumns()); track column) {
+      <th
         class="ng2-smart-th {{ column.id }}"
         [ngClass]="column.class"
         [style.width]="column.width">
-      <ng2-st-column-title [source]="source" [column]="column" (sort)="sort.emit($event)"></ng2-st-column-title>
-    </th>
-    <th ng2-st-actions-title *ngIf="showActionColumnRight" [grid]="grid"></th>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "component", type: ActionsTitleComponent, selector: "[ng2-st-actions-title]", inputs: ["grid"] }, { kind: "component", type: CheckboxSelectAllComponent, selector: "[ng2-st-checkbox-select-all]", inputs: ["grid", "source"] }, { kind: "component", type: ColumnTitleComponent, selector: "ng2-st-column-title", inputs: ["column", "source"], outputs: ["sort"] }] }); }
+        <ng2-st-column-title [source]="source" [column]="column" (sort)="sort.emit($event)"></ng2-st-column-title>
+      </th>
+    }
+    @if (showActionColumnRight) {
+      <th ng2-st-actions-title [grid]="grid"></th>
+    }
+    `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "component", type: ActionsTitleComponent, selector: "[ng2-st-actions-title]", inputs: ["grid"] }, { kind: "component", type: CheckboxSelectAllComponent, selector: "[ng2-st-checkbox-select-all]", inputs: ["grid", "source"] }, { kind: "component", type: ColumnTitleComponent, selector: "ng2-st-column-title", inputs: ["column", "source"], outputs: ["sort"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TheadTitlesRowComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TheadTitlesRowComponent, decorators: [{
             type: Component,
             args: [{
                     selector: '[ng2-st-thead-titles-row]',
                     template: `
-    <th ng2-st-checkbox-select-all *ngIf="isMultiSelectVisible"
-                                   [grid]="grid"
-                                   [source]="source"
-                                   (click)="selectAllRows.emit($event)">
-    </th>
-    <th ng2-st-actions-title *ngIf="showActionColumnLeft" [grid]="grid"></th>
-    <th *ngFor="let column of getVisibleColumns(grid.getColumns())"
+    @if (isMultiSelectVisible) {
+      <th ng2-st-checkbox-select-all
+        [grid]="grid"
+        [source]="source"
+        (click)="selectAllRows.emit($event)">
+      </th>
+    }
+    @if (showActionColumnLeft) {
+      <th ng2-st-actions-title [grid]="grid"></th>
+    }
+    @for (column of getVisibleColumns(grid.getColumns()); track column) {
+      <th
         class="ng2-smart-th {{ column.id }}"
         [ngClass]="column.class"
         [style.width]="column.width">
-      <ng2-st-column-title [source]="source" [column]="column" (sort)="sort.emit($event)"></ng2-st-column-title>
-    </th>
-    <th ng2-st-actions-title *ngIf="showActionColumnRight" [grid]="grid"></th>
-  `,
+        <ng2-st-column-title [source]="source" [column]="column" (sort)="sort.emit($event)"></ng2-st-column-title>
+      </th>
+    }
+    @if (showActionColumnRight) {
+      <th ng2-st-actions-title [grid]="grid"></th>
+    }
+    `,
                 }]
         }], propDecorators: { grid: [{
                 type: Input
@@ -3192,12 +3327,12 @@ class Ng2SmartTableTheadComponent {
         this.isHideHeader = this.grid.getSetting('hideHeader', false);
         this.isHideSubHeader = this.grid.getSetting('hideSubHeader', false);
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableTheadComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: Ng2SmartTableTheadComponent, selector: "[ng2-st-thead]", inputs: { grid: "grid", source: "source", createConfirm: "createConfirm" }, outputs: { sort: "sort", selectAllRows: "selectAllRows", create: "create", filter: "filter" }, usesOnChanges: true, ngImport: i0, template: "<tr ng2-st-thead-titles-row *ngIf=\"!isHideHeader\"\n                            class=\"ng2-smart-titles\"\n                            [grid]=\"grid\"\n                            [source]=\"source\"\n                            (sort)=\"sort.emit($event)\"\n                            (selectAllRows)=\"selectAllRows.emit($event)\">\n</tr>\n\n<tr ng2-st-thead-filters-row *ngIf=\"!isHideSubHeader\"\n                              class=\"ng2-smart-filters\"\n                              [grid]=\"grid\"\n                              [source]=\"source\"\n                              (create)=\"create.emit($event)\"\n                              (filter)=\"filter.emit($event)\">\n</tr>\n\n<tr ng2-st-thead-form-row *ngIf=\"grid.createFormShown\"\n                          [grid]=\"grid\"\n                          [createConfirm]=\"createConfirm\">\n</tr>\n", dependencies: [{ kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "component", type: TheadFitlersRowComponent, selector: "[ng2-st-thead-filters-row]", inputs: ["grid", "source"], outputs: ["create", "filter"] }, { kind: "component", type: TheadFormRowComponent, selector: "[ng2-st-thead-form-row]", inputs: ["grid", "row", "createConfirm"], outputs: ["create"] }, { kind: "component", type: TheadTitlesRowComponent, selector: "[ng2-st-thead-titles-row]", inputs: ["grid", "source"], outputs: ["sort", "selectAllRows"] }] }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableTheadComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: Ng2SmartTableTheadComponent, selector: "[ng2-st-thead]", inputs: { grid: "grid", source: "source", createConfirm: "createConfirm" }, outputs: { sort: "sort", selectAllRows: "selectAllRows", create: "create", filter: "filter" }, usesOnChanges: true, ngImport: i0, template: "@if (!isHideHeader) {\n  <tr ng2-st-thead-titles-row\n    class=\"ng2-smart-titles\"\n    [grid]=\"grid\"\n    [source]=\"source\"\n    (sort)=\"sort.emit($event)\"\n    (selectAllRows)=\"selectAllRows.emit($event)\">\n  </tr>\n}\n\n@if (!isHideSubHeader) {\n  <tr ng2-st-thead-filters-row\n    class=\"ng2-smart-filters\"\n    [grid]=\"grid\"\n    [source]=\"source\"\n    (create)=\"create.emit($event)\"\n    (filter)=\"filter.emit($event)\">\n  </tr>\n}\n\n@if (grid.createFormShown) {\n  <tr ng2-st-thead-form-row\n    [grid]=\"grid\"\n    [createConfirm]=\"createConfirm\">\n  </tr>\n}\n", dependencies: [{ kind: "component", type: TheadFitlersRowComponent, selector: "[ng2-st-thead-filters-row]", inputs: ["grid", "source"], outputs: ["create", "filter"] }, { kind: "component", type: TheadFormRowComponent, selector: "[ng2-st-thead-form-row]", inputs: ["grid", "row", "createConfirm"], outputs: ["create"] }, { kind: "component", type: TheadTitlesRowComponent, selector: "[ng2-st-thead-titles-row]", inputs: ["grid", "source"], outputs: ["sort", "selectAllRows"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableTheadComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableTheadComponent, decorators: [{
             type: Component,
-            args: [{ selector: '[ng2-st-thead]', template: "<tr ng2-st-thead-titles-row *ngIf=\"!isHideHeader\"\n                            class=\"ng2-smart-titles\"\n                            [grid]=\"grid\"\n                            [source]=\"source\"\n                            (sort)=\"sort.emit($event)\"\n                            (selectAllRows)=\"selectAllRows.emit($event)\">\n</tr>\n\n<tr ng2-st-thead-filters-row *ngIf=\"!isHideSubHeader\"\n                              class=\"ng2-smart-filters\"\n                              [grid]=\"grid\"\n                              [source]=\"source\"\n                              (create)=\"create.emit($event)\"\n                              (filter)=\"filter.emit($event)\">\n</tr>\n\n<tr ng2-st-thead-form-row *ngIf=\"grid.createFormShown\"\n                          [grid]=\"grid\"\n                          [createConfirm]=\"createConfirm\">\n</tr>\n" }]
+            args: [{ selector: '[ng2-st-thead]', template: "@if (!isHideHeader) {\n  <tr ng2-st-thead-titles-row\n    class=\"ng2-smart-titles\"\n    [grid]=\"grid\"\n    [source]=\"source\"\n    (sort)=\"sort.emit($event)\"\n    (selectAllRows)=\"selectAllRows.emit($event)\">\n  </tr>\n}\n\n@if (!isHideSubHeader) {\n  <tr ng2-st-thead-filters-row\n    class=\"ng2-smart-filters\"\n    [grid]=\"grid\"\n    [source]=\"source\"\n    (create)=\"create.emit($event)\"\n    (filter)=\"filter.emit($event)\">\n  </tr>\n}\n\n@if (grid.createFormShown) {\n  <tr ng2-st-thead-form-row\n    [grid]=\"grid\"\n    [createConfirm]=\"createConfirm\">\n  </tr>\n}\n" }]
         }], propDecorators: { grid: [{
                 type: Input
             }], source: [{
@@ -3227,8 +3362,8 @@ const THEAD_COMPONENTS = [
     Ng2SmartTableTheadComponent,
 ];
 class THeadModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: THeadModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.2.12", ngImport: i0, type: THeadModule, declarations: [ActionsComponent,
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, declarations: [ActionsComponent,
             ActionsTitleComponent,
             AddButtonComponent,
             CheckboxSelectAllComponent,
@@ -3250,12 +3385,12 @@ class THeadModule {
             TheadFormRowComponent,
             TheadTitlesRowComponent,
             Ng2SmartTableTheadComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: THeadModule, imports: [CommonModule,
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, imports: [CommonModule,
             FormsModule,
             FilterModule,
             CellModule] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: THeadModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [
@@ -3294,8 +3429,8 @@ class Ng2SmartTableComponent {
         this.isPagerDisplay = false;
         this.rowClassFunction = () => '';
         this.defaultSettings = {
-            mode: 'inline',
-            selectMode: 'single',
+            mode: 'inline', // inline|external|click-to-edit
+            selectMode: 'single', // single|multi
             selectedRowIndex: -1,
             switchPageToSelectedRowPage: false,
             hideHeader: false,
@@ -3399,12 +3534,12 @@ class Ng2SmartTableComponent {
             selected: this.grid.dataSet.getSelectedRowsData(),
         });
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: Ng2SmartTableComponent, selector: "ng2-smart-table", inputs: { source: "source", settings: "settings" }, outputs: { multiRowSelect: "multiRowSelect", rowClicked: "rowClicked", delete: "delete", edit: "edit", editCancel: "editCancel", create: "create", custom: "custom", deleteConfirm: "deleteConfirm", editConfirm: "editConfirm", createConfirm: "createConfirm", rowHover: "rowHover" }, usesOnChanges: true, ngImport: i0, template: "<table [id]=\"tableId\" [ngClass]=\"tableClass\">\n\n  <thead ng2-st-thead *ngIf=\"!isHideHeader || !isHideSubHeader\"\n                      [grid]=\"grid\"\n                      [source]=\"source\"\n                      [createConfirm]=\"createConfirm\"\n                      (create)=\"create.emit($event)\"\n                      (selectAllRows)=\"onSelectAllRows()\">\n  </thead>\n\n  <tbody ng2-st-tbody [grid]=\"grid\"\n                      [source]=\"source\"\n                      [deleteConfirm]=\"deleteConfirm\"\n                      [editConfirm]=\"editConfirm\"\n                      [rowClassFunction]=\"rowClassFunction\"\n                      (edit)=\"edit.emit($event)\"\n                      (editCancel)=\"editCancel.emit($event)\"\n                      (delete)=\"delete.emit($event)\"\n                      (custom)=\"custom.emit($event)\"\n                      (userClickedRow)=\"emitUserRowClicked($event)\"\n                      (multipleSelectRow)=\"multipleSelectRow($event)\">\n  </tbody>\n\n</table>\n\n<ng2-smart-table-pager *ngIf=\"isPagerDisplay\"\n                        [source]=\"source\"\n                        [perPageSelect]=\"perPageSelect\">\n</ng2-smart-table-pager>\n", styles: [":host{font-size:1rem}:host ::ng-deep *{box-sizing:border-box}:host ::ng-deep button,:host ::ng-deep input,:host ::ng-deep optgroup,:host ::ng-deep select,:host ::ng-deep textarea{color:inherit;font:inherit;margin:0}:host ::ng-deep table{line-height:1.5em;border-collapse:collapse;border-spacing:0;display:table;width:100%;max-width:100%;word-break:normal;word-break:keep-all;overflow:auto}:host ::ng-deep table tr th{font-weight:700}:host ::ng-deep table tr section{font-size:.75em;font-weight:700}:host ::ng-deep table tr td,:host ::ng-deep table tr th{font-size:.875em;margin:0;padding:.5em 1em}:host ::ng-deep a{color:#1e6bb8;text-decoration:none}:host ::ng-deep a:hover{text-decoration:underline}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i1.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { kind: "component", type: PagerComponent, selector: "ng2-smart-table-pager", inputs: ["source", "perPageSelect"], outputs: ["changePage"] }, { kind: "component", type: Ng2SmartTableTbodyComponent, selector: "[ng2-st-tbody]", inputs: ["grid", "source", "deleteConfirm", "editConfirm", "rowClassFunction"], outputs: ["save", "cancel", "edit", "editCancel", "delete", "custom", "edited", "userSelectRow", "userClickedRow", "editRowSelect", "multipleSelectRow"] }, { kind: "component", type: Ng2SmartTableTheadComponent, selector: "[ng2-st-thead]", inputs: ["grid", "source", "createConfirm"], outputs: ["sort", "selectAllRows", "create", "filter"] }] }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: Ng2SmartTableComponent, selector: "ng2-smart-table", inputs: { source: "source", settings: "settings" }, outputs: { multiRowSelect: "multiRowSelect", rowClicked: "rowClicked", delete: "delete", edit: "edit", editCancel: "editCancel", create: "create", custom: "custom", deleteConfirm: "deleteConfirm", editConfirm: "editConfirm", createConfirm: "createConfirm", rowHover: "rowHover" }, usesOnChanges: true, ngImport: i0, template: "<table [id]=\"tableId\" [ngClass]=\"tableClass\">\n\n  @if (!isHideHeader || !isHideSubHeader) {\n    <thead ng2-st-thead\n      [grid]=\"grid\"\n      [source]=\"source\"\n      [createConfirm]=\"createConfirm\"\n      (create)=\"create.emit($event)\"\n      (selectAllRows)=\"onSelectAllRows()\">\n    </thead>\n  }\n\n  <tbody ng2-st-tbody [grid]=\"grid\"\n    [source]=\"source\"\n    [deleteConfirm]=\"deleteConfirm\"\n    [editConfirm]=\"editConfirm\"\n    [rowClassFunction]=\"rowClassFunction\"\n    (edit)=\"edit.emit($event)\"\n    (editCancel)=\"editCancel.emit($event)\"\n    (delete)=\"delete.emit($event)\"\n    (custom)=\"custom.emit($event)\"\n    (userClickedRow)=\"emitUserRowClicked($event)\"\n    (multipleSelectRow)=\"multipleSelectRow($event)\">\n  </tbody>\n\n</table>\n\n@if (isPagerDisplay) {\n  <ng2-smart-table-pager\n    [source]=\"source\"\n    [perPageSelect]=\"perPageSelect\">\n  </ng2-smart-table-pager>\n}\n", styles: [":host{font-size:1rem}:host ::ng-deep *{box-sizing:border-box}:host ::ng-deep button,:host ::ng-deep input,:host ::ng-deep optgroup,:host ::ng-deep select,:host ::ng-deep textarea{color:inherit;font:inherit;margin:0}:host ::ng-deep table{line-height:1.5em;border-collapse:collapse;border-spacing:0;display:table;width:100%;max-width:100%;word-break:normal;word-break:keep-all;overflow:auto}:host ::ng-deep table tr th{font-weight:700}:host ::ng-deep table tr section{font-size:.75em;font-weight:700}:host ::ng-deep table tr td,:host ::ng-deep table tr th{font-size:.875em;margin:0;padding:.5em 1em}:host ::ng-deep a{color:#1e6bb8;text-decoration:none}:host ::ng-deep a:hover{text-decoration:underline}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "component", type: PagerComponent, selector: "ng2-smart-table-pager", inputs: ["source", "perPageSelect"], outputs: ["changePage"] }, { kind: "component", type: Ng2SmartTableTbodyComponent, selector: "[ng2-st-tbody]", inputs: ["grid", "source", "deleteConfirm", "editConfirm", "rowClassFunction"], outputs: ["save", "cancel", "edit", "editCancel", "delete", "custom", "edited", "userSelectRow", "userClickedRow", "editRowSelect", "multipleSelectRow"] }, { kind: "component", type: Ng2SmartTableTheadComponent, selector: "[ng2-st-thead]", inputs: ["grid", "source", "createConfirm"], outputs: ["sort", "selectAllRows", "create", "filter"] }] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableComponent, decorators: [{
             type: Component,
-            args: [{ selector: 'ng2-smart-table', template: "<table [id]=\"tableId\" [ngClass]=\"tableClass\">\n\n  <thead ng2-st-thead *ngIf=\"!isHideHeader || !isHideSubHeader\"\n                      [grid]=\"grid\"\n                      [source]=\"source\"\n                      [createConfirm]=\"createConfirm\"\n                      (create)=\"create.emit($event)\"\n                      (selectAllRows)=\"onSelectAllRows()\">\n  </thead>\n\n  <tbody ng2-st-tbody [grid]=\"grid\"\n                      [source]=\"source\"\n                      [deleteConfirm]=\"deleteConfirm\"\n                      [editConfirm]=\"editConfirm\"\n                      [rowClassFunction]=\"rowClassFunction\"\n                      (edit)=\"edit.emit($event)\"\n                      (editCancel)=\"editCancel.emit($event)\"\n                      (delete)=\"delete.emit($event)\"\n                      (custom)=\"custom.emit($event)\"\n                      (userClickedRow)=\"emitUserRowClicked($event)\"\n                      (multipleSelectRow)=\"multipleSelectRow($event)\">\n  </tbody>\n\n</table>\n\n<ng2-smart-table-pager *ngIf=\"isPagerDisplay\"\n                        [source]=\"source\"\n                        [perPageSelect]=\"perPageSelect\">\n</ng2-smart-table-pager>\n", styles: [":host{font-size:1rem}:host ::ng-deep *{box-sizing:border-box}:host ::ng-deep button,:host ::ng-deep input,:host ::ng-deep optgroup,:host ::ng-deep select,:host ::ng-deep textarea{color:inherit;font:inherit;margin:0}:host ::ng-deep table{line-height:1.5em;border-collapse:collapse;border-spacing:0;display:table;width:100%;max-width:100%;word-break:normal;word-break:keep-all;overflow:auto}:host ::ng-deep table tr th{font-weight:700}:host ::ng-deep table tr section{font-size:.75em;font-weight:700}:host ::ng-deep table tr td,:host ::ng-deep table tr th{font-size:.875em;margin:0;padding:.5em 1em}:host ::ng-deep a{color:#1e6bb8;text-decoration:none}:host ::ng-deep a:hover{text-decoration:underline}\n"] }]
+            args: [{ selector: 'ng2-smart-table', template: "<table [id]=\"tableId\" [ngClass]=\"tableClass\">\n\n  @if (!isHideHeader || !isHideSubHeader) {\n    <thead ng2-st-thead\n      [grid]=\"grid\"\n      [source]=\"source\"\n      [createConfirm]=\"createConfirm\"\n      (create)=\"create.emit($event)\"\n      (selectAllRows)=\"onSelectAllRows()\">\n    </thead>\n  }\n\n  <tbody ng2-st-tbody [grid]=\"grid\"\n    [source]=\"source\"\n    [deleteConfirm]=\"deleteConfirm\"\n    [editConfirm]=\"editConfirm\"\n    [rowClassFunction]=\"rowClassFunction\"\n    (edit)=\"edit.emit($event)\"\n    (editCancel)=\"editCancel.emit($event)\"\n    (delete)=\"delete.emit($event)\"\n    (custom)=\"custom.emit($event)\"\n    (userClickedRow)=\"emitUserRowClicked($event)\"\n    (multipleSelectRow)=\"multipleSelectRow($event)\">\n  </tbody>\n\n</table>\n\n@if (isPagerDisplay) {\n  <ng2-smart-table-pager\n    [source]=\"source\"\n    [perPageSelect]=\"perPageSelect\">\n  </ng2-smart-table-pager>\n}\n", styles: [":host{font-size:1rem}:host ::ng-deep *{box-sizing:border-box}:host ::ng-deep button,:host ::ng-deep input,:host ::ng-deep optgroup,:host ::ng-deep select,:host ::ng-deep textarea{color:inherit;font:inherit;margin:0}:host ::ng-deep table{line-height:1.5em;border-collapse:collapse;border-spacing:0;display:table;width:100%;max-width:100%;word-break:normal;word-break:keep-all;overflow:auto}:host ::ng-deep table tr th{font-weight:700}:host ::ng-deep table tr section{font-size:.75em;font-weight:700}:host ::ng-deep table tr td,:host ::ng-deep table tr th{font-size:.875em;margin:0;padding:.5em 1em}:host ::ng-deep a{color:#1e6bb8;text-decoration:none}:host ::ng-deep a:hover{text-decoration:underline}\n"] }]
         }], propDecorators: { source: [{
                 type: Input
             }], settings: [{
@@ -3434,8 +3569,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImpo
             }] } });
 
 class Ng2SmartTableModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableModule, declarations: [Ng2SmartTableComponent], imports: [CommonModule,
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableModule, declarations: [Ng2SmartTableComponent], imports: [CommonModule,
             FormsModule,
             ReactiveFormsModule,
             CellModule,
@@ -3443,7 +3578,7 @@ class Ng2SmartTableModule {
             PagerModule,
             TBodyModule,
             THeadModule], exports: [Ng2SmartTableComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableModule, imports: [CommonModule,
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableModule, imports: [CommonModule,
             FormsModule,
             ReactiveFormsModule,
             CellModule,
@@ -3452,7 +3587,7 @@ class Ng2SmartTableModule {
             TBodyModule,
             THeadModule] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: Ng2SmartTableModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [

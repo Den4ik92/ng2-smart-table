@@ -11,8 +11,8 @@ export class ActionsComponent {
         this.createButtonContent = this.grid.getSetting('add.createButtonContent');
         this.cancelButtonContent = this.grid.getSetting('add.cancelButtonContent');
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ActionsComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.2.12", type: ActionsComponent, selector: "ng2-st-actions", inputs: { grid: "grid" }, outputs: { create: "create" }, usesOnChanges: true, ngImport: i0, template: `
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ActionsComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: ActionsComponent, selector: "ng2-st-actions", inputs: { grid: "grid" }, outputs: { create: "create" }, usesOnChanges: true, ngImport: i0, template: `
     <a href="#" class="ng2-smart-action ng2-smart-action-add-create"
         [innerHTML]="createButtonContent"
         (click)="$event.preventDefault();create.emit($event)"></a>
@@ -21,7 +21,7 @@ export class ActionsComponent {
         (click)="$event.preventDefault();grid.createFormShown = false;"></a>
   `, isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: ActionsComponent, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: ActionsComponent, decorators: [{
             type: Component,
             args: [{
                     selector: 'ng2-st-actions',

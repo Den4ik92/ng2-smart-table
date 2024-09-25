@@ -8,13 +8,13 @@ export declare class Ng2SmartTableComponent implements OnChanges {
     source: LocalDataSource;
     settings: SmartTableSettings;
     multiRowSelect: EventEmitter<SmartTableRowSelectEvent<any>>;
-    rowClicked: EventEmitter<SmartTableRowClickedEvent<any>>;
+    rowClicked: EventEmitter<SmartTableRowClickedEvent>;
     delete: EventEmitter<any>;
     edit: EventEmitter<any>;
     editCancel: EventEmitter<any>;
     create: EventEmitter<any>;
     custom: EventEmitter<SmartTableCustomEvent<any>>;
-    deleteConfirm: EventEmitter<SmartTableConfirmDeleteEvent<any>>;
+    deleteConfirm: EventEmitter<SmartTableConfirmDeleteEvent>;
     editConfirm: EventEmitter<SmartTableConfirmEditEvent<any, any>>;
     createConfirm: EventEmitter<SmartTableCreateConfirm<any>>;
     rowHover: EventEmitter<any>;

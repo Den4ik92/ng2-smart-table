@@ -14,8 +14,8 @@ const TBODY_COMPONENTS = [
     Ng2SmartTableTbodyComponent
 ];
 export class TBodyModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TBodyModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.2.12", ngImport: i0, type: TBodyModule, declarations: [TbodyCreateCancelComponent,
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, declarations: [TbodyCreateCancelComponent,
             TbodyEditDeleteComponent,
             TbodyCustomComponent,
             Ng2SmartTableTbodyComponent], imports: [CommonModule,
@@ -24,11 +24,11 @@ export class TBodyModule {
             TbodyEditDeleteComponent,
             TbodyCustomComponent,
             Ng2SmartTableTbodyComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TBodyModule, imports: [CommonModule,
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, imports: [CommonModule,
             FormsModule,
             CellModule] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: TBodyModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [

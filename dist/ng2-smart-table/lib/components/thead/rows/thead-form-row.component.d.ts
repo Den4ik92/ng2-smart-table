@@ -1,7 +1,7 @@
-import { EventEmitter, OnChanges } from '@angular/core';
-import { Grid } from '../../../lib/grid';
-import { Row } from '../../../lib/data-set/row';
-import { Cell } from '../../../lib/data-set/cell';
+import { EventEmitter, OnChanges } from "@angular/core";
+import { Cell } from "../../../lib/data-set/cell";
+import { Row } from "../../../lib/data-set/row";
+import { Grid } from "../../../lib/grid";
 import * as i0 from "@angular/core";
 export declare class TheadFormRowComponent implements OnChanges {
     grid: Grid;

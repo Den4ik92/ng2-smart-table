@@ -27,8 +27,8 @@ const THEAD_COMPONENTS = [
     Ng2SmartTableTheadComponent,
 ];
 export class THeadModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: THeadModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.2.12", ngImport: i0, type: THeadModule, declarations: [ActionsComponent,
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, declarations: [ActionsComponent,
             ActionsTitleComponent,
             AddButtonComponent,
             CheckboxSelectAllComponent,
@@ -50,12 +50,12 @@ export class THeadModule {
             TheadFormRowComponent,
             TheadTitlesRowComponent,
             Ng2SmartTableTheadComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: THeadModule, imports: [CommonModule,
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, imports: [CommonModule,
             FormsModule,
             FilterModule,
             CellModule] }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.2.12", ngImport: i0, type: THeadModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [
