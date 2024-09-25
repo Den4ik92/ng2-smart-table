@@ -1,57 +1,14 @@
 import {
   Component,
-  Input,
-  ComponentFactoryResolver,
-  ViewChild,
-  ViewContainerRef,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
+  Input
+} from "@angular/core";
 
-import { Cell } from '../../../lib/data-set/cell';
-import { ViewCell } from './view-cell';
+import { Cell } from "../../../lib/data-set/cell";
 
 @Component({
-  selector: 'custom-view-component',
-  template: `
-    <ng-template #dynamicTarget></ng-template>
-  `,
+  selector: "custom-view-component",
+  templateUrl: "./custom-view.component.html",
 })
-export class CustomViewComponent implements OnInit, OnDestroy {
-
-  customComponent: any;
+export class CustomViewComponent {
   @Input() cell!: Cell;
-  @ViewChild('dynamicTarget', { read: ViewContainerRef, static: true }) dynamicTarget: any;
-
-  constructor(private resolver: ComponentFactoryResolver) {
-  }
-
-  ngOnInit() {
-    if (this.cell && !this.customComponent) {
-      this.createCustomComponent();
-      this.patchInstance();
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.customComponent) {
-      this.customComponent.destroy();
-    }
-  }
-
-  protected createCustomComponent() {
-    const componentFactory = this.resolver.resolveComponentFactory(this.cell.getColumn().renderComponent);
-    this.customComponent = this.dynamicTarget.createComponent(componentFactory);
-  }
-
-  protected patchInstance() {
-    Object.assign(this.customComponent.instance, this.getPatch());
-  }
-
-  protected getPatch(): ViewCell {
-    return {
-      value: this.cell.getValue(),
-      rowData: this.cell.getRow().getData()
-    }
-  }
 }
