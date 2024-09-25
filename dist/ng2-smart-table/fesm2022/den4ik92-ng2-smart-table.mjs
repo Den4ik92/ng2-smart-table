@@ -1,10 +1,10 @@
 import * as i0 from '@angular/core';
 import { EventEmitter, Component, Input, Output, ViewContainerRef, ViewChild, ChangeDetectionStrategy, NgModule } from '@angular/core';
+import { Subject } from 'rxjs';
 import * as i1 from '@angular/common';
 import { CommonModule } from '@angular/common';
 import * as i2 from '@angular/forms';
-import { FormsModule, UntypedFormControl, NgControl, ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { UntypedFormControl, NgControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, skip } from 'rxjs/operators';
 
 function prepareValue(value) { return value; }
@@ -50,49 +50,281 @@ class Cell {
     }
 }
 
-class Row {
-    constructor(index, data, _dataSet) {
-        this.index = index;
-        this.data = data;
-        this._dataSet = _dataSet;
-        this.pending = false;
-        this.isSelected = false;
-        this.isInEditing = false;
-        this.cells = [];
-        this.process();
+class DefaultEditor {
+    constructor() {
+        this.inputClass = '';
+        this.onStopEditing = new EventEmitter();
+        this.onEdited = new EventEmitter();
+        this.onClick = new EventEmitter();
     }
-    getCell(column) {
-        return this.cells.find(el => el.getColumn() === column);
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultEditor, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: DefaultEditor, selector: "ng-component", inputs: { cell: "cell", inputClass: "inputClass" }, outputs: { onStopEditing: "onStopEditing", onEdited: "onEdited", onClick: "onClick" }, ngImport: i0, template: '', isInline: true }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultEditor, decorators: [{
+            type: Component,
+            args: [{
+                    template: '',
+                }]
+        }], propDecorators: { cell: [{
+                type: Input
+            }], inputClass: [{
+                type: Input
+            }], onStopEditing: [{
+                type: Output
+            }], onEdited: [{
+                type: Output
+            }], onClick: [{
+                type: Output
+            }] } });
+
+class Column {
+    constructor(id, settings, dataSet) {
+        this.id = id;
+        this.settings = settings;
+        this.dataSet = dataSet;
+        this.title = '';
+        this.type = 'text';
+        this.class = '';
+        this.width = '';
+        this.hide = false;
+        this.isSortable = false;
+        this.isEditable = true;
+        this.isAddable = true;
+        this.isFilterable = false;
+        this.sortDirection = 'asc';
+        this.defaultSortDirection = false;
+        this.editor = false;
+        this.filter = false;
+        this.process(this.settings);
     }
-    getCells() {
-        return this.cells;
+    getCompareFunction() {
+        return this.compareFunction;
     }
-    getData() {
-        return this.data;
+    getValuePrepareFunction() {
+        return this.valuePrepareFunction;
     }
-    getIsSelected() {
-        return this.isSelected;
+    getFilterFunction() {
+        return this.filterFunction;
     }
-    getNewData() {
-        const values = Object.assign({}, this.data);
-        this.getCells().forEach((cell) => values[cell.getColumn().id] = cell.newValue);
-        return values;
+    getConfig() {
+        if (this.editor && (this.editor.type === 'checkbox' || this.editor.type === 'custom' || this.editor.type === 'list')) {
+            return this.editor?.config;
+        }
+        return false;
     }
-    setData(data) {
-        this.data = data;
-        this.process();
+    getFilterType() {
+        return this.filter && this.filter.type;
     }
-    process() {
-        this.cells = [];
-        this._dataSet.getColumns().forEach((column) => {
-            const cell = this.createCell(column);
-            this.cells.push(cell);
+    getFilterConfig() {
+        if (this.filter && (this.filter.type === 'checkbox' || this.filter.type === 'custom' || this.filter.type === 'list')) {
+            return this.filter?.config;
+        }
+        return false;
+    }
+    process(settings) {
+        this.title = settings.title;
+        this.class = settings.class || '';
+        this.width = settings.width || '';
+        this.hide = !!settings.hide;
+        this.type = settings.type;
+        if (settings?.editor) {
+            this.editor = settings.editor;
+        }
+        if (settings?.filter) {
+            this.filter = settings.filter;
+        }
+        if (settings.type === 'custom' && settings.renderComponent) {
+            this.renderComponent = settings.renderComponent;
+        }
+        this.isFilterable = typeof settings.filter === 'undefined' ? true : !!settings['filter'];
+        this.defaultSortDirection = settings?.sortDirection || false;
+        this.isSortable = typeof settings.sort === 'undefined' ? true : settings.sort;
+        this.isEditable = typeof settings.editable === 'undefined' ? true : settings.editable;
+        this.isAddable = typeof settings.addable === 'undefined' ? true : settings.addable;
+        this.sortDirection = this.prepareSortDirection();
+        this.compareFunction = settings.compareFunction;
+        this.valuePrepareFunction = settings.valuePrepareFunction;
+        this.filterFunction = settings.filterFunction;
+    }
+    prepareSortDirection() {
+        return this.defaultSortDirection === 'desc' ? 'desc' : 'asc';
+    }
+}
+
+class DefaultFilter {
+    constructor() {
+        this.delay = 300;
+        this.query = '';
+        this.inputClass = '';
+        this.filter = new EventEmitter();
+    }
+    ngOnDestroy() {
+        if (this.changesSubscription) {
+            this.changesSubscription.unsubscribe();
+        }
+    }
+    setFilter() {
+        this.filter.emit(this.query);
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilter, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: DefaultFilter, selector: "ng-component", inputs: { query: "query", inputClass: "inputClass", column: "column" }, outputs: { filter: "filter" }, ngImport: i0, template: '', isInline: true }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilter, decorators: [{
+            type: Component,
+            args: [{
+                    template: '',
+                }]
+        }], propDecorators: { query: [{
+                type: Input
+            }], inputClass: [{
+                type: Input
+            }], column: [{
+                type: Input
+            }], filter: [{
+                type: Output
+            }] } });
+
+function compareValues(direction, a, b) {
+    if (a < b) {
+        return -1 * direction;
+    }
+    if (a > b) {
+        return direction;
+    }
+    return 0;
+}
+class LocalSorter {
+    static sort(data, field, direction, customCompare) {
+        const dir = (direction === 'asc') ? 1 : -1;
+        const compare = customCompare ? customCompare : compareValues;
+        return data.sort((a, b) => {
+            return compare.call(null, dir, a[field], b[field]);
         });
     }
-    createCell(column) {
-        const defValue = column.settings.defaultValue ? column.settings.defaultValue : '';
-        const value = typeof this.data[column.id] === 'undefined' ? defValue : this.data[column.id];
-        return new Cell(value, this, column, this._dataSet);
+}
+
+function filterValues(value, search) {
+    return value.toString().toLowerCase().includes(search.toString().toLowerCase());
+}
+class LocalFilter {
+    static filter(data, field, search, customFilter) {
+        const filter = customFilter ? customFilter : filterValues;
+        return data.filter((el) => {
+            const value = typeof el[field] === 'undefined' || el[field] === null ? '' : el[field];
+            return filter.call(null, value, search);
+        });
+    }
+}
+
+class LocalPager {
+    static paginate(data, page, perPage) {
+        return data.slice(perPage * (page - 1), perPage * page);
+    }
+}
+
+var SmartTableOnChangedEventName;
+(function (SmartTableOnChangedEventName) {
+    SmartTableOnChangedEventName["load"] = "load";
+    SmartTableOnChangedEventName["paging"] = "paging";
+    SmartTableOnChangedEventName["update"] = "update";
+    SmartTableOnChangedEventName["page"] = "page";
+    SmartTableOnChangedEventName["filter"] = "filter";
+    SmartTableOnChangedEventName["empty"] = "empty";
+    SmartTableOnChangedEventName["sort"] = "sort";
+    SmartTableOnChangedEventName["add"] = "add";
+    SmartTableOnChangedEventName["remove"] = "remove";
+    SmartTableOnChangedEventName["append"] = "append";
+    SmartTableOnChangedEventName["prepend"] = "prepend";
+    SmartTableOnChangedEventName["refresh"] = "refresh";
+})(SmartTableOnChangedEventName || (SmartTableOnChangedEventName = {}));
+
+class DataSource {
+    constructor() {
+        this.onChangedSource = new Subject();
+        this.onAddedSource = new Subject();
+        this.onUpdatedSource = new Subject();
+        this.onRemovedSource = new Subject();
+    }
+    refresh() {
+        this.emitOnChanged(SmartTableOnChangedEventName.refresh);
+    }
+    loadEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.load);
+        return Promise.resolve(true);
+    }
+    onChanged() {
+        return this.onChangedSource.asObservable();
+    }
+    onAdded() {
+        return this.onAddedSource.asObservable();
+    }
+    onUpdated() {
+        return this.onUpdatedSource.asObservable();
+    }
+    onRemoved() {
+        return this.onRemovedSource.asObservable();
+    }
+    prependEmit(element) {
+        this.emitOnAdded(element);
+        this.emitOnChanged(SmartTableOnChangedEventName.prepend);
+        return Promise.resolve(true);
+    }
+    appendEmit(element) {
+        this.emitOnAdded(element);
+        this.emitOnChanged(SmartTableOnChangedEventName.append);
+        return Promise.resolve(true);
+    }
+    addEmit(element) {
+        this.emitOnAdded(element);
+        this.emitOnChanged(SmartTableOnChangedEventName.add);
+        return Promise.resolve(true);
+    }
+    removeEmit(element) {
+        this.emitOnRemoved(element);
+        this.emitOnChanged(SmartTableOnChangedEventName.remove);
+        return Promise.resolve(true);
+    }
+    updateEmit(element) {
+        this.emitOnUpdated(element);
+        this.emitOnChanged(SmartTableOnChangedEventName.update);
+        return Promise.resolve(true);
+    }
+    emptyEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.empty);
+        return Promise.resolve(true);
+    }
+    setSortEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.sort);
+    }
+    setFilterEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.filter);
+    }
+    addFilterEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.filter);
+    }
+    setPagingEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.paging);
+    }
+    setPageEmit() {
+        this.emitOnChanged(SmartTableOnChangedEventName.page);
+    }
+    emitOnRemoved(element) {
+        this.onRemovedSource.next(element);
+    }
+    emitOnUpdated(element) {
+        this.onUpdatedSource.next(element);
+    }
+    emitOnAdded(element) {
+        this.onAddedSource.next(element);
+    }
+    emitOnChanged(action) {
+        this.getElements().then((elements) => this.onChangedSource.next({
+            action: action,
+            elements: elements,
+            paging: this.getPaging(),
+            filter: this.getFilter(),
+            sort: this.getSort(),
+        }));
     }
 }
 
@@ -180,77 +412,307 @@ function getPageForRowIndex(index, perPage) {
     return Math.floor(index / perPage) + 1;
 }
 
-class Column {
-    constructor(id, settings, dataSet) {
-        this.id = id;
-        this.settings = settings;
-        this.dataSet = dataSet;
-        this.title = '';
-        this.type = 'text';
-        this.class = '';
-        this.width = '';
-        this.hide = false;
-        this.isSortable = false;
-        this.isEditable = true;
-        this.isAddable = true;
-        this.isFilterable = false;
-        this.sortDirection = 'asc';
-        this.defaultSortDirection = false;
-        this.editor = false;
-        this.filter = false;
-        this.process(this.settings);
+class LocalDataSource extends DataSource {
+    constructor(data = []) {
+        super();
+        this.data = [];
+        this.filteredAndSorted = [];
+        this.sortConf = [];
+        this.filterConf = {
+            filters: [],
+            andOperator: true,
+        };
+        this.pagingConf = false;
+        this.data = data;
     }
-    getCompareFunction() {
-        return this.compareFunction;
+    load(data) {
+        this.data = data;
+        return super.loadEmit();
     }
-    getValuePrepareFunction() {
-        return this.valuePrepareFunction;
+    prepend(element) {
+        this.reset(true);
+        this.data.unshift(element);
+        return super.prependEmit(element);
     }
-    getFilterFunction() {
-        return this.filterFunction;
+    appendMany(elements) {
+        this.reset(true);
+        this.data = [...this.data, ...elements];
+        return super.loadEmit();
     }
-    getConfig() {
-        if (this.editor && (this.editor.type === 'checkbox' || this.editor.type === 'custom' || this.editor.type === 'list')) {
-            return this.editor?.config;
+    append(element) {
+        this.reset(true);
+        this.data.push(element);
+        return super.appendEmit(element);
+    }
+    add(element) {
+        this.data.push(element);
+        return super.addEmit(element);
+    }
+    remove(element) {
+        this.data = this.data.filter(el => el !== element);
+        return super.removeEmit(element);
+    }
+    update(element, values) {
+        return new Promise((resolve, reject) => {
+            this.find(element).then((found) => {
+                found = deepExtend(found, values);
+                super.updateEmit(found).then(resolve).catch(reject);
+            }).catch(reject);
+        });
+    }
+    find(element) {
+        const found = this.data.find(el => el === element);
+        if (found) {
+            return Promise.resolve(found);
         }
-        return false;
+        return Promise.reject(new Error('Element was not found in the dataset'));
     }
-    getFilterType() {
-        return this.filter && this.filter.type;
+    getElements() {
+        const data = this.data.slice(0);
+        return Promise.resolve(this.prepareData(data));
     }
-    getFilterConfig() {
-        if (this.filter && (this.filter.type === 'checkbox' || this.filter.type === 'custom' || this.filter.type === 'list')) {
-            return this.filter?.config;
-        }
-        return false;
+    getFilteredAndSorted() {
+        let data = this.data.slice(0);
+        this.prepareData(data);
+        return Promise.resolve(this.filteredAndSorted);
     }
-    process(settings) {
-        this.title = settings.title;
-        this.class = settings.class || '';
-        this.width = settings.width || '';
-        this.hide = !!settings.hide;
-        this.type = settings.type;
-        if (settings?.editor) {
-            this.editor = settings.editor;
-        }
-        if (settings?.filter) {
-            this.filter = settings.filter;
-        }
-        if (settings.type === 'custom' && settings.renderComponent) {
-            this.renderComponent = settings.renderComponent;
-        }
-        this.isFilterable = typeof settings.filter === 'undefined' ? true : !!settings['filter'];
-        this.defaultSortDirection = settings?.sortDirection || false;
-        this.isSortable = typeof settings.sort === 'undefined' ? true : settings.sort;
-        this.isEditable = typeof settings.editable === 'undefined' ? true : settings.editable;
-        this.isAddable = typeof settings.addable === 'undefined' ? true : settings.addable;
-        this.sortDirection = this.prepareSortDirection();
-        this.compareFunction = settings.compareFunction;
-        this.valuePrepareFunction = settings.valuePrepareFunction;
-        this.filterFunction = settings.filterFunction;
+    getAll() {
+        const data = this.data.slice(0);
+        return Promise.resolve(data);
     }
-    prepareSortDirection() {
-        return this.defaultSortDirection === 'desc' ? 'desc' : 'asc';
+    reset(silent = false) {
+        if (silent) {
+            this.filterConf = {
+                filters: [],
+                andOperator: true,
+            };
+            this.sortConf = [];
+            if (this.pagingConf) {
+                this.pagingConf.page = 1;
+            }
+        }
+        else {
+            this.setFilter([], true, false);
+            this.setSort([], false);
+            if (this.pagingConf) {
+                this.setPage(1);
+            }
+        }
+    }
+    empty() {
+        this.data = [];
+        return super.emptyEmit();
+    }
+    count() {
+        return this.filteredAndSorted.length;
+    }
+    /**
+     *
+     * Array of conf objects
+     * [
+     *  {field: string, direction: asc|desc|null, compare: Function|null},
+     * ]
+     * @param conf
+     * @param doEmit
+     * @returns {LocalDataSource}
+     */
+    setSort(conf, doEmit = true) {
+        if (conf !== null) {
+            conf.forEach((fieldConf) => {
+                if (!fieldConf.field || typeof fieldConf.direction === 'undefined') {
+                    throw new Error('Sort configuration object is not valid');
+                }
+            });
+            this.sortConf = conf;
+        }
+        if (doEmit) {
+            super.setSortEmit();
+        }
+        return this;
+    }
+    /**
+     *
+     * Array of conf objects
+     * [
+     *  {field: string, search: string, filter: Function|null},
+     * ]
+     * @param conf
+     * @param andOperator
+     * @param doEmit
+     * @returns {LocalDataSource}
+     */
+    setFilter(conf, andOperator = true, doEmit = true) {
+        if (conf && conf.length > 0) {
+            conf.forEach((fieldConf) => {
+                this.addFilter(fieldConf, andOperator, false);
+            });
+        }
+        else {
+            this.filterConf = {
+                filters: [],
+                andOperator: true,
+            };
+        }
+        this.filterConf.andOperator = andOperator;
+        if (this.pagingConf) {
+            this.pagingConf.page = 1;
+        }
+        if (doEmit) {
+            super.setFilterEmit();
+        }
+        return this;
+    }
+    addFilter(fieldConf, andOperator = true, doEmit = true) {
+        if (!fieldConf.field || typeof fieldConf.search === 'undefined') {
+            throw new Error('Filter configuration object is not valid');
+        }
+        let found = false;
+        this.filterConf.filters.forEach((currentFieldConf, index) => {
+            if (currentFieldConf.field === fieldConf.field) {
+                this.filterConf.filters[index] = fieldConf;
+                found = true;
+            }
+        });
+        if (!found) {
+            this.filterConf.filters.push(fieldConf);
+        }
+        this.filterConf.andOperator = andOperator;
+        if (doEmit) {
+            super.addFilterEmit();
+        }
+        return this;
+    }
+    setPaging(page = 1, perPage, doEmit = true) {
+        if (this.pagingConf) {
+            this.pagingConf.page = page;
+            this.pagingConf.perPage = perPage;
+        }
+        else {
+            this.pagingConf = {
+                page, perPage
+            };
+        }
+        if (doEmit) {
+            super.setPagingEmit();
+        }
+        return;
+    }
+    setPage(page, doEmit = true) {
+        if (!this.pagingConf) {
+            return;
+        }
+        this.pagingConf.page = page;
+        if (doEmit) {
+            super.setPageEmit();
+        }
+        return;
+    }
+    getSort() {
+        return this.sortConf;
+    }
+    getFilter() {
+        return this.filterConf;
+    }
+    getPaging() {
+        return this.pagingConf;
+    }
+    prepareData(data) {
+        data = this.filter(data);
+        data = this.sort(data);
+        this.filteredAndSorted = data.slice(0);
+        if (this.pagingConf) {
+            return this.paginate(data);
+        }
+        else
+            return data;
+    }
+    sort(data) {
+        if (this.sortConf) {
+            this.sortConf.forEach((fieldConf) => {
+                data = LocalSorter
+                    .sort(data, fieldConf.field, fieldConf.direction, fieldConf.compare);
+            });
+        }
+        return data;
+    }
+    // TODO: refactor?
+    filter(data) {
+        if (this.filterConf.filters) {
+            if (this.filterConf.andOperator) {
+                this.filterConf.filters.forEach((fieldConf) => {
+                    if (fieldConf.search?.length > 0) {
+                        data = LocalFilter
+                            .filter(data, fieldConf.field, fieldConf.search, fieldConf.filter);
+                    }
+                });
+            }
+            else {
+                let mergedData = [];
+                this.filterConf.filters.forEach((fieldConf) => {
+                    if (fieldConf.search?.length > 0) {
+                        mergedData = mergedData.concat(LocalFilter
+                            .filter(data, fieldConf.field, fieldConf.search, fieldConf.filter));
+                    }
+                });
+                // remove non unique items
+                data = mergedData.filter((elem, pos, arr) => {
+                    return arr.indexOf(elem) === pos;
+                });
+            }
+        }
+        return data;
+    }
+    paginate(data) {
+        if (this.pagingConf && this.pagingConf.page && this.pagingConf.perPage) {
+            data = LocalPager.paginate(data, this.pagingConf.page, this.pagingConf.perPage);
+        }
+        return data;
+    }
+}
+
+class Row {
+    constructor(index, data, _dataSet) {
+        this.index = index;
+        this.data = data;
+        this._dataSet = _dataSet;
+        this.pending = false;
+        this.isSelected = false;
+        this.isInEditing = false;
+        this.cells = [];
+        this.process();
+    }
+    getCell(column) {
+        return this.cells.find(el => el.getColumn() === column);
+    }
+    getCells() {
+        return this.cells;
+    }
+    getData() {
+        return this.data;
+    }
+    getIsSelected() {
+        return this.isSelected;
+    }
+    getNewData() {
+        const values = Object.assign({}, this.data);
+        this.getCells().forEach((cell) => values[cell.getColumn().id] = cell.newValue);
+        return values;
+    }
+    setData(data) {
+        this.data = data;
+        this.process();
+    }
+    process() {
+        this.cells = [];
+        this._dataSet.getColumns().forEach((column) => {
+            const cell = this.createCell(column);
+            this.cells.push(cell);
+        });
+    }
+    createCell(column) {
+        const defValue = column.settings.defaultValue ? column.settings.defaultValue : '';
+        const value = typeof this.data[column.id] === 'undefined' ? defValue : this.data[column.id];
+        return new Cell(value, this, column, this._dataSet);
     }
 }
 
@@ -563,6 +1025,242 @@ class Grid {
     }
 }
 
+class PagerComponent {
+    constructor() {
+        this.perPageSelect = [];
+        this.changePage = new EventEmitter();
+        this.currentPerPage = 0;
+        this.pages = [];
+        this.page = 1;
+        this.count = 0;
+        this.perPage = 0;
+    }
+    ngOnChanges(changes) {
+        if (changes['source']) {
+            if (!changes['source'].firstChange && this.dataChangedSub) {
+                this.dataChangedSub.unsubscribe();
+            }
+            this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
+                const paging = this.source.getPaging();
+                if (paging) {
+                    this.page = paging.page;
+                    this.perPage = paging.perPage;
+                }
+                this.currentPerPage = this.perPage;
+                this.count = this.source.count();
+                if (this.isPageOutOfBounce()) {
+                    this.source.setPage(--this.page);
+                }
+                this.processPageChange(dataChanges);
+                this.initPages();
+            });
+        }
+    }
+    /**
+     * We change the page here depending on the action performed against data source
+     * if a new element was added to the end of the table - then change the page to the last
+     * if a new element was added to the beginning of the table - then to the first page
+     * @param changes
+     */
+    processPageChange(changes) {
+        if (changes['action'] === 'prepend') {
+            this.source.setPage(1);
+        }
+        if (changes['action'] === 'append') {
+            this.source.setPage(this.getLast());
+        }
+    }
+    shouldShow() {
+        return this.source.count() > this.perPage;
+    }
+    paginate(page) {
+        this.source.setPage(page);
+        this.page = page;
+        this.changePage.emit({ page });
+        return false;
+    }
+    next() {
+        return this.paginate(this.getPage() + 1);
+    }
+    prev() {
+        return this.paginate(this.getPage() - 1);
+    }
+    getPage() {
+        return this.page;
+    }
+    getPages() {
+        return this.pages;
+    }
+    getLast() {
+        return Math.ceil(this.count / this.perPage);
+    }
+    isPageOutOfBounce() {
+        return (this.page * this.perPage) >= (this.count + this.perPage) && this.page > 1;
+    }
+    initPages() {
+        const pagesCount = this.getLast();
+        let showPagesCount = 4;
+        showPagesCount = pagesCount < showPagesCount ? pagesCount : showPagesCount;
+        this.pages = [];
+        if (this.shouldShow()) {
+            let middleOne = Math.ceil(showPagesCount / 2);
+            middleOne = this.page >= middleOne ? this.page : middleOne;
+            let lastOne = middleOne + Math.floor(showPagesCount / 2);
+            lastOne = lastOne >= pagesCount ? pagesCount : lastOne;
+            const firstOne = lastOne - showPagesCount + 1;
+            for (let i = firstOne; i <= lastOne; i++) {
+                this.pages.push(i);
+            }
+        }
+    }
+    onChangePerPage() {
+        const paging = this.source.getPaging();
+        if (paging) {
+            paging.perPage = this.currentPerPage * 1;
+        }
+        this.source.refresh();
+        this.initPages();
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: PagerComponent, selector: "ng2-smart-table-pager", inputs: { source: "source", perPageSelect: "perPageSelect" }, outputs: { changePage: "changePage" }, usesOnChanges: true, ngImport: i0, template: `
+    @if (shouldShow()) {
+      <nav class="ng2-smart-pagination-nav">
+        <ul class="ng2-smart-pagination pagination">
+          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
+            <a class="ng2-smart-page-link page-link" href="#"
+              (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">First</span>
+            </a>
+          </li>
+          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
+            <a class="ng2-smart-page-link page-link page-link-prev" href="#"
+              (click)="getPage() == 1 ? false : prev()" aria-label="Prev">
+              <span aria-hidden="true">&lt;</span>
+              <span class="sr-only">Prev</span>
+            </a>
+          </li>
+          @for (page of getPages(); track page) {
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{active: getPage() == page}">
+              @if (getPage() == page) {
+                <span class="ng2-smart-page-link page-link"
+                  >{{ page }} <span class="sr-only">(current)</span></span>
+                }
+                @if (getPage() != page) {
+                  <a class="ng2-smart-page-link page-link" href="#"
+                  (click)="paginate(page)">{{ page }}</a>
+                }
+              </li>
+            }
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{disabled: getPage() == getLast()}">
+              <a class="ng2-smart-page-link page-link page-link-next" href="#"
+                (click)="getPage() == getLast() ? false : next()" aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{disabled: getPage() == getLast()}">
+              <a class="ng2-smart-page-link page-link" href="#"
+                (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Last</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      }
+    
+      @if (perPageSelect && perPageSelect.length > 0) {
+        <nav class="ng2-smart-pagination-per-page">
+          <label for="per-page">
+            Per Page:
+          </label>
+          <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
+            @for (item of perPageSelect; track item) {
+              <option [value]="item">{{ item }}</option>
+            }
+          </select>
+        </nav>
+      }
+    `, isInline: true, styles: [".ng2-smart-pagination{display:inline-flex;font-size:.875em;padding:0}.ng2-smart-pagination .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}.ng2-smart-pagination .ng2-smart-page-item{display:inline}.ng2-smart-pagination .page-link-next,.ng2-smart-pagination .page-link-prev{font-size:10px}:host{display:flex;justify-content:space-between}:host select{margin:1rem 0 1rem 1rem}:host label{margin:1rem 0 1rem 1rem;line-height:2.5rem}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.NgSelectOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.ɵNgSelectMultipleOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.SelectControlValueAccessor, selector: "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]", inputs: ["compareWith"] }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerComponent, decorators: [{
+            type: Component,
+            args: [{ selector: 'ng2-smart-table-pager', template: `
+    @if (shouldShow()) {
+      <nav class="ng2-smart-pagination-nav">
+        <ul class="ng2-smart-pagination pagination">
+          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
+            <a class="ng2-smart-page-link page-link" href="#"
+              (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">First</span>
+            </a>
+          </li>
+          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
+            <a class="ng2-smart-page-link page-link page-link-prev" href="#"
+              (click)="getPage() == 1 ? false : prev()" aria-label="Prev">
+              <span aria-hidden="true">&lt;</span>
+              <span class="sr-only">Prev</span>
+            </a>
+          </li>
+          @for (page of getPages(); track page) {
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{active: getPage() == page}">
+              @if (getPage() == page) {
+                <span class="ng2-smart-page-link page-link"
+                  >{{ page }} <span class="sr-only">(current)</span></span>
+                }
+                @if (getPage() != page) {
+                  <a class="ng2-smart-page-link page-link" href="#"
+                  (click)="paginate(page)">{{ page }}</a>
+                }
+              </li>
+            }
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{disabled: getPage() == getLast()}">
+              <a class="ng2-smart-page-link page-link page-link-next" href="#"
+                (click)="getPage() == getLast() ? false : next()" aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+            <li class="ng2-smart-page-item page-item"
+              [ngClass]="{disabled: getPage() == getLast()}">
+              <a class="ng2-smart-page-link page-link" href="#"
+                (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Last</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      }
+    
+      @if (perPageSelect && perPageSelect.length > 0) {
+        <nav class="ng2-smart-pagination-per-page">
+          <label for="per-page">
+            Per Page:
+          </label>
+          <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
+            @for (item of perPageSelect; track item) {
+              <option [value]="item">{{ item }}</option>
+            }
+          </select>
+        </nav>
+      }
+    `, styles: [".ng2-smart-pagination{display:inline-flex;font-size:.875em;padding:0}.ng2-smart-pagination .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}.ng2-smart-pagination .ng2-smart-page-item{display:inline}.ng2-smart-pagination .page-link-next,.ng2-smart-pagination .page-link-prev{font-size:10px}:host{display:flex;justify-content:space-between}:host select{margin:1rem 0 1rem 1rem}:host label{margin:1rem 0 1rem 1rem;line-height:2.5rem}\n"] }]
+        }], propDecorators: { source: [{
+                type: Input
+            }], perPageSelect: [{
+                type: Input
+            }], changePage: [{
+                type: Output
+            }] } });
+
 class EditCellDefault {
     constructor() {
         this.inputClass = '';
@@ -634,33 +1332,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImpo
         }], ctorParameters: () => [{ type: i0.ComponentFactoryResolver }], propDecorators: { dynamicTarget: [{
                 type: ViewChild,
                 args: ['dynamicTarget', { read: ViewContainerRef, static: true }]
-            }] } });
-
-class DefaultEditor {
-    constructor() {
-        this.inputClass = '';
-        this.onStopEditing = new EventEmitter();
-        this.onEdited = new EventEmitter();
-        this.onClick = new EventEmitter();
-    }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultEditor, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: DefaultEditor, selector: "ng-component", inputs: { cell: "cell", inputClass: "inputClass" }, outputs: { onStopEditing: "onStopEditing", onEdited: "onEdited", onClick: "onClick" }, ngImport: i0, template: '', isInline: true }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultEditor, decorators: [{
-            type: Component,
-            args: [{
-                    template: '',
-                }]
-        }], propDecorators: { cell: [{
-                type: Input
-            }], inputClass: [{
-                type: Input
-            }], onStopEditing: [{
-                type: Output
-            }], onEdited: [{
-                type: Output
-            }], onClick: [{
-                type: Output
             }] } });
 
 class CheckboxEditorComponent extends DefaultEditor {
@@ -1021,1173 +1692,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImpo
             }], edited: [{
                 type: Output
             }] } });
-
-const CELL_COMPONENTS = [
-    CellComponent,
-    EditCellDefault,
-    DefaultEditor,
-    CustomEditComponent,
-    DefaultEditComponent,
-    EditCellComponent,
-    CheckboxEditorComponent,
-    InputEditorComponent,
-    SelectEditorComponent,
-    TextareaEditorComponent,
-    CustomViewComponent,
-    ViewCellComponent,
-];
-class CellModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CellModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: CellModule, declarations: [CellComponent,
-            EditCellDefault,
-            DefaultEditor,
-            CustomEditComponent,
-            DefaultEditComponent,
-            EditCellComponent,
-            CheckboxEditorComponent,
-            InputEditorComponent,
-            SelectEditorComponent,
-            TextareaEditorComponent,
-            CustomViewComponent,
-            ViewCellComponent], imports: [CommonModule,
-            FormsModule], exports: [CellComponent,
-            EditCellDefault,
-            DefaultEditor,
-            CustomEditComponent,
-            DefaultEditComponent,
-            EditCellComponent,
-            CheckboxEditorComponent,
-            InputEditorComponent,
-            SelectEditorComponent,
-            TextareaEditorComponent,
-            CustomViewComponent,
-            ViewCellComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CellModule, imports: [CommonModule,
-            FormsModule] }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CellModule, decorators: [{
-            type: NgModule,
-            args: [{
-                    imports: [
-                        CommonModule,
-                        FormsModule,
-                    ],
-                    declarations: [
-                        ...CELL_COMPONENTS,
-                    ],
-                    exports: [
-                        ...CELL_COMPONENTS,
-                    ],
-                }]
-        }] });
-
-function compareValues(direction, a, b) {
-    if (a < b) {
-        return -1 * direction;
-    }
-    if (a > b) {
-        return direction;
-    }
-    return 0;
-}
-class LocalSorter {
-    static sort(data, field, direction, customCompare) {
-        const dir = (direction === 'asc') ? 1 : -1;
-        const compare = customCompare ? customCompare : compareValues;
-        return data.sort((a, b) => {
-            return compare.call(null, dir, a[field], b[field]);
-        });
-    }
-}
-
-function filterValues(value, search) {
-    return value.toString().toLowerCase().includes(search.toString().toLowerCase());
-}
-class LocalFilter {
-    static filter(data, field, search, customFilter) {
-        const filter = customFilter ? customFilter : filterValues;
-        return data.filter((el) => {
-            const value = typeof el[field] === 'undefined' || el[field] === null ? '' : el[field];
-            return filter.call(null, value, search);
-        });
-    }
-}
-
-class LocalPager {
-    static paginate(data, page, perPage) {
-        return data.slice(perPage * (page - 1), perPage * page);
-    }
-}
-
-var SmartTableOnChangedEventName;
-(function (SmartTableOnChangedEventName) {
-    SmartTableOnChangedEventName["load"] = "load";
-    SmartTableOnChangedEventName["paging"] = "paging";
-    SmartTableOnChangedEventName["update"] = "update";
-    SmartTableOnChangedEventName["page"] = "page";
-    SmartTableOnChangedEventName["filter"] = "filter";
-    SmartTableOnChangedEventName["empty"] = "empty";
-    SmartTableOnChangedEventName["sort"] = "sort";
-    SmartTableOnChangedEventName["add"] = "add";
-    SmartTableOnChangedEventName["remove"] = "remove";
-    SmartTableOnChangedEventName["append"] = "append";
-    SmartTableOnChangedEventName["prepend"] = "prepend";
-    SmartTableOnChangedEventName["refresh"] = "refresh";
-})(SmartTableOnChangedEventName || (SmartTableOnChangedEventName = {}));
-
-class DataSource {
-    constructor() {
-        this.onChangedSource = new Subject();
-        this.onAddedSource = new Subject();
-        this.onUpdatedSource = new Subject();
-        this.onRemovedSource = new Subject();
-    }
-    refresh() {
-        this.emitOnChanged(SmartTableOnChangedEventName.refresh);
-    }
-    loadEmit() {
-        this.emitOnChanged(SmartTableOnChangedEventName.load);
-        return Promise.resolve(true);
-    }
-    onChanged() {
-        return this.onChangedSource.asObservable();
-    }
-    onAdded() {
-        return this.onAddedSource.asObservable();
-    }
-    onUpdated() {
-        return this.onUpdatedSource.asObservable();
-    }
-    onRemoved() {
-        return this.onRemovedSource.asObservable();
-    }
-    prependEmit(element) {
-        this.emitOnAdded(element);
-        this.emitOnChanged(SmartTableOnChangedEventName.prepend);
-        return Promise.resolve(true);
-    }
-    appendEmit(element) {
-        this.emitOnAdded(element);
-        this.emitOnChanged(SmartTableOnChangedEventName.append);
-        return Promise.resolve(true);
-    }
-    addEmit(element) {
-        this.emitOnAdded(element);
-        this.emitOnChanged(SmartTableOnChangedEventName.add);
-        return Promise.resolve(true);
-    }
-    removeEmit(element) {
-        this.emitOnRemoved(element);
-        this.emitOnChanged(SmartTableOnChangedEventName.remove);
-        return Promise.resolve(true);
-    }
-    updateEmit(element) {
-        this.emitOnUpdated(element);
-        this.emitOnChanged(SmartTableOnChangedEventName.update);
-        return Promise.resolve(true);
-    }
-    emptyEmit() {
-        this.emitOnChanged(SmartTableOnChangedEventName.empty);
-        return Promise.resolve(true);
-    }
-    setSortEmit() {
-        this.emitOnChanged(SmartTableOnChangedEventName.sort);
-    }
-    setFilterEmit() {
-        this.emitOnChanged(SmartTableOnChangedEventName.filter);
-    }
-    addFilterEmit() {
-        this.emitOnChanged(SmartTableOnChangedEventName.filter);
-    }
-    setPagingEmit() {
-        this.emitOnChanged(SmartTableOnChangedEventName.paging);
-    }
-    setPageEmit() {
-        this.emitOnChanged(SmartTableOnChangedEventName.page);
-    }
-    emitOnRemoved(element) {
-        this.onRemovedSource.next(element);
-    }
-    emitOnUpdated(element) {
-        this.onUpdatedSource.next(element);
-    }
-    emitOnAdded(element) {
-        this.onAddedSource.next(element);
-    }
-    emitOnChanged(action) {
-        this.getElements().then((elements) => this.onChangedSource.next({
-            action: action,
-            elements: elements,
-            paging: this.getPaging(),
-            filter: this.getFilter(),
-            sort: this.getSort(),
-        }));
-    }
-}
-
-class LocalDataSource extends DataSource {
-    constructor(data = []) {
-        super();
-        this.data = [];
-        this.filteredAndSorted = [];
-        this.sortConf = [];
-        this.filterConf = {
-            filters: [],
-            andOperator: true,
-        };
-        this.pagingConf = false;
-        this.data = data;
-    }
-    load(data) {
-        this.data = data;
-        return super.loadEmit();
-    }
-    prepend(element) {
-        this.reset(true);
-        this.data.unshift(element);
-        return super.prependEmit(element);
-    }
-    appendMany(elements) {
-        this.reset(true);
-        this.data = [...this.data, ...elements];
-        return super.loadEmit();
-    }
-    append(element) {
-        this.reset(true);
-        this.data.push(element);
-        return super.appendEmit(element);
-    }
-    add(element) {
-        this.data.push(element);
-        return super.addEmit(element);
-    }
-    remove(element) {
-        this.data = this.data.filter(el => el !== element);
-        return super.removeEmit(element);
-    }
-    update(element, values) {
-        return new Promise((resolve, reject) => {
-            this.find(element).then((found) => {
-                found = deepExtend(found, values);
-                super.updateEmit(found).then(resolve).catch(reject);
-            }).catch(reject);
-        });
-    }
-    find(element) {
-        const found = this.data.find(el => el === element);
-        if (found) {
-            return Promise.resolve(found);
-        }
-        return Promise.reject(new Error('Element was not found in the dataset'));
-    }
-    getElements() {
-        const data = this.data.slice(0);
-        return Promise.resolve(this.prepareData(data));
-    }
-    getFilteredAndSorted() {
-        let data = this.data.slice(0);
-        this.prepareData(data);
-        return Promise.resolve(this.filteredAndSorted);
-    }
-    getAll() {
-        const data = this.data.slice(0);
-        return Promise.resolve(data);
-    }
-    reset(silent = false) {
-        if (silent) {
-            this.filterConf = {
-                filters: [],
-                andOperator: true,
-            };
-            this.sortConf = [];
-            if (this.pagingConf) {
-                this.pagingConf.page = 1;
-            }
-        }
-        else {
-            this.setFilter([], true, false);
-            this.setSort([], false);
-            if (this.pagingConf) {
-                this.setPage(1);
-            }
-        }
-    }
-    empty() {
-        this.data = [];
-        return super.emptyEmit();
-    }
-    count() {
-        return this.filteredAndSorted.length;
-    }
-    /**
-     *
-     * Array of conf objects
-     * [
-     *  {field: string, direction: asc|desc|null, compare: Function|null},
-     * ]
-     * @param conf
-     * @param doEmit
-     * @returns {LocalDataSource}
-     */
-    setSort(conf, doEmit = true) {
-        if (conf !== null) {
-            conf.forEach((fieldConf) => {
-                if (!fieldConf.field || typeof fieldConf.direction === 'undefined') {
-                    throw new Error('Sort configuration object is not valid');
-                }
-            });
-            this.sortConf = conf;
-        }
-        if (doEmit) {
-            super.setSortEmit();
-        }
-        return this;
-    }
-    /**
-     *
-     * Array of conf objects
-     * [
-     *  {field: string, search: string, filter: Function|null},
-     * ]
-     * @param conf
-     * @param andOperator
-     * @param doEmit
-     * @returns {LocalDataSource}
-     */
-    setFilter(conf, andOperator = true, doEmit = true) {
-        if (conf && conf.length > 0) {
-            conf.forEach((fieldConf) => {
-                this.addFilter(fieldConf, andOperator, false);
-            });
-        }
-        else {
-            this.filterConf = {
-                filters: [],
-                andOperator: true,
-            };
-        }
-        this.filterConf.andOperator = andOperator;
-        if (this.pagingConf) {
-            this.pagingConf.page = 1;
-        }
-        if (doEmit) {
-            super.setFilterEmit();
-        }
-        return this;
-    }
-    addFilter(fieldConf, andOperator = true, doEmit = true) {
-        if (!fieldConf.field || typeof fieldConf.search === 'undefined') {
-            throw new Error('Filter configuration object is not valid');
-        }
-        let found = false;
-        this.filterConf.filters.forEach((currentFieldConf, index) => {
-            if (currentFieldConf.field === fieldConf.field) {
-                this.filterConf.filters[index] = fieldConf;
-                found = true;
-            }
-        });
-        if (!found) {
-            this.filterConf.filters.push(fieldConf);
-        }
-        this.filterConf.andOperator = andOperator;
-        if (doEmit) {
-            super.addFilterEmit();
-        }
-        return this;
-    }
-    setPaging(page = 1, perPage, doEmit = true) {
-        if (this.pagingConf) {
-            this.pagingConf.page = page;
-            this.pagingConf.perPage = perPage;
-        }
-        else {
-            this.pagingConf = {
-                page, perPage
-            };
-        }
-        if (doEmit) {
-            super.setPagingEmit();
-        }
-        return;
-    }
-    setPage(page, doEmit = true) {
-        if (!this.pagingConf) {
-            return;
-        }
-        this.pagingConf.page = page;
-        if (doEmit) {
-            super.setPageEmit();
-        }
-        return;
-    }
-    getSort() {
-        return this.sortConf;
-    }
-    getFilter() {
-        return this.filterConf;
-    }
-    getPaging() {
-        return this.pagingConf;
-    }
-    prepareData(data) {
-        data = this.filter(data);
-        data = this.sort(data);
-        this.filteredAndSorted = data.slice(0);
-        if (this.pagingConf) {
-            return this.paginate(data);
-        }
-        else
-            return data;
-    }
-    sort(data) {
-        if (this.sortConf) {
-            this.sortConf.forEach((fieldConf) => {
-                data = LocalSorter
-                    .sort(data, fieldConf.field, fieldConf.direction, fieldConf.compare);
-            });
-        }
-        return data;
-    }
-    // TODO: refactor?
-    filter(data) {
-        if (this.filterConf.filters) {
-            if (this.filterConf.andOperator) {
-                this.filterConf.filters.forEach((fieldConf) => {
-                    if (fieldConf.search?.length > 0) {
-                        data = LocalFilter
-                            .filter(data, fieldConf.field, fieldConf.search, fieldConf.filter);
-                    }
-                });
-            }
-            else {
-                let mergedData = [];
-                this.filterConf.filters.forEach((fieldConf) => {
-                    if (fieldConf.search?.length > 0) {
-                        mergedData = mergedData.concat(LocalFilter
-                            .filter(data, fieldConf.field, fieldConf.search, fieldConf.filter));
-                    }
-                });
-                // remove non unique items
-                data = mergedData.filter((elem, pos, arr) => {
-                    return arr.indexOf(elem) === pos;
-                });
-            }
-        }
-        return data;
-    }
-    paginate(data) {
-        if (this.pagingConf && this.pagingConf.page && this.pagingConf.perPage) {
-            data = LocalPager.paginate(data, this.pagingConf.page, this.pagingConf.perPage);
-        }
-        return data;
-    }
-}
-
-class FilterDefault {
-    constructor() {
-        this.inputClass = '';
-        this.query = '';
-        this.filter = new EventEmitter();
-    }
-    onFilter(query) {
-        this.source.addFilter({
-            field: this.column.id,
-            search: query,
-            filter: this.column.getFilterFunction(),
-        });
-    }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterDefault, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: FilterDefault, selector: "ng-component", inputs: { column: "column", source: "source", inputClass: "inputClass", query: "query" }, outputs: { filter: "filter" }, ngImport: i0, template: '', isInline: true }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterDefault, decorators: [{
-            type: Component,
-            args: [{
-                    template: '',
-                }]
-        }], propDecorators: { column: [{
-                type: Input
-            }], source: [{
-                type: Input
-            }], inputClass: [{
-                type: Input
-            }], query: [{
-                type: Input
-            }], filter: [{
-                type: Output
-            }] } });
-
-class DefaultFilter {
-    constructor() {
-        this.delay = 300;
-        this.query = '';
-        this.inputClass = '';
-        this.filter = new EventEmitter();
-    }
-    ngOnDestroy() {
-        if (this.changesSubscription) {
-            this.changesSubscription.unsubscribe();
-        }
-    }
-    setFilter() {
-        this.filter.emit(this.query);
-    }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilter, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: DefaultFilter, selector: "ng-component", inputs: { query: "query", inputClass: "inputClass", column: "column" }, outputs: { filter: "filter" }, ngImport: i0, template: '', isInline: true }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilter, decorators: [{
-            type: Component,
-            args: [{
-                    template: '',
-                }]
-        }], propDecorators: { query: [{
-                type: Input
-            }], inputClass: [{
-                type: Input
-            }], column: [{
-                type: Input
-            }], filter: [{
-                type: Output
-            }] } });
-
-class CheckboxFilterComponent extends DefaultFilter {
-    constructor() {
-        super();
-        this.filterActive = false;
-        this.inputControl = new UntypedFormControl();
-    }
-    ngOnInit() {
-        this.changesSubscription = this.inputControl.valueChanges
-            .pipe(debounceTime(this.delay))
-            .subscribe((checked) => {
-            this.filterActive = true;
-            const trueVal = (this.column.getFilterConfig() && this.column.getFilterConfig().true) || true;
-            const falseVal = (this.column.getFilterConfig() && this.column.getFilterConfig().false) || false;
-            this.query = checked ? trueVal : falseVal;
-            this.setFilter();
-        });
-    }
-    resetFilter(event) {
-        event.preventDefault();
-        this.query = '';
-        this.inputControl.setValue(false, { emitEvent: false });
-        this.filterActive = false;
-        this.setFilter();
-    }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: CheckboxFilterComponent, selector: "checkbox-filter", usesInheritance: true, ngImport: i0, template: `
-    <input type="checkbox" [formControl]="inputControl" [ngClass]="inputClass" class="form-control">
-    @if (filterActive) {
-      <a href="#"
-      (click)="resetFilter($event)">{{column.getFilterConfig()?.resetText || 'reset'}}</a>
-    }
-    `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.CheckboxControlValueAccessor, selector: "input[type=checkbox][formControlName],input[type=checkbox][formControl],input[type=checkbox][ngModel]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.FormControlDirective, selector: "[formControl]", inputs: ["formControl", "disabled", "ngModel"], outputs: ["ngModelChange"], exportAs: ["ngForm"] }] }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxFilterComponent, decorators: [{
-            type: Component,
-            args: [{
-                    selector: 'checkbox-filter',
-                    template: `
-    <input type="checkbox" [formControl]="inputControl" [ngClass]="inputClass" class="form-control">
-    @if (filterActive) {
-      <a href="#"
-      (click)="resetFilter($event)">{{column.getFilterConfig()?.resetText || 'reset'}}</a>
-    }
-    `,
-                }]
-        }], ctorParameters: () => [] });
-
-class InputFilterComponent extends DefaultFilter {
-    constructor() {
-        super();
-        this.inputControl = new UntypedFormControl();
-    }
-    ngOnInit() {
-        if (this.query) {
-            this.inputControl.setValue(this.query);
-        }
-        this.inputControl.valueChanges
-            .pipe(distinctUntilChanged(), debounceTime(this.delay))
-            .subscribe((value) => {
-            this.query = this.inputControl.value;
-            this.setFilter();
-        });
-    }
-    ngOnChanges(changes) {
-        if (changes?.['query']) {
-            this.inputControl.setValue(this.query);
-        }
-    }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: InputFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: InputFilterComponent, selector: "input-filter", usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `
-    <input
-      [ngClass]="inputClass"
-      [formControl]="inputControl"
-      class="form-control"
-      type="text"
-      placeholder="{{ column.title }}"/>
-  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.DefaultValueAccessor, selector: "input:not([type=checkbox])[formControlName],textarea[formControlName],input:not([type=checkbox])[formControl],textarea[formControl],input:not([type=checkbox])[ngModel],textarea[ngModel],[ngDefaultControl]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.FormControlDirective, selector: "[formControl]", inputs: ["formControl", "disabled", "ngModel"], outputs: ["ngModelChange"], exportAs: ["ngForm"] }] }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: InputFilterComponent, decorators: [{
-            type: Component,
-            args: [{
-                    selector: 'input-filter',
-                    template: `
-    <input
-      [ngClass]="inputClass"
-      [formControl]="inputControl"
-      class="form-control"
-      type="text"
-      placeholder="{{ column.title }}"/>
-  `,
-                }]
-        }], ctorParameters: () => [] });
-
-class SelectFilterComponent extends DefaultFilter {
-    constructor() {
-        super();
-    }
-    ngOnInit() {
-        if (this.inputControl.valueChanges) {
-            this.inputControl.valueChanges
-                .pipe(skip(1), distinctUntilChanged(), debounceTime(this.delay))
-                .subscribe((value) => this.setFilter());
-        }
-    }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: SelectFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: SelectFilterComponent, selector: "select-filter", viewQueries: [{ propertyName: "inputControl", first: true, predicate: ["inputControl"], descendants: true, read: NgControl, static: true }], usesInheritance: true, ngImport: i0, template: `
-    <select [ngClass]="inputClass"
-      class="form-control"
-      #inputControl
-      [(ngModel)]="query">
-    
-      <option value="">{{ column.getFilterConfig().selectText }}</option>
-      @for (option of column.getFilterConfig().list; track option) {
-        <option [value]="option.value">
-          {{ option.title }}
-        </option>
-      }
-    </select>
-    `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.NgSelectOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.ɵNgSelectMultipleOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.SelectControlValueAccessor, selector: "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]", inputs: ["compareWith"] }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: SelectFilterComponent, decorators: [{
-            type: Component,
-            args: [{
-                    selector: 'select-filter',
-                    template: `
-    <select [ngClass]="inputClass"
-      class="form-control"
-      #inputControl
-      [(ngModel)]="query">
-    
-      <option value="">{{ column.getFilterConfig().selectText }}</option>
-      @for (option of column.getFilterConfig().list; track option) {
-        <option [value]="option.value">
-          {{ option.title }}
-        </option>
-      }
-    </select>
-    `,
-                }]
-        }], ctorParameters: () => [], propDecorators: { inputControl: [{
-                type: ViewChild,
-                args: ['inputControl', { read: NgControl, static: true }]
-            }] } });
-
-class DefaultFilterComponent extends FilterDefault {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilterComponent, deps: null, target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: DefaultFilterComponent, selector: "default-table-filter", usesInheritance: true, ngImport: i0, template: `
-@switch (column.getFilterType()) {
-  @case ('list') {
-    <select-filter
-      [query]="query"
-      [ngClass]="inputClass"
-      [column]="column"
-      (filter)="onFilter($event)">
-    </select-filter>
-  }
-  @case ('checkbox') {
-    <checkbox-filter
-      [query]="query"
-      [ngClass]="inputClass"
-      [column]="column"
-      (filter)="onFilter($event)">
-    </checkbox-filter>
-  }
-  @default {
-    <input-filter
-      [query]="query"
-      [ngClass]="inputClass"
-      [column]="column"
-      (filter)="onFilter($event)">
-  </input-filter>
-}
-}
-`, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "component", type: CheckboxFilterComponent, selector: "checkbox-filter" }, { kind: "component", type: InputFilterComponent, selector: "input-filter" }, { kind: "component", type: SelectFilterComponent, selector: "select-filter" }] }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilterComponent, decorators: [{
-            type: Component,
-            args: [{
-                    selector: 'default-table-filter',
-                    template: `
-@switch (column.getFilterType()) {
-  @case ('list') {
-    <select-filter
-      [query]="query"
-      [ngClass]="inputClass"
-      [column]="column"
-      (filter)="onFilter($event)">
-    </select-filter>
-  }
-  @case ('checkbox') {
-    <checkbox-filter
-      [query]="query"
-      [ngClass]="inputClass"
-      [column]="column"
-      (filter)="onFilter($event)">
-    </checkbox-filter>
-  }
-  @default {
-    <input-filter
-      [query]="query"
-      [ngClass]="inputClass"
-      [column]="column"
-      (filter)="onFilter($event)">
-  </input-filter>
-}
-}
-`,
-                }]
-        }] });
-
-class CustomFilterComponent extends FilterDefault {
-    constructor(resolver) {
-        super();
-        this.resolver = resolver;
-    }
-    ngOnChanges(changes) {
-        if (this.customComponent) {
-            this.customComponent.instance.ngOnChanges(changes);
-            return;
-        }
-        if (this.column.filter && this.column.filter.type === 'custom') {
-            const componentFactory = this.resolver.resolveComponentFactory(this.column.filter?.component);
-            this.customComponent = this.dynamicTarget.createComponent(componentFactory);
-        }
-        // set @Inputs and @Outputs of custom component
-        this.customComponent.instance.query = this.query;
-        this.customComponent.instance.column = this.column;
-        this.customComponent.instance.source = this.source;
-        this.customComponent.instance.inputClass = this.inputClass;
-        this.customComponent.instance.filter.subscribe((event) => this.onFilter(event));
-    }
-    ngOnDestroy() {
-        if (this.customComponent) {
-            this.customComponent.destroy();
-        }
-    }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CustomFilterComponent, deps: [{ token: i0.ComponentFactoryResolver }], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: CustomFilterComponent, selector: "custom-table-filter", viewQueries: [{ propertyName: "dynamicTarget", first: true, predicate: ["dynamicTarget"], descendants: true, read: ViewContainerRef, static: true }], usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `<ng-template #dynamicTarget></ng-template>`, isInline: true }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CustomFilterComponent, decorators: [{
-            type: Component,
-            args: [{
-                    selector: 'custom-table-filter',
-                    template: `<ng-template #dynamicTarget></ng-template>`,
-                }]
-        }], ctorParameters: () => [{ type: i0.ComponentFactoryResolver }], propDecorators: { dynamicTarget: [{
-                type: ViewChild,
-                args: ['dynamicTarget', { read: ViewContainerRef, static: true }]
-            }] } });
-
-class FilterComponent extends FilterDefault {
-    ngOnChanges(changes) {
-        if (changes['source']) {
-            if (!changes['source'].firstChange && this.dataChangedSub) {
-                this.dataChangedSub.unsubscribe();
-            }
-            this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
-                const filterConf = this.source.getFilter();
-                if (filterConf && filterConf.filters && filterConf.filters.length === 0) {
-                    this.query = '';
-                    // add a check for existing filters an set the query if one exists for this column
-                    // this covers instances where the filter is set by user code while maintaining existing functionality
-                }
-                else if (filterConf && filterConf.filters && filterConf.filters.length > 0) {
-                    filterConf.filters.forEach((k, v) => {
-                        if (k.field == this.column.id) {
-                            this.query = k.search;
-                        }
-                    });
-                }
-            });
-        }
-    }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterComponent, deps: null, target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: FilterComponent, selector: "ng2-smart-table-filter", usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `
-      @if (column.isFilterable) {
-        <div class="ng2-smart-filter">
-          @switch (column.getFilterType()) {
-            @case ('custom') {
-              <custom-table-filter
-                [query]="query"
-                [column]="column"
-                [source]="source"
-                [inputClass]="inputClass"
-                (filter)="onFilter($event)">
-              </custom-table-filter>
-            }
-            @default {
-              <default-table-filter
-                [query]="query"
-                [column]="column"
-                [source]="source"
-                [inputClass]="inputClass"
-                (filter)="onFilter($event)">
-              </default-table-filter>
-            }
-          }
-        </div>
-      }
-      `, isInline: true, styles: [":host .ng2-smart-filter ::ng-deep input,:host .ng2-smart-filter ::ng-deep select{width:100%;line-height:normal;padding:.375em .75em;font-weight:400}:host .ng2-smart-filter ::ng-deep input[type=search]{box-sizing:inherit}:host .ng2-smart-filter ::ng-deep .completer-dropdown-holder{font-weight:400}:host .ng2-smart-filter ::ng-deep a{font-weight:400}\n"], dependencies: [{ kind: "component", type: DefaultFilterComponent, selector: "default-table-filter" }, { kind: "component", type: CustomFilterComponent, selector: "custom-table-filter" }] }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterComponent, decorators: [{
-            type: Component,
-            args: [{ selector: 'ng2-smart-table-filter', template: `
-      @if (column.isFilterable) {
-        <div class="ng2-smart-filter">
-          @switch (column.getFilterType()) {
-            @case ('custom') {
-              <custom-table-filter
-                [query]="query"
-                [column]="column"
-                [source]="source"
-                [inputClass]="inputClass"
-                (filter)="onFilter($event)">
-              </custom-table-filter>
-            }
-            @default {
-              <default-table-filter
-                [query]="query"
-                [column]="column"
-                [source]="source"
-                [inputClass]="inputClass"
-                (filter)="onFilter($event)">
-              </default-table-filter>
-            }
-          }
-        </div>
-      }
-      `, styles: [":host .ng2-smart-filter ::ng-deep input,:host .ng2-smart-filter ::ng-deep select{width:100%;line-height:normal;padding:.375em .75em;font-weight:400}:host .ng2-smart-filter ::ng-deep input[type=search]{box-sizing:inherit}:host .ng2-smart-filter ::ng-deep .completer-dropdown-holder{font-weight:400}:host .ng2-smart-filter ::ng-deep a{font-weight:400}\n"] }]
-        }] });
-
-const FILTER_COMPONENTS = [
-    FilterDefault,
-    DefaultFilter,
-    FilterComponent,
-    DefaultFilterComponent,
-    CustomFilterComponent,
-    CheckboxFilterComponent,
-    InputFilterComponent,
-    SelectFilterComponent,
-];
-class FilterModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, declarations: [FilterDefault,
-            DefaultFilter,
-            FilterComponent,
-            DefaultFilterComponent,
-            CustomFilterComponent,
-            CheckboxFilterComponent,
-            InputFilterComponent,
-            SelectFilterComponent], imports: [CommonModule,
-            FormsModule,
-            ReactiveFormsModule], exports: [FilterDefault,
-            DefaultFilter,
-            FilterComponent,
-            DefaultFilterComponent,
-            CustomFilterComponent,
-            CheckboxFilterComponent,
-            InputFilterComponent,
-            SelectFilterComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, imports: [CommonModule,
-            FormsModule,
-            ReactiveFormsModule] }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, decorators: [{
-            type: NgModule,
-            args: [{
-                    imports: [
-                        CommonModule,
-                        FormsModule,
-                        ReactiveFormsModule,
-                    ],
-                    declarations: [
-                        ...FILTER_COMPONENTS,
-                    ],
-                    exports: [
-                        ...FILTER_COMPONENTS,
-                    ],
-                }]
-        }] });
-
-class PagerComponent {
-    constructor() {
-        this.perPageSelect = [];
-        this.changePage = new EventEmitter();
-        this.currentPerPage = 0;
-        this.pages = [];
-        this.page = 1;
-        this.count = 0;
-        this.perPage = 0;
-    }
-    ngOnChanges(changes) {
-        if (changes['source']) {
-            if (!changes['source'].firstChange && this.dataChangedSub) {
-                this.dataChangedSub.unsubscribe();
-            }
-            this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
-                const paging = this.source.getPaging();
-                if (paging) {
-                    this.page = paging.page;
-                    this.perPage = paging.perPage;
-                }
-                this.currentPerPage = this.perPage;
-                this.count = this.source.count();
-                if (this.isPageOutOfBounce()) {
-                    this.source.setPage(--this.page);
-                }
-                this.processPageChange(dataChanges);
-                this.initPages();
-            });
-        }
-    }
-    /**
-     * We change the page here depending on the action performed against data source
-     * if a new element was added to the end of the table - then change the page to the last
-     * if a new element was added to the beginning of the table - then to the first page
-     * @param changes
-     */
-    processPageChange(changes) {
-        if (changes['action'] === 'prepend') {
-            this.source.setPage(1);
-        }
-        if (changes['action'] === 'append') {
-            this.source.setPage(this.getLast());
-        }
-    }
-    shouldShow() {
-        return this.source.count() > this.perPage;
-    }
-    paginate(page) {
-        this.source.setPage(page);
-        this.page = page;
-        this.changePage.emit({ page });
-        return false;
-    }
-    next() {
-        return this.paginate(this.getPage() + 1);
-    }
-    prev() {
-        return this.paginate(this.getPage() - 1);
-    }
-    getPage() {
-        return this.page;
-    }
-    getPages() {
-        return this.pages;
-    }
-    getLast() {
-        return Math.ceil(this.count / this.perPage);
-    }
-    isPageOutOfBounce() {
-        return (this.page * this.perPage) >= (this.count + this.perPage) && this.page > 1;
-    }
-    initPages() {
-        const pagesCount = this.getLast();
-        let showPagesCount = 4;
-        showPagesCount = pagesCount < showPagesCount ? pagesCount : showPagesCount;
-        this.pages = [];
-        if (this.shouldShow()) {
-            let middleOne = Math.ceil(showPagesCount / 2);
-            middleOne = this.page >= middleOne ? this.page : middleOne;
-            let lastOne = middleOne + Math.floor(showPagesCount / 2);
-            lastOne = lastOne >= pagesCount ? pagesCount : lastOne;
-            const firstOne = lastOne - showPagesCount + 1;
-            for (let i = firstOne; i <= lastOne; i++) {
-                this.pages.push(i);
-            }
-        }
-    }
-    onChangePerPage() {
-        const paging = this.source.getPaging();
-        if (paging) {
-            paging.perPage = this.currentPerPage * 1;
-        }
-        this.source.refresh();
-        this.initPages();
-    }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: PagerComponent, selector: "ng2-smart-table-pager", inputs: { source: "source", perPageSelect: "perPageSelect" }, outputs: { changePage: "changePage" }, usesOnChanges: true, ngImport: i0, template: `
-    @if (shouldShow()) {
-      <nav class="ng2-smart-pagination-nav">
-        <ul class="ng2-smart-pagination pagination">
-          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
-            <a class="ng2-smart-page-link page-link" href="#"
-              (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
-              <span aria-hidden="true">&laquo;</span>
-              <span class="sr-only">First</span>
-            </a>
-          </li>
-          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
-            <a class="ng2-smart-page-link page-link page-link-prev" href="#"
-              (click)="getPage() == 1 ? false : prev()" aria-label="Prev">
-              <span aria-hidden="true">&lt;</span>
-              <span class="sr-only">Prev</span>
-            </a>
-          </li>
-          @for (page of getPages(); track page) {
-            <li class="ng2-smart-page-item page-item"
-              [ngClass]="{active: getPage() == page}">
-              @if (getPage() == page) {
-                <span class="ng2-smart-page-link page-link"
-                  >{{ page }} <span class="sr-only">(current)</span></span>
-                }
-                @if (getPage() != page) {
-                  <a class="ng2-smart-page-link page-link" href="#"
-                  (click)="paginate(page)">{{ page }}</a>
-                }
-              </li>
-            }
-            <li class="ng2-smart-page-item page-item"
-              [ngClass]="{disabled: getPage() == getLast()}">
-              <a class="ng2-smart-page-link page-link page-link-next" href="#"
-                (click)="getPage() == getLast() ? false : next()" aria-label="Next">
-                <span aria-hidden="true">&gt;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-            <li class="ng2-smart-page-item page-item"
-              [ngClass]="{disabled: getPage() == getLast()}">
-              <a class="ng2-smart-page-link page-link" href="#"
-                (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Last</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      }
-    
-      @if (perPageSelect && perPageSelect.length > 0) {
-        <nav class="ng2-smart-pagination-per-page">
-          <label for="per-page">
-            Per Page:
-          </label>
-          <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
-            @for (item of perPageSelect; track item) {
-              <option [value]="item">{{ item }}</option>
-            }
-          </select>
-        </nav>
-      }
-    `, isInline: true, styles: [".ng2-smart-pagination{display:inline-flex;font-size:.875em;padding:0}.ng2-smart-pagination .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}.ng2-smart-pagination .ng2-smart-page-item{display:inline}.ng2-smart-pagination .page-link-next,.ng2-smart-pagination .page-link-prev{font-size:10px}:host{display:flex;justify-content:space-between}:host select{margin:1rem 0 1rem 1rem}:host label{margin:1rem 0 1rem 1rem;line-height:2.5rem}\n"], dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.NgSelectOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.ɵNgSelectMultipleOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.SelectControlValueAccessor, selector: "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]", inputs: ["compareWith"] }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerComponent, decorators: [{
-            type: Component,
-            args: [{ selector: 'ng2-smart-table-pager', template: `
-    @if (shouldShow()) {
-      <nav class="ng2-smart-pagination-nav">
-        <ul class="ng2-smart-pagination pagination">
-          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
-            <a class="ng2-smart-page-link page-link" href="#"
-              (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
-              <span aria-hidden="true">&laquo;</span>
-              <span class="sr-only">First</span>
-            </a>
-          </li>
-          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
-            <a class="ng2-smart-page-link page-link page-link-prev" href="#"
-              (click)="getPage() == 1 ? false : prev()" aria-label="Prev">
-              <span aria-hidden="true">&lt;</span>
-              <span class="sr-only">Prev</span>
-            </a>
-          </li>
-          @for (page of getPages(); track page) {
-            <li class="ng2-smart-page-item page-item"
-              [ngClass]="{active: getPage() == page}">
-              @if (getPage() == page) {
-                <span class="ng2-smart-page-link page-link"
-                  >{{ page }} <span class="sr-only">(current)</span></span>
-                }
-                @if (getPage() != page) {
-                  <a class="ng2-smart-page-link page-link" href="#"
-                  (click)="paginate(page)">{{ page }}</a>
-                }
-              </li>
-            }
-            <li class="ng2-smart-page-item page-item"
-              [ngClass]="{disabled: getPage() == getLast()}">
-              <a class="ng2-smart-page-link page-link page-link-next" href="#"
-                (click)="getPage() == getLast() ? false : next()" aria-label="Next">
-                <span aria-hidden="true">&gt;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-            <li class="ng2-smart-page-item page-item"
-              [ngClass]="{disabled: getPage() == getLast()}">
-              <a class="ng2-smart-page-link page-link" href="#"
-                (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Last</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      }
-    
-      @if (perPageSelect && perPageSelect.length > 0) {
-        <nav class="ng2-smart-pagination-per-page">
-          <label for="per-page">
-            Per Page:
-          </label>
-          <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
-            @for (item of perPageSelect; track item) {
-              <option [value]="item">{{ item }}</option>
-            }
-          </select>
-        </nav>
-      }
-    `, styles: [".ng2-smart-pagination{display:inline-flex;font-size:.875em;padding:0}.ng2-smart-pagination .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}.ng2-smart-pagination .ng2-smart-page-item{display:inline}.ng2-smart-pagination .page-link-next,.ng2-smart-pagination .page-link-prev{font-size:10px}:host{display:flex;justify-content:space-between}:host select{margin:1rem 0 1rem 1rem}:host label{margin:1rem 0 1rem 1rem;line-height:2.5rem}\n"] }]
-        }], propDecorators: { source: [{
-                type: Input
-            }], perPageSelect: [{
-                type: Input
-            }], changePage: [{
-                type: Output
-            }] } });
-
-class PagerModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, declarations: [PagerComponent], imports: [CommonModule,
-            FormsModule], exports: [PagerComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, imports: [CommonModule,
-            FormsModule] }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, decorators: [{
-            type: NgModule,
-            args: [{
-                    imports: [
-                        CommonModule,
-                        FormsModule,
-                    ],
-                    declarations: [
-                        PagerComponent,
-                    ],
-                    exports: [
-                        PagerComponent,
-                    ],
-                }]
-        }] });
 
 class TbodyCreateCancelComponent {
     constructor() {
@@ -2755,42 +2259,368 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImpo
                 type: Output
             }] } });
 
-const TBODY_COMPONENTS = [
-    TbodyCreateCancelComponent,
-    TbodyEditDeleteComponent,
-    TbodyCustomComponent,
-    Ng2SmartTableTbodyComponent
-];
-class TBodyModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, declarations: [TbodyCreateCancelComponent,
-            TbodyEditDeleteComponent,
-            TbodyCustomComponent,
-            Ng2SmartTableTbodyComponent], imports: [CommonModule,
-            FormsModule,
-            CellModule], exports: [TbodyCreateCancelComponent,
-            TbodyEditDeleteComponent,
-            TbodyCustomComponent,
-            Ng2SmartTableTbodyComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, imports: [CommonModule,
-            FormsModule,
-            CellModule] }); }
+class FilterDefault {
+    constructor() {
+        this.inputClass = '';
+        this.query = '';
+        this.filter = new EventEmitter();
+    }
+    onFilter(query) {
+        this.source.addFilter({
+            field: this.column.id,
+            search: query,
+            filter: this.column.getFilterFunction(),
+        });
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterDefault, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: FilterDefault, selector: "ng-component", inputs: { column: "column", source: "source", inputClass: "inputClass", query: "query" }, outputs: { filter: "filter" }, ngImport: i0, template: '', isInline: true }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, decorators: [{
-            type: NgModule,
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterDefault, decorators: [{
+            type: Component,
             args: [{
-                    imports: [
-                        CommonModule,
-                        FormsModule,
-                        CellModule,
-                    ],
-                    declarations: [
-                        ...TBODY_COMPONENTS,
-                    ],
-                    exports: [
-                        ...TBODY_COMPONENTS,
-                    ],
+                    template: '',
                 }]
+        }], propDecorators: { column: [{
+                type: Input
+            }], source: [{
+                type: Input
+            }], inputClass: [{
+                type: Input
+            }], query: [{
+                type: Input
+            }], filter: [{
+                type: Output
+            }] } });
+
+class CheckboxFilterComponent extends DefaultFilter {
+    constructor() {
+        super();
+        this.filterActive = false;
+        this.inputControl = new UntypedFormControl();
+    }
+    ngOnInit() {
+        this.changesSubscription = this.inputControl.valueChanges
+            .pipe(debounceTime(this.delay))
+            .subscribe((checked) => {
+            this.filterActive = true;
+            const trueVal = (this.column.getFilterConfig() && this.column.getFilterConfig().true) || true;
+            const falseVal = (this.column.getFilterConfig() && this.column.getFilterConfig().false) || false;
+            this.query = checked ? trueVal : falseVal;
+            this.setFilter();
+        });
+    }
+    resetFilter(event) {
+        event.preventDefault();
+        this.query = '';
+        this.inputControl.setValue(false, { emitEvent: false });
+        this.filterActive = false;
+        this.setFilter();
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: CheckboxFilterComponent, selector: "checkbox-filter", usesInheritance: true, ngImport: i0, template: `
+    <input type="checkbox" [formControl]="inputControl" [ngClass]="inputClass" class="form-control">
+    @if (filterActive) {
+      <a href="#"
+      (click)="resetFilter($event)">{{column.getFilterConfig()?.resetText || 'reset'}}</a>
+    }
+    `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.CheckboxControlValueAccessor, selector: "input[type=checkbox][formControlName],input[type=checkbox][formControl],input[type=checkbox][ngModel]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.FormControlDirective, selector: "[formControl]", inputs: ["formControl", "disabled", "ngModel"], outputs: ["ngModelChange"], exportAs: ["ngForm"] }] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CheckboxFilterComponent, decorators: [{
+            type: Component,
+            args: [{
+                    selector: 'checkbox-filter',
+                    template: `
+    <input type="checkbox" [formControl]="inputControl" [ngClass]="inputClass" class="form-control">
+    @if (filterActive) {
+      <a href="#"
+      (click)="resetFilter($event)">{{column.getFilterConfig()?.resetText || 'reset'}}</a>
+    }
+    `,
+                }]
+        }], ctorParameters: () => [] });
+
+class InputFilterComponent extends DefaultFilter {
+    constructor() {
+        super();
+        this.inputControl = new UntypedFormControl();
+    }
+    ngOnInit() {
+        if (this.query) {
+            this.inputControl.setValue(this.query);
+        }
+        this.inputControl.valueChanges
+            .pipe(distinctUntilChanged(), debounceTime(this.delay))
+            .subscribe((value) => {
+            this.query = this.inputControl.value;
+            this.setFilter();
+        });
+    }
+    ngOnChanges(changes) {
+        if (changes?.['query']) {
+            this.inputControl.setValue(this.query);
+        }
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: InputFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: InputFilterComponent, selector: "input-filter", usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `
+    <input
+      [ngClass]="inputClass"
+      [formControl]="inputControl"
+      class="form-control"
+      type="text"
+      placeholder="{{ column.title }}"/>
+  `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.DefaultValueAccessor, selector: "input:not([type=checkbox])[formControlName],textarea[formControlName],input:not([type=checkbox])[formControl],textarea[formControl],input:not([type=checkbox])[ngModel],textarea[ngModel],[ngDefaultControl]" }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.FormControlDirective, selector: "[formControl]", inputs: ["formControl", "disabled", "ngModel"], outputs: ["ngModelChange"], exportAs: ["ngForm"] }] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: InputFilterComponent, decorators: [{
+            type: Component,
+            args: [{
+                    selector: 'input-filter',
+                    template: `
+    <input
+      [ngClass]="inputClass"
+      [formControl]="inputControl"
+      class="form-control"
+      type="text"
+      placeholder="{{ column.title }}"/>
+  `,
+                }]
+        }], ctorParameters: () => [] });
+
+class SelectFilterComponent extends DefaultFilter {
+    constructor() {
+        super();
+    }
+    ngOnInit() {
+        if (this.inputControl.valueChanges) {
+            this.inputControl.valueChanges
+                .pipe(skip(1), distinctUntilChanged(), debounceTime(this.delay))
+                .subscribe((value) => this.setFilter());
+        }
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: SelectFilterComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: SelectFilterComponent, selector: "select-filter", viewQueries: [{ propertyName: "inputControl", first: true, predicate: ["inputControl"], descendants: true, read: NgControl, static: true }], usesInheritance: true, ngImport: i0, template: `
+    <select [ngClass]="inputClass"
+      class="form-control"
+      #inputControl
+      [(ngModel)]="query">
+    
+      <option value="">{{ column.getFilterConfig().selectText }}</option>
+      @for (option of column.getFilterConfig().list; track option) {
+        <option [value]="option.value">
+          {{ option.title }}
+        </option>
+      }
+    </select>
+    `, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "directive", type: i2.NgSelectOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.ɵNgSelectMultipleOption, selector: "option", inputs: ["ngValue", "value"] }, { kind: "directive", type: i2.SelectControlValueAccessor, selector: "select:not([multiple])[formControlName],select:not([multiple])[formControl],select:not([multiple])[ngModel]", inputs: ["compareWith"] }, { kind: "directive", type: i2.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { kind: "directive", type: i2.NgModel, selector: "[ngModel]:not([formControlName]):not([formControl])", inputs: ["name", "disabled", "ngModel", "ngModelOptions"], outputs: ["ngModelChange"], exportAs: ["ngModel"] }] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: SelectFilterComponent, decorators: [{
+            type: Component,
+            args: [{
+                    selector: 'select-filter',
+                    template: `
+    <select [ngClass]="inputClass"
+      class="form-control"
+      #inputControl
+      [(ngModel)]="query">
+    
+      <option value="">{{ column.getFilterConfig().selectText }}</option>
+      @for (option of column.getFilterConfig().list; track option) {
+        <option [value]="option.value">
+          {{ option.title }}
+        </option>
+      }
+    </select>
+    `,
+                }]
+        }], ctorParameters: () => [], propDecorators: { inputControl: [{
+                type: ViewChild,
+                args: ['inputControl', { read: NgControl, static: true }]
+            }] } });
+
+class DefaultFilterComponent extends FilterDefault {
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilterComponent, deps: null, target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: DefaultFilterComponent, selector: "default-table-filter", usesInheritance: true, ngImport: i0, template: `
+@switch (column.getFilterType()) {
+  @case ('list') {
+    <select-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+    </select-filter>
+  }
+  @case ('checkbox') {
+    <checkbox-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+    </checkbox-filter>
+  }
+  @default {
+    <input-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+  </input-filter>
+}
+}
+`, isInline: true, dependencies: [{ kind: "directive", type: i1.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }, { kind: "component", type: CheckboxFilterComponent, selector: "checkbox-filter" }, { kind: "component", type: InputFilterComponent, selector: "input-filter" }, { kind: "component", type: SelectFilterComponent, selector: "select-filter" }] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: DefaultFilterComponent, decorators: [{
+            type: Component,
+            args: [{
+                    selector: 'default-table-filter',
+                    template: `
+@switch (column.getFilterType()) {
+  @case ('list') {
+    <select-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+    </select-filter>
+  }
+  @case ('checkbox') {
+    <checkbox-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+    </checkbox-filter>
+  }
+  @default {
+    <input-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+  </input-filter>
+}
+}
+`,
+                }]
+        }] });
+
+class CustomFilterComponent extends FilterDefault {
+    constructor(resolver) {
+        super();
+        this.resolver = resolver;
+    }
+    ngOnChanges(changes) {
+        if (this.customComponent) {
+            this.customComponent.instance.ngOnChanges(changes);
+            return;
+        }
+        if (this.column.filter && this.column.filter.type === 'custom') {
+            const componentFactory = this.resolver.resolveComponentFactory(this.column.filter?.component);
+            this.customComponent = this.dynamicTarget.createComponent(componentFactory);
+        }
+        // set @Inputs and @Outputs of custom component
+        this.customComponent.instance.query = this.query;
+        this.customComponent.instance.column = this.column;
+        this.customComponent.instance.source = this.source;
+        this.customComponent.instance.inputClass = this.inputClass;
+        this.customComponent.instance.filter.subscribe((event) => this.onFilter(event));
+    }
+    ngOnDestroy() {
+        if (this.customComponent) {
+            this.customComponent.destroy();
+        }
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CustomFilterComponent, deps: [{ token: i0.ComponentFactoryResolver }], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.3.12", type: CustomFilterComponent, selector: "custom-table-filter", viewQueries: [{ propertyName: "dynamicTarget", first: true, predicate: ["dynamicTarget"], descendants: true, read: ViewContainerRef, static: true }], usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `<ng-template #dynamicTarget></ng-template>`, isInline: true }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CustomFilterComponent, decorators: [{
+            type: Component,
+            args: [{
+                    selector: 'custom-table-filter',
+                    template: `<ng-template #dynamicTarget></ng-template>`,
+                }]
+        }], ctorParameters: () => [{ type: i0.ComponentFactoryResolver }], propDecorators: { dynamicTarget: [{
+                type: ViewChild,
+                args: ['dynamicTarget', { read: ViewContainerRef, static: true }]
+            }] } });
+
+class FilterComponent extends FilterDefault {
+    ngOnChanges(changes) {
+        if (changes['source']) {
+            if (!changes['source'].firstChange && this.dataChangedSub) {
+                this.dataChangedSub.unsubscribe();
+            }
+            this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
+                const filterConf = this.source.getFilter();
+                if (filterConf && filterConf.filters && filterConf.filters.length === 0) {
+                    this.query = '';
+                    // add a check for existing filters an set the query if one exists for this column
+                    // this covers instances where the filter is set by user code while maintaining existing functionality
+                }
+                else if (filterConf && filterConf.filters && filterConf.filters.length > 0) {
+                    filterConf.filters.forEach((k, v) => {
+                        if (k.field == this.column.id) {
+                            this.query = k.search;
+                        }
+                    });
+                }
+            });
+        }
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterComponent, deps: null, target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "17.3.12", type: FilterComponent, selector: "ng2-smart-table-filter", usesInheritance: true, usesOnChanges: true, ngImport: i0, template: `
+      @if (column.isFilterable) {
+        <div class="ng2-smart-filter">
+          @switch (column.getFilterType()) {
+            @case ('custom') {
+              <custom-table-filter
+                [query]="query"
+                [column]="column"
+                [source]="source"
+                [inputClass]="inputClass"
+                (filter)="onFilter($event)">
+              </custom-table-filter>
+            }
+            @default {
+              <default-table-filter
+                [query]="query"
+                [column]="column"
+                [source]="source"
+                [inputClass]="inputClass"
+                (filter)="onFilter($event)">
+              </default-table-filter>
+            }
+          }
+        </div>
+      }
+      `, isInline: true, styles: [":host .ng2-smart-filter ::ng-deep input,:host .ng2-smart-filter ::ng-deep select{width:100%;line-height:normal;padding:.375em .75em;font-weight:400}:host .ng2-smart-filter ::ng-deep input[type=search]{box-sizing:inherit}:host .ng2-smart-filter ::ng-deep .completer-dropdown-holder{font-weight:400}:host .ng2-smart-filter ::ng-deep a{font-weight:400}\n"], dependencies: [{ kind: "component", type: DefaultFilterComponent, selector: "default-table-filter" }, { kind: "component", type: CustomFilterComponent, selector: "custom-table-filter" }] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterComponent, decorators: [{
+            type: Component,
+            args: [{ selector: 'ng2-smart-table-filter', template: `
+      @if (column.isFilterable) {
+        <div class="ng2-smart-filter">
+          @switch (column.getFilterType()) {
+            @case ('custom') {
+              <custom-table-filter
+                [query]="query"
+                [column]="column"
+                [source]="source"
+                [inputClass]="inputClass"
+                (filter)="onFilter($event)">
+              </custom-table-filter>
+            }
+            @default {
+              <default-table-filter
+                [query]="query"
+                [column]="column"
+                [source]="source"
+                [inputClass]="inputClass"
+                (filter)="onFilter($event)">
+              </default-table-filter>
+            }
+          }
+        </div>
+      }
+      `, styles: [":host .ng2-smart-filter ::ng-deep input,:host .ng2-smart-filter ::ng-deep select{width:100%;line-height:normal;padding:.375em .75em;font-weight:400}:host .ng2-smart-filter ::ng-deep input[type=search]{box-sizing:inherit}:host .ng2-smart-filter ::ng-deep .completer-dropdown-holder{font-weight:400}:host .ng2-smart-filter ::ng-deep a{font-weight:400}\n"] }]
         }] });
 
 class AddButtonComponent {
@@ -3349,65 +3179,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImpo
                 type: Output
             }] } });
 
-const THEAD_COMPONENTS = [
-    ActionsComponent,
-    ActionsTitleComponent,
-    AddButtonComponent,
-    CheckboxSelectAllComponent,
-    ColumnTitleComponent,
-    TitleComponent,
-    TheadFitlersRowComponent,
-    TheadFormRowComponent,
-    TheadTitlesRowComponent,
-    Ng2SmartTableTheadComponent,
-];
-class THeadModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, declarations: [ActionsComponent,
-            ActionsTitleComponent,
-            AddButtonComponent,
-            CheckboxSelectAllComponent,
-            ColumnTitleComponent,
-            TitleComponent,
-            TheadFitlersRowComponent,
-            TheadFormRowComponent,
-            TheadTitlesRowComponent,
-            Ng2SmartTableTheadComponent], imports: [CommonModule,
-            FormsModule,
-            FilterModule,
-            CellModule], exports: [ActionsComponent,
-            ActionsTitleComponent,
-            AddButtonComponent,
-            CheckboxSelectAllComponent,
-            ColumnTitleComponent,
-            TitleComponent,
-            TheadFitlersRowComponent,
-            TheadFormRowComponent,
-            TheadTitlesRowComponent,
-            Ng2SmartTableTheadComponent] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, imports: [CommonModule,
-            FormsModule,
-            FilterModule,
-            CellModule] }); }
-}
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, decorators: [{
-            type: NgModule,
-            args: [{
-                    imports: [
-                        CommonModule,
-                        FormsModule,
-                        FilterModule,
-                        CellModule,
-                    ],
-                    declarations: [
-                        ...THEAD_COMPONENTS,
-                    ],
-                    exports: [
-                        ...THEAD_COMPONENTS,
-                    ],
-                }]
-        }] });
-
 class Ng2SmartTableComponent {
     constructor() {
         this.multiRowSelect = new EventEmitter();
@@ -3568,6 +3339,235 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImpo
                 type: Output
             }] } });
 
+const CELL_COMPONENTS = [
+    CellComponent,
+    EditCellDefault,
+    DefaultEditor,
+    CustomEditComponent,
+    DefaultEditComponent,
+    EditCellComponent,
+    CheckboxEditorComponent,
+    InputEditorComponent,
+    SelectEditorComponent,
+    TextareaEditorComponent,
+    CustomViewComponent,
+    ViewCellComponent,
+];
+class CellModule {
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CellModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: CellModule, declarations: [CellComponent,
+            EditCellDefault,
+            DefaultEditor,
+            CustomEditComponent,
+            DefaultEditComponent,
+            EditCellComponent,
+            CheckboxEditorComponent,
+            InputEditorComponent,
+            SelectEditorComponent,
+            TextareaEditorComponent,
+            CustomViewComponent,
+            ViewCellComponent], imports: [CommonModule,
+            FormsModule], exports: [CellComponent,
+            EditCellDefault,
+            DefaultEditor,
+            CustomEditComponent,
+            DefaultEditComponent,
+            EditCellComponent,
+            CheckboxEditorComponent,
+            InputEditorComponent,
+            SelectEditorComponent,
+            TextareaEditorComponent,
+            CustomViewComponent,
+            ViewCellComponent] }); }
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CellModule, imports: [CommonModule,
+            FormsModule] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: CellModule, decorators: [{
+            type: NgModule,
+            args: [{
+                    imports: [
+                        CommonModule,
+                        FormsModule,
+                    ],
+                    declarations: [
+                        ...CELL_COMPONENTS,
+                    ],
+                    exports: [
+                        ...CELL_COMPONENTS,
+                    ],
+                }]
+        }] });
+
+const FILTER_COMPONENTS = [
+    FilterDefault,
+    DefaultFilter,
+    FilterComponent,
+    DefaultFilterComponent,
+    CustomFilterComponent,
+    CheckboxFilterComponent,
+    InputFilterComponent,
+    SelectFilterComponent,
+];
+class FilterModule {
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, declarations: [FilterDefault,
+            DefaultFilter,
+            FilterComponent,
+            DefaultFilterComponent,
+            CustomFilterComponent,
+            CheckboxFilterComponent,
+            InputFilterComponent,
+            SelectFilterComponent], imports: [CommonModule,
+            FormsModule,
+            ReactiveFormsModule], exports: [FilterDefault,
+            DefaultFilter,
+            FilterComponent,
+            DefaultFilterComponent,
+            CustomFilterComponent,
+            CheckboxFilterComponent,
+            InputFilterComponent,
+            SelectFilterComponent] }); }
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, imports: [CommonModule,
+            FormsModule,
+            ReactiveFormsModule] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: FilterModule, decorators: [{
+            type: NgModule,
+            args: [{
+                    imports: [
+                        CommonModule,
+                        FormsModule,
+                        ReactiveFormsModule,
+                    ],
+                    declarations: [
+                        ...FILTER_COMPONENTS,
+                    ],
+                    exports: [
+                        ...FILTER_COMPONENTS,
+                    ],
+                }]
+        }] });
+
+class PagerModule {
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, declarations: [PagerComponent], imports: [CommonModule,
+            FormsModule], exports: [PagerComponent] }); }
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, imports: [CommonModule,
+            FormsModule] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: PagerModule, decorators: [{
+            type: NgModule,
+            args: [{
+                    imports: [
+                        CommonModule,
+                        FormsModule,
+                    ],
+                    declarations: [
+                        PagerComponent,
+                    ],
+                    exports: [
+                        PagerComponent,
+                    ],
+                }]
+        }] });
+
+const TBODY_COMPONENTS = [
+    TbodyCreateCancelComponent,
+    TbodyEditDeleteComponent,
+    TbodyCustomComponent,
+    Ng2SmartTableTbodyComponent
+];
+class TBodyModule {
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, declarations: [TbodyCreateCancelComponent,
+            TbodyEditDeleteComponent,
+            TbodyCustomComponent,
+            Ng2SmartTableTbodyComponent], imports: [CommonModule,
+            FormsModule,
+            CellModule], exports: [TbodyCreateCancelComponent,
+            TbodyEditDeleteComponent,
+            TbodyCustomComponent,
+            Ng2SmartTableTbodyComponent] }); }
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, imports: [CommonModule,
+            FormsModule,
+            CellModule] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: TBodyModule, decorators: [{
+            type: NgModule,
+            args: [{
+                    imports: [
+                        CommonModule,
+                        FormsModule,
+                        CellModule,
+                    ],
+                    declarations: [
+                        ...TBODY_COMPONENTS,
+                    ],
+                    exports: [
+                        ...TBODY_COMPONENTS,
+                    ],
+                }]
+        }] });
+
+const THEAD_COMPONENTS = [
+    ActionsComponent,
+    ActionsTitleComponent,
+    AddButtonComponent,
+    CheckboxSelectAllComponent,
+    ColumnTitleComponent,
+    TitleComponent,
+    TheadFitlersRowComponent,
+    TheadFormRowComponent,
+    TheadTitlesRowComponent,
+    Ng2SmartTableTheadComponent,
+];
+class THeadModule {
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, declarations: [ActionsComponent,
+            ActionsTitleComponent,
+            AddButtonComponent,
+            CheckboxSelectAllComponent,
+            ColumnTitleComponent,
+            TitleComponent,
+            TheadFitlersRowComponent,
+            TheadFormRowComponent,
+            TheadTitlesRowComponent,
+            Ng2SmartTableTheadComponent], imports: [CommonModule,
+            FormsModule,
+            FilterModule,
+            CellModule], exports: [ActionsComponent,
+            ActionsTitleComponent,
+            AddButtonComponent,
+            CheckboxSelectAllComponent,
+            ColumnTitleComponent,
+            TitleComponent,
+            TheadFitlersRowComponent,
+            TheadFormRowComponent,
+            TheadTitlesRowComponent,
+            Ng2SmartTableTheadComponent] }); }
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, imports: [CommonModule,
+            FormsModule,
+            FilterModule,
+            CellModule] }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: THeadModule, decorators: [{
+            type: NgModule,
+            args: [{
+                    imports: [
+                        CommonModule,
+                        FormsModule,
+                        FilterModule,
+                        CellModule,
+                    ],
+                    declarations: [
+                        ...THEAD_COMPONENTS,
+                    ],
+                    exports: [
+                        ...THEAD_COMPONENTS,
+                    ],
+                }]
+        }] });
+
 class Ng2SmartTableModule {
     static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
     static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.3.12", ngImport: i0, type: Ng2SmartTableModule, declarations: [Ng2SmartTableComponent], imports: [CommonModule,
@@ -3613,5 +3613,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImpo
  * Generated bundle index. Do not edit.
  */
 
-export { Cell, DefaultEditor, DefaultFilter, LocalDataSource, Ng2SmartTableComponent, Ng2SmartTableModule };
+export { Cell, DefaultEditor, DefaultFilter, LocalDataSource, Ng2SmartTableComponent, Ng2SmartTableModule, SmartTableOnChangedEventName };
 //# sourceMappingURL=den4ik92-ng2-smart-table.mjs.map
