@@ -7,12 +7,16 @@ import { Grid } from '../../lib/grid';
 @Component({
   selector: 'ng2-smart-table-cell',
   template: `
-    <table-cell-view-mode *ngIf="!isInEditing" [cell]="cell"></table-cell-view-mode>
-    <table-cell-edit-mode *ngIf="isInEditing" [cell]="cell"
-                          [inputClass]="inputClass"
-                          (edited)="onEdited($event)">
-    </table-cell-edit-mode>
-  `,
+    @if (!isInEditing) {
+      <table-cell-view-mode [cell]="cell"></table-cell-view-mode>
+    }
+    @if (isInEditing) {
+      <table-cell-edit-mode [cell]="cell"
+        [inputClass]="inputClass"
+        (edited)="onEdited($event)">
+      </table-cell-edit-mode>
+    }
+    `,
 })
 export class CellComponent {
 

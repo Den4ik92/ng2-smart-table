@@ -6,7 +6,7 @@ import { Grid } from "../../../lib/grid";
 @Component({
   selector: "ng2-st-tbody-create-cancel",
   template: `
-    <ng-container *ngIf="!row.pending; else loader">
+    @if (!row.pending) {
       <a
         href="#"
         [id]="'row-' + row.index + '_editing-confirm-button'"
@@ -21,8 +21,7 @@ import { Grid } from "../../../lib/grid";
         [innerHTML]="cancelButtonContent"
         (click)="onCancelEdit($event)"
       ></a>
-    </ng-container>
-    <ng-template #loader>
+    } @else {
       <div style="display: flex;">
         <svg
           (click)="$event.stopPropagation()"
@@ -36,11 +35,11 @@ import { Grid } from "../../../lib/grid";
           viewBox="0 0 100 100"
           enable-background="new 0 0 0 0"
           xml:space="preserve"
-        >
+          >
           <path
             fill="#e9e9e9"
             d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
+            >
             <animateTransform
               attributeName="transform"
               attributeType="XML"
@@ -49,7 +48,7 @@ import { Grid } from "../../../lib/grid";
               from="0 50 50"
               to="360 50 50"
               repeatCount="indefinite"
-            />
+              />
           </path>
         </svg>
         <svg
@@ -64,11 +63,11 @@ import { Grid } from "../../../lib/grid";
           viewBox="0 0 100 100"
           enable-background="new 0 0 0 0"
           xml:space="preserve"
-        >
+          >
           <path
             fill="#e9e9e9"
             d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-          >
+            >
             <animateTransform
               attributeName="transform"
               attributeType="XML"
@@ -77,12 +76,12 @@ import { Grid } from "../../../lib/grid";
               from="0 50 50"
               to="360 50 50"
               repeatCount="indefinite"
-            />
+              />
           </path>
         </svg>
       </div>
-    </ng-template>
-  `,
+    }
+    `,
 })
 export class TbodyCreateCancelComponent implements OnChanges {
   @Input() grid!: Grid;

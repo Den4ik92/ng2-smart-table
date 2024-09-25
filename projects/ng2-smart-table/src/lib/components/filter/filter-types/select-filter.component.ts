@@ -8,16 +8,18 @@ import { DefaultFilter } from './default-filter';
   selector: 'select-filter',
   template: `
     <select [ngClass]="inputClass"
-            class="form-control"
-            #inputControl
-            [(ngModel)]="query">
-
-        <option value="">{{ column.getFilterConfig().selectText }}</option>
-        <option *ngFor="let option of column.getFilterConfig().list" [value]="option.value">
+      class="form-control"
+      #inputControl
+      [(ngModel)]="query">
+    
+      <option value="">{{ column.getFilterConfig().selectText }}</option>
+      @for (option of column.getFilterConfig().list; track option) {
+        <option [value]="option.value">
           {{ option.title }}
         </option>
+      }
     </select>
-  `,
+    `,
 })
 export class SelectFilterComponent extends DefaultFilter implements OnInit {
   @ViewChild('inputControl', { read: NgControl, static: true }) inputControl!: NgControl;

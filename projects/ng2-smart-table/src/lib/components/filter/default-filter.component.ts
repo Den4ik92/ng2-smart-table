@@ -5,27 +5,33 @@ import {FilterDefault} from "./filter-default";
 @Component({
   selector: 'default-table-filter',
   template: `
-    <ng-container [ngSwitch]="column.getFilterType()">
-      <select-filter *ngSwitchCase="'list'"
-                     [query]="query"
-                     [ngClass]="inputClass"
-                     [column]="column"
-                     (filter)="onFilter($event)">
-      </select-filter>
-      <checkbox-filter *ngSwitchCase="'checkbox'"
-                       [query]="query"
-                       [ngClass]="inputClass"
-                       [column]="column"
-                       (filter)="onFilter($event)">
-      </checkbox-filter>
-      <input-filter *ngSwitchDefault
-                    [query]="query"
-                    [ngClass]="inputClass"
-                    [column]="column"
-                    (filter)="onFilter($event)">
-      </input-filter>
-    </ng-container>
-  `,
+@switch (column.getFilterType()) {
+  @case ('list') {
+    <select-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+    </select-filter>
+  }
+  @case ('checkbox') {
+    <checkbox-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+    </checkbox-filter>
+  }
+  @default {
+    <input-filter
+      [query]="query"
+      [ngClass]="inputClass"
+      [column]="column"
+      (filter)="onFilter($event)">
+  </input-filter>
+}
+}
+`,
 })
 export class DefaultFilterComponent extends FilterDefault {  
 

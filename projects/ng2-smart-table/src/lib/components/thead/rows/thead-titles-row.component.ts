@@ -7,20 +7,28 @@ import { LocalDataSource } from '../../../lib/data-source/local/local.data-sourc
 @Component({
   selector: '[ng2-st-thead-titles-row]',
   template: `
-    <th ng2-st-checkbox-select-all *ngIf="isMultiSelectVisible"
-                                   [grid]="grid"
-                                   [source]="source"
-                                   (click)="selectAllRows.emit($event)">
-    </th>
-    <th ng2-st-actions-title *ngIf="showActionColumnLeft" [grid]="grid"></th>
-    <th *ngFor="let column of getVisibleColumns(grid.getColumns())"
+    @if (isMultiSelectVisible) {
+      <th ng2-st-checkbox-select-all
+        [grid]="grid"
+        [source]="source"
+        (click)="selectAllRows.emit($event)">
+      </th>
+    }
+    @if (showActionColumnLeft) {
+      <th ng2-st-actions-title [grid]="grid"></th>
+    }
+    @for (column of getVisibleColumns(grid.getColumns()); track column) {
+      <th
         class="ng2-smart-th {{ column.id }}"
         [ngClass]="column.class"
         [style.width]="column.width">
-      <ng2-st-column-title [source]="source" [column]="column" (sort)="sort.emit($event)"></ng2-st-column-title>
-    </th>
-    <th ng2-st-actions-title *ngIf="showActionColumnRight" [grid]="grid"></th>
-  `,
+        <ng2-st-column-title [source]="source" [column]="column" (sort)="sort.emit($event)"></ng2-st-column-title>
+      </th>
+    }
+    @if (showActionColumnRight) {
+      <th ng2-st-actions-title [grid]="grid"></th>
+    }
+    `,
 })
 export class TheadTitlesRowComponent implements OnChanges {
 

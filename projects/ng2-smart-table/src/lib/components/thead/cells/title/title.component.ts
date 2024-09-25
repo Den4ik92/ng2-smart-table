@@ -8,14 +8,18 @@ import { Column } from '../../../../lib/data-set/column';
   selector: 'ng2-smart-table-title',
   styleUrls: ['./title.component.scss'],
   template: `
-    <a href="#" *ngIf="column.isSortable"
-                (click)="_sort($event)"
-                class="ng2-smart-sort-link sort"
-                [ngClass]="currentDirection">
-      {{ column.title }}
-    </a>
-    <span class="ng2-smart-sort" *ngIf="!column.isSortable">{{ column.title }}</span>
-  `,
+    @if (column.isSortable) {
+      <a href="#"
+        (click)="_sort($event)"
+        class="ng2-smart-sort-link sort"
+        [ngClass]="currentDirection">
+        {{ column.title }}
+      </a>
+    }
+    @if (!column.isSortable) {
+      <span class="ng2-smart-sort">{{ column.title }}</span>
+    }
+    `,
 })
 export class TitleComponent implements OnChanges {
 

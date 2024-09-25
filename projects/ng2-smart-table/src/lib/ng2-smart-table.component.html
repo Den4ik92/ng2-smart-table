@@ -1,29 +1,33 @@
 <table [id]="tableId" [ngClass]="tableClass">
 
-  <thead ng2-st-thead *ngIf="!isHideHeader || !isHideSubHeader"
-                      [grid]="grid"
-                      [source]="source"
-                      [createConfirm]="createConfirm"
-                      (create)="create.emit($event)"
-                      (selectAllRows)="onSelectAllRows()">
-  </thead>
+  @if (!isHideHeader || !isHideSubHeader) {
+    <thead ng2-st-thead
+      [grid]="grid"
+      [source]="source"
+      [createConfirm]="createConfirm"
+      (create)="create.emit($event)"
+      (selectAllRows)="onSelectAllRows()">
+    </thead>
+  }
 
   <tbody ng2-st-tbody [grid]="grid"
-                      [source]="source"
-                      [deleteConfirm]="deleteConfirm"
-                      [editConfirm]="editConfirm"
-                      [rowClassFunction]="rowClassFunction"
-                      (edit)="edit.emit($event)"
-                      (editCancel)="editCancel.emit($event)"
-                      (delete)="delete.emit($event)"
-                      (custom)="custom.emit($event)"
-                      (userClickedRow)="emitUserRowClicked($event)"
-                      (multipleSelectRow)="multipleSelectRow($event)">
+    [source]="source"
+    [deleteConfirm]="deleteConfirm"
+    [editConfirm]="editConfirm"
+    [rowClassFunction]="rowClassFunction"
+    (edit)="edit.emit($event)"
+    (editCancel)="editCancel.emit($event)"
+    (delete)="delete.emit($event)"
+    (custom)="custom.emit($event)"
+    (userClickedRow)="emitUserRowClicked($event)"
+    (multipleSelectRow)="multipleSelectRow($event)">
   </tbody>
 
 </table>
 
-<ng2-smart-table-pager *ngIf="isPagerDisplay"
-                        [source]="source"
-                        [perPageSelect]="perPageSelect">
-</ng2-smart-table-pager>
+@if (isPagerDisplay) {
+  <ng2-smart-table-pager
+    [source]="source"
+    [perPageSelect]="perPageSelect">
+  </ng2-smart-table-pager>
+}

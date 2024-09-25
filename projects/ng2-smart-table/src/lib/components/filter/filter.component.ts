@@ -6,23 +6,31 @@ import { Subscription } from 'rxjs';
   selector: 'ng2-smart-table-filter',
   styleUrls: ['./filter.component.scss'],
   template: `
-      <div class="ng2-smart-filter" *ngIf="column.isFilterable" [ngSwitch]="column.getFilterType()">
-        <custom-table-filter *ngSwitchCase="'custom'"
-                             [query]="query"
-                             [column]="column"
-                             [source]="source"
-                             [inputClass]="inputClass"
-                             (filter)="onFilter($event)">
-        </custom-table-filter>
-        <default-table-filter *ngSwitchDefault
-                              [query]="query"
-                              [column]="column"
-                              [source]="source"
-                              [inputClass]="inputClass"
-                              (filter)="onFilter($event)">
-        </default-table-filter>
-      </div>
-    `,
+      @if (column.isFilterable) {
+        <div class="ng2-smart-filter">
+          @switch (column.getFilterType()) {
+            @case ('custom') {
+              <custom-table-filter
+                [query]="query"
+                [column]="column"
+                [source]="source"
+                [inputClass]="inputClass"
+                (filter)="onFilter($event)">
+              </custom-table-filter>
+            }
+            @default {
+              <default-table-filter
+                [query]="query"
+                [column]="column"
+                [source]="source"
+                [inputClass]="inputClass"
+                (filter)="onFilter($event)">
+              </default-table-filter>
+            }
+          }
+        </div>
+      }
+      `,
 })
 export class FilterComponent extends FilterDefault implements OnChanges {
   protected dataChangedSub?: Subscription;

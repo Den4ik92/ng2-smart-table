@@ -7,24 +7,32 @@ import { LocalDataSource } from '../../../lib/data-source/local/local.data-sourc
 @Component({
   selector: '[ng2-st-thead-filters-row]',
   template: `
-    <th *ngIf="isMultiSelectVisible"></th>
-    <th ng2-st-add-button *ngIf="showActionColumnLeft"
-                          [grid]="grid"
-                          (create)="create.emit($event)">
-    </th>
-    <th *ngFor="let column of getVisibleColumns(grid.getColumns())" class="ng2-smart-th {{ column.id }}">
-      <ng2-smart-table-filter [source]="source"
-                              [column]="column"
-                              [inputClass]="filterInputClass"
-                              (filter)="filter.emit($event)">
-      </ng2-smart-table-filter>
-    </th>
-    <th ng2-st-add-button *ngIf="showActionColumnRight"
-                          [grid]="grid"
-                          [source]="source"
-                          (create)="create.emit($event)">
-    </th>
-  `,
+    @if (isMultiSelectVisible) {
+      <th></th>
+    }
+    @if (showActionColumnLeft) {
+      <th ng2-st-add-button
+        [grid]="grid"
+        (create)="create.emit($event)">
+      </th>
+    }
+    @for (column of getVisibleColumns(grid.getColumns()); track column) {
+      <th class="ng2-smart-th {{ column.id }}">
+        <ng2-smart-table-filter [source]="source"
+          [column]="column"
+          [inputClass]="filterInputClass"
+          (filter)="filter.emit($event)">
+        </ng2-smart-table-filter>
+      </th>
+    }
+    @if (showActionColumnRight) {
+      <th ng2-st-add-button
+        [grid]="grid"
+        [source]="source"
+        (create)="create.emit($event)">
+      </th>
+    }
+    `,
 })
 export class TheadFitlersRowComponent implements OnChanges {
 

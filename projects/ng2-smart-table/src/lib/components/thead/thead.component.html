@@ -1,20 +1,26 @@
-<tr ng2-st-thead-titles-row *ngIf="!isHideHeader"
-                            class="ng2-smart-titles"
-                            [grid]="grid"
-                            [source]="source"
-                            (sort)="sort.emit($event)"
-                            (selectAllRows)="selectAllRows.emit($event)">
-</tr>
+@if (!isHideHeader) {
+  <tr ng2-st-thead-titles-row
+    class="ng2-smart-titles"
+    [grid]="grid"
+    [source]="source"
+    (sort)="sort.emit($event)"
+    (selectAllRows)="selectAllRows.emit($event)">
+  </tr>
+}
 
-<tr ng2-st-thead-filters-row *ngIf="!isHideSubHeader"
-                              class="ng2-smart-filters"
-                              [grid]="grid"
-                              [source]="source"
-                              (create)="create.emit($event)"
-                              (filter)="filter.emit($event)">
-</tr>
+@if (!isHideSubHeader) {
+  <tr ng2-st-thead-filters-row
+    class="ng2-smart-filters"
+    [grid]="grid"
+    [source]="source"
+    (create)="create.emit($event)"
+    (filter)="filter.emit($event)">
+  </tr>
+}
 
-<tr ng2-st-thead-form-row *ngIf="grid.createFormShown"
-                          [grid]="grid"
-                          [createConfirm]="createConfirm">
-</tr>
+@if (grid.createFormShown) {
+  <tr ng2-st-thead-form-row
+    [grid]="grid"
+    [createConfirm]="createConfirm">
+  </tr>
+}

@@ -15,15 +15,16 @@ import { SmartTableCustomAction } from "../../../lib/interfaces/smart-table.mode
   selector: "ng2-st-tbody-custom",
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <a
-      *ngFor="let action of customActions()"
-      [id]="'row-' + row.index + '_action-' + action.name + '-button'"
-      href="#"
-      class="ng2-smart-action ng2-smart-action-custom-custom"
-      [innerHTML]="action.title"
-      (click)="$event.stopPropagation(); $event.preventDefault(); onCustom(action)"
-    ></a>
-  `,
+    @for (action of customActions(); track action) {
+      <a
+        [id]="'row-' + row.index + '_action-' + action.name + '-button'"
+        href="#"
+        class="ng2-smart-action ng2-smart-action-custom-custom"
+        [innerHTML]="action.title"
+        (click)="$event.stopPropagation(); $event.preventDefault(); onCustom(action)"
+      ></a>
+    }
+    `,
 })
 export class TbodyCustomComponent {
   @Input() grid!: Grid;
