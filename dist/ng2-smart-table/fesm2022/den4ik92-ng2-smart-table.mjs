@@ -184,41 +184,49 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImpo
                 type: Output
             }] } });
 
-function compareValues(direction, a, b) {
-    if (a < b) {
-        return -1 * direction;
+class Row {
+    constructor(index, data, _dataSet) {
+        this.index = index;
+        this.data = data;
+        this._dataSet = _dataSet;
+        this.pending = false;
+        this.isSelected = false;
+        this.isInEditing = false;
+        this.cells = [];
+        this.process();
     }
-    if (a > b) {
-        return direction;
+    getCell(column) {
+        return this.cells.find(el => el.getColumn() === column);
     }
-    return 0;
-}
-class LocalSorter {
-    static sort(data, field, direction, customCompare) {
-        const dir = (direction === 'asc') ? 1 : -1;
-        const compare = customCompare ? customCompare : compareValues;
-        return data.sort((a, b) => {
-            return compare.call(null, dir, a[field], b[field]);
+    getCells() {
+        return this.cells;
+    }
+    getData() {
+        return this.data;
+    }
+    getIsSelected() {
+        return this.isSelected;
+    }
+    getNewData() {
+        const values = Object.assign({}, this.data);
+        this.getCells().forEach((cell) => values[cell.getColumn().id] = cell.newValue);
+        return values;
+    }
+    setData(data) {
+        this.data = data;
+        this.process();
+    }
+    process() {
+        this.cells = [];
+        this._dataSet.getColumns().forEach((column) => {
+            const cell = this.createCell(column);
+            this.cells.push(cell);
         });
     }
-}
-
-function filterValues(value, search) {
-    return value.toString().toLowerCase().includes(search.toString().toLowerCase());
-}
-class LocalFilter {
-    static filter(data, field, search, customFilter) {
-        const filter = customFilter ? customFilter : filterValues;
-        return data.filter((el) => {
-            const value = typeof el[field] === 'undefined' || el[field] === null ? '' : el[field];
-            return filter.call(null, value, search);
-        });
-    }
-}
-
-class LocalPager {
-    static paginate(data, page, perPage) {
-        return data.slice(perPage * (page - 1), perPage * page);
+    createCell(column) {
+        const defValue = column.settings.defaultValue ? column.settings.defaultValue : '';
+        const value = typeof this.data[column.id] === 'undefined' ? defValue : this.data[column.id];
+        return new Cell(value, this, column, this._dataSet);
     }
 }
 
@@ -325,6 +333,44 @@ class DataSource {
             filter: this.getFilter(),
             sort: this.getSort(),
         }));
+    }
+}
+
+function compareValues(direction, a, b) {
+    if (a < b) {
+        return -1 * direction;
+    }
+    if (a > b) {
+        return direction;
+    }
+    return 0;
+}
+class LocalSorter {
+    static sort(data, field, direction, customCompare) {
+        const dir = (direction === 'asc') ? 1 : -1;
+        const compare = customCompare ? customCompare : compareValues;
+        return data.sort((a, b) => {
+            return compare.call(null, dir, a[field], b[field]);
+        });
+    }
+}
+
+function filterValues(value, search) {
+    return value.toString().toLowerCase().includes(search.toString().toLowerCase());
+}
+class LocalFilter {
+    static filter(data, field, search, customFilter) {
+        const filter = customFilter ? customFilter : filterValues;
+        return data.filter((el) => {
+            const value = typeof el[field] === 'undefined' || el[field] === null ? '' : el[field];
+            return filter.call(null, value, search);
+        });
+    }
+}
+
+class LocalPager {
+    static paginate(data, page, perPage) {
+        return data.slice(perPage * (page - 1), perPage * page);
     }
 }
 
@@ -667,52 +713,6 @@ class LocalDataSource extends DataSource {
             data = LocalPager.paginate(data, this.pagingConf.page, this.pagingConf.perPage);
         }
         return data;
-    }
-}
-
-class Row {
-    constructor(index, data, _dataSet) {
-        this.index = index;
-        this.data = data;
-        this._dataSet = _dataSet;
-        this.pending = false;
-        this.isSelected = false;
-        this.isInEditing = false;
-        this.cells = [];
-        this.process();
-    }
-    getCell(column) {
-        return this.cells.find(el => el.getColumn() === column);
-    }
-    getCells() {
-        return this.cells;
-    }
-    getData() {
-        return this.data;
-    }
-    getIsSelected() {
-        return this.isSelected;
-    }
-    getNewData() {
-        const values = Object.assign({}, this.data);
-        this.getCells().forEach((cell) => values[cell.getColumn().id] = cell.newValue);
-        return values;
-    }
-    setData(data) {
-        this.data = data;
-        this.process();
-    }
-    process() {
-        this.cells = [];
-        this._dataSet.getColumns().forEach((column) => {
-            const cell = this.createCell(column);
-            this.cells.push(cell);
-        });
-    }
-    createCell(column) {
-        const defValue = column.settings.defaultValue ? column.settings.defaultValue : '';
-        const value = typeof this.data[column.id] === 'undefined' ? defValue : this.data[column.id];
-        return new Cell(value, this, column, this._dataSet);
     }
 }
 
@@ -3613,5 +3613,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImpo
  * Generated bundle index. Do not edit.
  */
 
-export { Cell, DefaultEditor, DefaultFilter, LocalDataSource, Ng2SmartTableComponent, Ng2SmartTableModule, SmartTableOnChangedEventName };
+export { Cell, Column, DataSource, DefaultEditor, DefaultFilter, Deferred, LocalDataSource, Ng2SmartTableComponent, Ng2SmartTableModule, Row, SmartTableOnChangedEventName };
 //# sourceMappingURL=den4ik92-ng2-smart-table.mjs.map
