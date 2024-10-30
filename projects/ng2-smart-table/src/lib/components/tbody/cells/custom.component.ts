@@ -15,7 +15,7 @@ import { SmartTableCustomAction } from "../../../lib/interfaces/smart-table.mode
   selector: "ng2-st-tbody-custom",
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @for (action of customActions(); track action) {
+    @for (action of customActions(); track $index) {
       <a
         [id]="'row-' + row.index + '_action-' + action.name + '-button'"
         href="#"

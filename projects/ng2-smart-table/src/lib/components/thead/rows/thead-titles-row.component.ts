@@ -1,8 +1,8 @@
-import {Component, Input, Output, EventEmitter, OnChanges} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
-import { Grid } from '../../../lib/grid';
 import { Column } from "../../../lib/data-set/column";
 import { LocalDataSource } from '../../../lib/data-source/local/local.data-source';
+import { Grid } from '../../../lib/grid';
 
 @Component({
   selector: '[ng2-st-thead-titles-row]',
@@ -17,7 +17,7 @@ import { LocalDataSource } from '../../../lib/data-source/local/local.data-sourc
     @if (showActionColumnLeft) {
       <th ng2-st-actions-title [grid]="grid"></th>
     }
-    @for (column of getVisibleColumns(grid.getColumns()); track column) {
+    @for (column of getVisibleColumns(grid.getColumns()); track column.id) {
       <th
         class="ng2-smart-th {{ column.id }}"
         [ngClass]="column.class"

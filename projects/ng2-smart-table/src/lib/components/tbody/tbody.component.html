@@ -47,7 +47,7 @@ trackByIdOrIndex($index, row)) {
       [editCancel]="editCancel"
     ></ng2-st-tbody-create-cancel>
   </td>
-  } @for (cell of getVisibleCells(row.cells); track cell) {
+  } @for (cell of getVisibleCells(row.cells); track cell.getId()) {
   <td [ngClass]="cell.getColumnClass()">
     <ng2-smart-table-cell
       [cell]="cell"

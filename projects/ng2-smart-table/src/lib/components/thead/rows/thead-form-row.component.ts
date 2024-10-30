@@ -22,7 +22,7 @@ import { Grid } from "../../../lib/grid";
         (create)="onCreate($event)"
       ></ng2-st-actions>
     </td>
-    } @for (cell of getVisibleCells(grid.getNewRow().getCells()); track cell) {
+    } @for (cell of getVisibleCells(grid.getNewRow().getCells()); track cell.getId()) {
     <td>
       <ng2-smart-table-cell
         [cell]="cell"
