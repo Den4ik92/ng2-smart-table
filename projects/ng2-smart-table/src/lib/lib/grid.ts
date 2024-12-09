@@ -1,15 +1,14 @@
+import { EventEmitter, OutputEmitterRef } from "@angular/core";
+import { Observable, Subject, Subscription } from "rxjs";
 import { LocalDataSource } from "./data-source/local/local.data-source";
-import { Subject, Subscription } from "rxjs";
-import { Observable } from "rxjs";
-import { EventEmitter } from "@angular/core";
 
-import { Deferred, getDeepFromObject } from "./helpers";
 import { Column } from "./data-set/column";
-import { Row } from "./data-set/row";
 import { DataSet } from "./data-set/data-set";
+import { Row } from "./data-set/row";
+import { Deferred, getDeepFromObject } from "./helpers";
 import {
-  SmartTableSettings,
   SmartTableColumnSettings,
+  SmartTableSettings,
   SmartTableSortItem,
 } from "./interfaces/smart-table.models";
 
@@ -131,7 +130,7 @@ export class Grid {
     row.isInEditing = true;
   }
 
-  create(row: Row, confirmEmitter: EventEmitter<any>) {
+  create(row: Row, confirmEmitter: EventEmitter<any> | OutputEmitterRef<any>) {
     row.pending = true;
     const deferred = new Deferred();
     deferred.promise
@@ -158,7 +157,7 @@ export class Grid {
     }
   }
 
-  save(row: Row, confirmEmitter: EventEmitter<any>) {
+  save(row: Row, confirmEmitter: EventEmitter<any> | OutputEmitterRef<any>) {
     row.pending = true;
     const deferred = new Deferred();
     deferred.promise
@@ -185,7 +184,7 @@ export class Grid {
     }
   }
 
-  delete(row: Row, confirmEmitter: EventEmitter<any>) {
+  delete(row: Row, confirmEmitter: EventEmitter<any> | OutputEmitterRef<any>) {
     row.pending = true;
     const deferred = new Deferred();
     deferred.promise

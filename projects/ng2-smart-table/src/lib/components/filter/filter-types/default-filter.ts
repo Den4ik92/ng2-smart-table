@@ -1,20 +1,17 @@
-import { Input, Output, EventEmitter, OnDestroy, Component } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, output, OutputEmitterRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { Column } from '../../../lib/data-set/column';
 
-@Component({
-    template: '',
-    standalone: false
-})
+@Component({ template: '' })
 export class DefaultFilter implements Filter, OnDestroy {
 
   delay: number = 300;
   changesSubscription?: Subscription;
-  @Input() query: string = '';
-  @Input() inputClass: string = '';
+  @Input() query = '';
+  @Input() inputClass = '';
   @Input() column!: Column;
-  @Output() filter = new EventEmitter<string>();
+  readonly filter = output<string>();
 
   ngOnDestroy() {
     if (this.changesSubscription) {
@@ -34,5 +31,5 @@ export interface Filter {
   query: string;
   inputClass: string;
   column: Column;
-  filter: EventEmitter<string>;
+  filter: EventEmitter<string> | OutputEmitterRef<any>;
 }

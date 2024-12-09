@@ -1,107 +1,129 @@
-import { Component, Input, Output, SimpleChange, EventEmitter, OnChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChange,
+  output
+} from "@angular/core";
 
-import { Grid } from './lib/grid';
-import { Row } from './lib/data-set/row';
-import { deepExtend } from './lib/helpers';
-import { LocalDataSource } from './lib/data-source/local/local.data-source';
-import { SmartTableConfirmDeleteEvent, SmartTableConfirmEditEvent, SmartTableCreateConfirm, SmartTableCustomEvent, SmartTableRowClickedEvent, SmartTableRowSelectEvent, SmartTableSettings } from './lib/interfaces/smart-table.models';
+import { PagerComponent } from "./components/pager/pager.component";
+import { Ng2SmartTableTbodyComponent } from "./components/tbody/tbody.component";
+import { Ng2SmartTableTheadComponent } from "./components/thead/thead.component";
+import { Row } from "./lib/data-set/row";
+import { LocalDataSource } from "./lib/data-source/local/local.data-source";
+import { Grid } from "./lib/grid";
+import { deepExtend } from "./lib/helpers";
+import {
+  SmartTableConfirmDeleteEvent,
+  SmartTableConfirmEditEvent,
+  SmartTableCreateConfirm,
+  SmartTableCustomEvent,
+  SmartTableRowClickedEvent,
+  SmartTableRowSelectEvent,
+  SmartTableSettings,
+} from "./lib/interfaces/smart-table.models";
 
 @Component({
-    selector: 'ng2-smart-table',
-    styleUrls: ['./ng2-smart-table.component.scss'],
-    templateUrl: './ng2-smart-table.component.html',
-    standalone: false
+  selector: "ng2-smart-table",
+  styleUrls: ["./ng2-smart-table.component.scss"],
+  templateUrl: "./ng2-smart-table.component.html",
+  standalone: true,
+  imports: [
+    Ng2SmartTableTheadComponent,
+    Ng2SmartTableTbodyComponent,
+    PagerComponent,
+  ],
 })
 export class Ng2SmartTableComponent implements OnChanges {
   @Input() source!: LocalDataSource;
   @Input() settings!: SmartTableSettings;
 
-  @Output() multiRowSelect = new EventEmitter<SmartTableRowSelectEvent>();
-  @Output() rowClicked = new EventEmitter<SmartTableRowClickedEvent>();
-  @Output() delete = new EventEmitter<any>();
-  @Output() edit = new EventEmitter<any>();
-  @Output() editCancel = new EventEmitter<any>();
-  @Output() create = new EventEmitter<any>();
-  @Output() custom = new EventEmitter<SmartTableCustomEvent>();
-  @Output() deleteConfirm = new EventEmitter<SmartTableConfirmDeleteEvent>();
-  @Output() editConfirm = new EventEmitter<SmartTableConfirmEditEvent>();
-  @Output() createConfirm = new EventEmitter<SmartTableCreateConfirm>();
-  @Output() rowHover: EventEmitter<any> = new EventEmitter<any>();
+  readonly multiRowSelect = output<SmartTableRowSelectEvent>();
+  readonly rowClicked = output<SmartTableRowClickedEvent>();
+  readonly delete = output<any>();
+  readonly edit = output<any>();
+  readonly editCancel = output<any>();
+  readonly create = output<any>();
+  readonly custom = output<SmartTableCustomEvent>();
+  readonly deleteConfirm = output<SmartTableConfirmDeleteEvent>();
+  readonly editConfirm = output<SmartTableConfirmEditEvent>();
+  readonly createConfirm = output<SmartTableCreateConfirm>();
+  readonly rowHover = output<any>();
 
-  tableClass: string = '';
-  tableId: string = '';
+  tableClass: string = "";
+  tableId: string = "";
   perPageSelect: number[] = [];
   isHideHeader = false;
   isHideSubHeader = false;
   isPagerDisplay = false;
-  rowClassFunction: Function = ()=>'';
+  rowClassFunction: Function = () => "";
 
   grid!: Grid;
   defaultSettings: SmartTableSettings = {
-    mode: 'inline', // inline|external|click-to-edit
-    selectMode: 'single', // single|multi
+    mode: "inline", // inline|external|click-to-edit
+    selectMode: "single", // single|multi
     selectedRowIndex: -1,
     switchPageToSelectedRowPage: false,
     hideHeader: false,
     hideSubHeader: false,
     actions: {
-      columnTitle: 'Actions',
+      columnTitle: "Actions",
       add: true,
       edit: true,
       delete: true,
       custom: [],
-      position: 'left', // left|right
+      position: "left", // left|right
     },
     filter: {
-      inputClass: '',
+      inputClass: "",
     },
     edit: {
-      inputClass: '',
-      editButtonContent: 'Edit',
-      saveButtonContent: 'Update',
-      cancelButtonContent: 'Cancel',
+      inputClass: "",
+      editButtonContent: "Edit",
+      saveButtonContent: "Update",
+      cancelButtonContent: "Cancel",
       confirmSave: false,
     },
     add: {
-      inputClass: '',
-      addButtonContent: 'Add New',
-      createButtonContent: 'Create',
-      cancelButtonContent: 'Cancel',
+      inputClass: "",
+      addButtonContent: "Add New",
+      createButtonContent: "Create",
+      cancelButtonContent: "Cancel",
       confirmCreate: false,
     },
     delete: {
-      deleteButtonContent: 'Delete',
+      deleteButtonContent: "Delete",
       confirmDelete: false,
     },
     attr: {
-      id: '',
-      class: '',
+      id: "",
+      class: "",
     },
-    noDataMessage: 'No data found',
+    noDataMessage: "No data found",
     columns: [],
     pager: false,
-    rowClassFunction: () => '',
+    rowClassFunction: () => "",
   };
 
   ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     if (this.grid) {
-      if (changes['settings']) {
+      if (changes["settings"]) {
         this.grid.setSettings(this.prepareSettings());
       }
-      if (changes['source']) {
+      if (changes["source"]) {
         this.source = this.prepareSource();
         this.grid.setSource(this.source);
       }
     } else {
       this.initGrid();
     }
-    this.tableId = this.grid.getSetting('attr.id');
-    this.tableClass = this.grid.getSetting('attr.class');
-    this.isHideHeader = this.grid.getSetting('hideHeader');
-    this.isHideSubHeader = this.grid.getSetting('hideSubHeader');
-    this.isPagerDisplay = this.grid.getSetting('pager.display', false);
-    this.perPageSelect = this.grid.getSetting('pager.perPageSelect');
-    this.rowClassFunction = this.grid.getSetting('rowClassFunction', () => '');
+    this.tableId = this.grid.getSetting("attr.id");
+    this.tableClass = this.grid.getSetting("attr.class");
+    this.isHideHeader = this.grid.getSetting("hideHeader");
+    this.isHideSubHeader = this.grid.getSetting("hideSubHeader");
+    this.isPagerDisplay = this.grid.getSetting("pager.display", false);
+    this.perPageSelect = this.grid.getSetting("pager.perPageSelect");
+    this.rowClassFunction = this.grid.getSetting("rowClassFunction", () => "");
   }
 
   protected multipleSelectRow(row: Row): void {
@@ -149,5 +171,5 @@ export class Ng2SmartTableComponent implements OnChanges {
       source: this.source,
       selected: this.grid.dataSet.getSelectedRowsData(),
     });
-  }  
+  }
 }

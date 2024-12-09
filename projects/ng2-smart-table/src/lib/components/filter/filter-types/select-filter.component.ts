@@ -1,26 +1,27 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgControl } from '@angular/forms';
-import { distinctUntilChanged, debounceTime, skip } from 'rxjs/operators';
+import { FormsModule, NgControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, skip } from 'rxjs/operators';
 
 import { DefaultFilter } from './default-filter';
 
 @Component({
     selector: 'select-filter',
     template: `
-    <select [ngClass]="inputClass"
+    <select [class]="inputClass"
       class="form-control"
       #inputControl
       [(ngModel)]="query">
-    
+
       <option value="">{{ column.getFilterConfig().selectText }}</option>
-      @for (option of column.getFilterConfig().list; track option) {
+      @for (option of column.getFilterConfig().list; track option.value) {
         <option [value]="option.value">
           {{ option.title }}
         </option>
       }
     </select>
     `,
-    standalone: false
+    standalone: true,
+    imports: [FormsModule]
 })
 export class SelectFilterComponent extends DefaultFilter implements OnInit {
   @ViewChild('inputControl', { read: NgControl, static: true }) inputControl!: NgControl;
@@ -39,6 +40,6 @@ export class SelectFilterComponent extends DefaultFilter implements OnInit {
       )
       .subscribe((value: string) => this.setFilter());
     }
-    
+
   }
 }

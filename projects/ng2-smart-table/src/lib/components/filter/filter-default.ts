@@ -1,12 +1,9 @@
-import { Output, EventEmitter, Input, Component } from '@angular/core';
+import { Input, Component, output } from '@angular/core';
 
 import { Column } from '../../lib/data-set/column';
 import { LocalDataSource } from '../../lib/data-source/local/local.data-source';
 
-@Component({
-    template: '',
-    standalone: false
-})
+@Component({ template: '' })
 export class FilterDefault {
 
   @Input() column!: Column;
@@ -14,7 +11,7 @@ export class FilterDefault {
   @Input() inputClass: string = '';
   @Input() query: string = '';
 
-  @Output() filter = new EventEmitter<any>();
+  readonly filter = output<any>();
 
   onFilter(query: string) {
     this.source.addFilter({

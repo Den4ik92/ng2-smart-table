@@ -1,37 +1,40 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, output, OutputEmitterRef } from "@angular/core";
 
-import { Cell } from '../../lib/data-set/cell';
-import { Row } from '../../lib/data-set/row';
-import { Grid } from '../../lib/grid';
+import { Cell } from "../../lib/data-set/cell";
+import { Row } from "../../lib/data-set/row";
+import { Grid } from "../../lib/grid";
+import { EditCellComponent } from "./cell-edit-mode/edit-cell.component";
+import { ViewCellComponent } from "./cell-view-mode/view-cell.component";
 
 @Component({
-    selector: 'ng2-smart-table-cell',
-    template: `
+  selector: "ng2-smart-table-cell",
+  template: `
     @if (!isInEditing) {
-      <table-cell-view-mode [cell]="cell"></table-cell-view-mode>
+    <table-cell-view-mode [cell]="cell"></table-cell-view-mode>
+    } @else {
+    <table-cell-edit-mode
+      [cell]="cell"
+      [inputClass]="inputClass"
+      (edited)="onEdited($event)"
+    >
+    </table-cell-edit-mode>
     }
-    @if (isInEditing) {
-      <table-cell-edit-mode [cell]="cell"
-        [inputClass]="inputClass"
-        (edited)="onEdited($event)">
-      </table-cell-edit-mode>
-    }
-    `,
-    standalone: false
+  `,
+  standalone: true,
+  imports: [ViewCellComponent, EditCellComponent],
 })
 export class CellComponent {
-
   @Input() grid!: Grid;
   @Input() row!: Row;
-  @Input() editConfirm!: EventEmitter<any>;
-  @Input() createConfirm!: EventEmitter<any>;
+  @Input() editConfirm!: EventEmitter<any> | OutputEmitterRef<any>;
+  @Input() createConfirm!: EventEmitter<any> | OutputEmitterRef<any>;
   @Input() isNew!: boolean;
   @Input() cell!: Cell;
-  @Input() inputClass: string = '';
-  @Input() mode: string = 'inline';
+  @Input() inputClass = "";
+  @Input() mode = "inline";
   @Input() isInEditing: boolean = false;
 
-  @Output() edited = new EventEmitter<any>();
+  readonly edited = output<any>();
 
   onEdited(event: any) {
     if (this.isNew) {

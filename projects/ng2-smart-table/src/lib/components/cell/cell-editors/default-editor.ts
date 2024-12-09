@@ -1,24 +1,21 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter, Input, output, OutputEmitterRef } from '@angular/core';
 
 import { Cell } from '../../../lib/data-set/cell';
 
-@Component({
-    template: '',
-    standalone: false
-})
+@Component({ template: '' })
 export class DefaultEditor implements Editor {
   @Input() cell!: Cell;
   @Input() inputClass: string = '';
 
-  @Output() onStopEditing = new EventEmitter<any>();
-  @Output() onEdited = new EventEmitter<any>();
-  @Output() onClick = new EventEmitter<any>();
+  readonly onStopEditing = output<any>();
+  readonly onEdited = output<any>();
+  readonly onClick = output<any>();
 }
 
 export interface Editor {
   cell: Cell;
   inputClass: string;
-  onStopEditing: EventEmitter<any>;
-  onEdited: EventEmitter<any>;
-  onClick: EventEmitter<any>;
+  onStopEditing: EventEmitter<any> | OutputEmitterRef<any>;
+  onEdited: EventEmitter<any> | OutputEmitterRef<any>;
+  onClick: EventEmitter<any> | OutputEmitterRef<any>;
 }

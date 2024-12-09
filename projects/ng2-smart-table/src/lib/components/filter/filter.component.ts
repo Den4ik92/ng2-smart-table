@@ -1,6 +1,8 @@
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
-import { FilterDefault } from './filter-default';
 import { Subscription } from 'rxjs';
+import { CustomFilterComponent } from './custom-filter.component';
+import { DefaultFilterComponent } from './default-filter.component';
+import { FilterDefault } from './filter-default';
 
 @Component({
     selector: 'ng2-smart-table-filter',
@@ -31,7 +33,8 @@ import { Subscription } from 'rxjs';
         </div>
       }
       `,
-    standalone: false
+      standalone: true,
+    imports: [CustomFilterComponent, DefaultFilterComponent]
 })
 export class FilterComponent extends FilterDefault implements OnChanges {
   protected dataChangedSub?: Subscription;

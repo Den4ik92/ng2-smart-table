@@ -1,22 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { Component, OnInit } from "@angular/core";
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormControl,
+} from "@angular/forms";
 
-import { DefaultFilter } from './default-filter';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime } from "rxjs/operators";
+import { DefaultFilter } from "./default-filter";
 
 @Component({
-    selector: 'checkbox-filter',
-    template: `
-    <input type="checkbox" [formControl]="inputControl" [ngClass]="inputClass" class="form-control">
+  selector: "checkbox-filter",
+  template: `
+    <input
+      type="checkbox"
+      [formControl]="inputControl"
+      [class]="inputClass"
+      class="form-control"
+    />
     @if (filterActive) {
-      <a href="#"
-      (click)="resetFilter($event)">{{column.getFilterConfig()?.resetText || 'reset'}}</a>
+    <a href="#" (click)="resetFilter($event)">{{
+      column.getFilterConfig()?.resetText || "reset"
+    }}</a>
     }
-    `,
-    standalone: false
+  `,
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule],
 })
 export class CheckboxFilterComponent extends DefaultFilter implements OnInit {
-
   filterActive: boolean = false;
   inputControl = new UntypedFormControl();
 
@@ -29,8 +39,14 @@ export class CheckboxFilterComponent extends DefaultFilter implements OnInit {
       .pipe(debounceTime(this.delay))
       .subscribe((checked: boolean) => {
         this.filterActive = true;
-        const trueVal = (this.column.getFilterConfig() && this.column.getFilterConfig().true) || true;
-        const falseVal = (this.column.getFilterConfig() && this.column.getFilterConfig().false) || false;
+        const trueVal =
+          (this.column.getFilterConfig() &&
+            this.column.getFilterConfig().true) ||
+          true;
+        const falseVal =
+          (this.column.getFilterConfig() &&
+            this.column.getFilterConfig().false) ||
+          false;
         this.query = checked ? trueVal : falseVal;
         this.setFilter();
       });
@@ -38,7 +54,7 @@ export class CheckboxFilterComponent extends DefaultFilter implements OnInit {
 
   resetFilter(event: any) {
     event.preventDefault();
-    this.query = '';
+    this.query = "";
     this.inputControl.setValue(false, { emitEvent: false });
     this.filterActive = false;
     this.setFilter();

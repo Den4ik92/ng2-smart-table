@@ -1,14 +1,18 @@
-import {
-  Component,
-  Input
-} from "@angular/core";
+import { Component, Input } from "@angular/core";
 
+import { NgComponentOutlet } from "@angular/common";
 import { Cell } from "../../../lib/data-set/cell";
 
 @Component({
-    selector: "custom-view-component",
-    templateUrl: "./custom-view.component.html",
-    standalone: false
+  selector: "custom-view-component",
+  template: `<ng-template
+    *ngComponentOutlet="
+      cell.getColumn().renderComponent;
+      inputs: { rowData: cell.getRow().getData(), value: cell.getValue() }
+    "
+  ></ng-template>`,
+  imports: [NgComponentOutlet],
+  standalone: true,
 })
 export class CustomViewComponent {
   @Input() cell!: Cell;

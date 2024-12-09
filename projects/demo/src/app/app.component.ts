@@ -1,17 +1,23 @@
-import { LocalDataSource } from './../../../ng2-smart-table/src/lib/lib/data-source/local/local.data-source';
-import { SmartTableSettings, SmartTableConfirmEditEvent, SmartTableConfirmDeleteEvent } from './../../../ng2-smart-table/src/lib/lib/interfaces/smart-table.models';
-import { Component, EventEmitter } from '@angular/core';
+import { Component } from "@angular/core";
+import { Ng2SmartTableComponent } from "../../../ng2-smart-table/src/lib/ng2-smart-table.component";
+import { LocalDataSource } from "./../../../ng2-smart-table/src/lib/lib/data-source/local/local.data-source";
+import {
+  SmartTableConfirmDeleteEvent,
+  SmartTableSettings,
+} from "./../../../ng2-smart-table/src/lib/lib/interfaces/smart-table.models";
+import { CustomEditorComponent } from "./custom-editor/custom-editor.component";
+import { CustomFilterComponent } from "./custom-filter/custom-filter.component";
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    standalone: false
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  standalone: true,
+  imports: [Ng2SmartTableComponent],
 })
 export class AppComponent {
-
   settings: SmartTableSettings = {
     pager: false,
-    selectMode: 'multi',
+    selectMode: "multi",
     actions: {
       add: true,
       delete: true,
@@ -23,28 +29,36 @@ export class AppComponent {
     edit: {
       confirmSave: true,
     },
-    columns: [      {
-      key: 'username',
-      title: 'User Name',
-      type: 'text'
-    },
-
+    columns: [
       {
-        key: 'name',
-        title: 'Full Name',
-        type: 'text'
-      },
-      {
-        key: 'id',
-        title: 'ID',
-        type: 'text'
+        key: "username",
+        title: "User Name",
+        type: "text",
+        editor: {
+          type: "custom",
+          component: CustomEditorComponent,
+        },
       },
 
+      {
+        key: "name",
+        title: "Full Name",
+        type: "text",
+        filter: {
+          type: "custom",
+          component: CustomFilterComponent,
+        },
+      },
+      {
+        key: "id",
+        title: "ID",
+        type: "text",
+      },
 
       {
-        key: 'email',
-        title: 'Email',
-        type: 'text'
+        key: "email",
+        title: "Email",
+        type: "text",
       },
     ],
   };
@@ -52,105 +66,105 @@ export class AppComponent {
   data = [
     {
       id: 1,
-      name: 'Leanne Graham',
-      username: 'Bret',
-      email: 'Sincere@april.biz',
+      name: "Leanne Graham",
+      username: "Bret",
+      email: "Sincere@april.biz",
     },
     {
       id: 2,
-      name: 'Ervin Howell',
-      username: 'Antonette',
-      email: 'Shanna@melissa.tv',
+      name: "Ervin Howell",
+      username: "Antonette",
+      email: "Shanna@melissa.tv",
     },
     {
       id: 3,
-      name: 'Clementine Bauch',
-      username: 'Samantha',
-      email: 'Nathan@yesenia.net',
+      name: "Clementine Bauch",
+      username: "Samantha",
+      email: "Nathan@yesenia.net",
     },
     {
       id: 4,
-      name: 'Patricia Lebsack',
-      username: 'Karianne',
-      email: 'Julianne.OConner@kory.org',
+      name: "Patricia Lebsack",
+      username: "Karianne",
+      email: "Julianne.OConner@kory.org",
     },
     {
       id: 5,
-      name: 'Chelsey Dietrich',
-      username: 'Kamren',
-      email: 'Lucio_Hettinger@annie.ca',
+      name: "Chelsey Dietrich",
+      username: "Kamren",
+      email: "Lucio_Hettinger@annie.ca",
     },
     {
       id: 6,
-      name: 'Mrs. Dennis Schulist',
-      username: 'Leopoldo_Corkery',
-      email: 'Karley_Dach@jasper.info',
+      name: "Mrs. Dennis Schulist",
+      username: "Leopoldo_Corkery",
+      email: "Karley_Dach@jasper.info",
     },
     {
       id: 7,
-      name: 'Kurtis Weissnat',
-      username: 'Elwyn.Skiles',
-      email: 'Telly.Hoeger@billy.biz',
+      name: "Kurtis Weissnat",
+      username: "Elwyn.Skiles",
+      email: "Telly.Hoeger@billy.biz",
     },
     {
       id: 8,
-      name: 'Nicholas Runolfsdottir V',
-      username: 'Maxime_Nienow',
-      email: 'Sherwood@rosamond.me',
+      name: "Nicholas Runolfsdottir V",
+      username: "Maxime_Nienow",
+      email: "Sherwood@rosamond.me",
     },
     {
       id: 9,
-      name: 'Glenna Reichert',
-      username: 'Delphine',
-      email: 'Chaim_McDermott@dana.io',
+      name: "Glenna Reichert",
+      username: "Delphine",
+      email: "Chaim_McDermott@dana.io",
     },
     {
       id: 10,
-      name: 'Clementina DuBuque',
-      username: 'Moriah.Stanton',
-      email: 'Rey.Padberg@karina.biz',
+      name: "Clementina DuBuque",
+      username: "Moriah.Stanton",
+      email: "Rey.Padberg@karina.biz",
     },
     {
       id: 11,
-      name: 'Nicholas DuBuque',
-      username: 'Nicholas.Stanton',
-      email: 'Rey.Padberg@rosamond.biz',
+      name: "Nicholas DuBuque",
+      username: "Nicholas.Stanton",
+      email: "Rey.Padberg@rosamond.biz",
     },
   ];
 
-  source = new LocalDataSource(this.getGeneratedData(200))
+  source = new LocalDataSource(this.getGeneratedData(200));
 
   getGeneratedData(count = 100, startId: number = 0): any {
-    const generatedData: any[] = []
-    for (let i= 0; i<=count; i++) {
-      const userIndex = this.randomInteger(0,10)
-      generatedData.push({...this.data[userIndex], id: i + startId})
+    const generatedData: any[] = [];
+    for (let i = 0; i <= count; i++) {
+      const userIndex = this.randomInteger(0, 10);
+      generatedData.push({ ...this.data[userIndex], id: i + startId });
     }
-    return generatedData
+    return generatedData;
   }
 
   listScrollEnd(): void {
     const count = this.source.count();
-    const data = this.getGeneratedData(100, count)
+    const data = this.getGeneratedData(100, count);
 
-    this.source.appendMany(data)
+    this.source.appendMany(data);
   }
 
-  deleteConfirm(event: SmartTableConfirmDeleteEvent):void {
+  deleteConfirm(event: SmartTableConfirmDeleteEvent): void {
     setTimeout(() => {
-      event.confirm.resolve()
-    },5000)
+      event.confirm.resolve();
+    }, 1000);
   }
 
   randomInteger(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  clickEvent(event:any){
-     console.log(event);
+  clickEvent(event: any) {
+    console.log(event);
   }
 
-  multiRowSelect(event:any){
-     console.log('multiRowSelect', event);
+  multiRowSelect(event: any) {
+    console.log("multiRowSelect", event);
   }
 }

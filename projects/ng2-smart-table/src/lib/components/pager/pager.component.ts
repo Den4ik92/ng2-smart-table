@@ -1,83 +1,122 @@
-import { SmartTablePagingItem } from './../../lib/interfaces/smart-table.models';
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { LocalDataSource } from '../../lib/data-source/local/local.data-source';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  output
+} from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { Subscription } from "rxjs";
+import { LocalDataSource } from "../../lib/data-source/local/local.data-source";
+import { SmartTablePagingItem } from "./../../lib/interfaces/smart-table.models";
 
 @Component({
-    selector: 'ng2-smart-table-pager',
-    styleUrls: ['./pager.component.scss'],
-    template: `
+  selector: "ng2-smart-table-pager",
+  styleUrls: ["./pager.component.scss"],
+  template: `
     @if (shouldShow()) {
-      <nav class="ng2-smart-pagination-nav">
-        <ul class="ng2-smart-pagination pagination">
-          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
-            <a class="ng2-smart-page-link page-link" href="#"
-              (click)="getPage() == 1 ? false : paginate(1)" aria-label="First">
-              <span aria-hidden="true">&laquo;</span>
-              <span class="sr-only">First</span>
-            </a>
-          </li>
-          <li class="ng2-smart-page-item page-item" [ngClass]="{disabled: getPage() == 1}">
-            <a class="ng2-smart-page-link page-link page-link-prev" href="#"
-              (click)="getPage() == 1 ? false : prev()" aria-label="Prev">
-              <span aria-hidden="true">&lt;</span>
-              <span class="sr-only">Prev</span>
-            </a>
-          </li>
-          @for (page of getPages(); track page) {
-            <li class="ng2-smart-page-item page-item"
-              [ngClass]="{active: getPage() == page}">
-              @if (getPage() == page) {
-                <span class="ng2-smart-page-link page-link"
-                  >{{ page }} <span class="sr-only">(current)</span></span>
-                }
-                @if (getPage() != page) {
-                  <a class="ng2-smart-page-link page-link" href="#"
-                  (click)="paginate(page)">{{ page }}</a>
-                }
-              </li>
-            }
-            <li class="ng2-smart-page-item page-item"
-              [ngClass]="{disabled: getPage() == getLast()}">
-              <a class="ng2-smart-page-link page-link page-link-next" href="#"
-                (click)="getPage() == getLast() ? false : next()" aria-label="Next">
-                <span aria-hidden="true">&gt;</span>
-                <span class="sr-only">Next</span>
-              </a>
-            </li>
-            <li class="ng2-smart-page-item page-item"
-              [ngClass]="{disabled: getPage() == getLast()}">
-              <a class="ng2-smart-page-link page-link" href="#"
-                (click)="getPage() == getLast() ? false : paginate(getLast())" aria-label="Last">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Last</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      }
-    
-      @if (perPageSelect && perPageSelect.length > 0) {
-        <nav class="ng2-smart-pagination-per-page">
-          <label for="per-page">
-            Per Page:
-          </label>
-          <select (change)="onChangePerPage()" [(ngModel)]="currentPerPage" id="per-page">
-            @for (item of perPageSelect; track item) {
-              <option [value]="item">{{ item }}</option>
-            }
-          </select>
-        </nav>
-      }
-    `,
-    standalone: false
+    <nav class="ng2-smart-pagination-nav">
+      <ul class="ng2-smart-pagination pagination">
+        <li
+          class="ng2-smart-page-item page-item"
+          [class.disabled]="getPage() === 1"
+        >
+          <a
+            class="ng2-smart-page-link page-link"
+            href="#"
+            (click)="getPage() === 1 ? false : paginate(1)"
+            aria-label="First"
+          >
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">First</span>
+          </a>
+        </li>
+        <li
+          class="ng2-smart-page-item page-item"
+          [class.disabled]="getPage() === 1"
+        >
+          <a
+            class="ng2-smart-page-link page-link page-link-prev"
+            href="#"
+            (click)="getPage() === 1 ? false : prev()"
+            aria-label="Prev"
+          >
+            <span aria-hidden="true">&lt;</span>
+            <span class="sr-only">Prev</span>
+          </a>
+        </li>
+        @for (page of getPages(); track page) {
+        <li
+          class="ng2-smart-page-item page-item"
+          [class.active]="getPage() === page"
+        >
+          @if (getPage() === page) {
+          <span class="ng2-smart-page-link page-link"
+            >{{ page }} <span class="sr-only">(current)</span></span
+          >
+          } @if (getPage() !== page) {
+          <a
+            class="ng2-smart-page-link page-link"
+            href="#"
+            (click)="paginate(page)"
+            >{{ page }}</a
+          >
+          }
+        </li>
+        }
+        <li
+          class="ng2-smart-page-item page-item"
+          [class.disabled]="getPage() === getLast()"
+        >
+          <a
+            class="ng2-smart-page-link page-link page-link-next"
+            href="#"
+            (click)="getPage() === getLast() ? false : next()"
+            aria-label="Next"
+          >
+            <span aria-hidden="true">&gt;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+        <li
+          class="ng2-smart-page-item page-item"
+          [class.disabled]="getPage() === getLast()"
+        >
+          <a
+            class="ng2-smart-page-link page-link"
+            href="#"
+            (click)="getPage() === getLast() ? false : paginate(getLast())"
+            aria-label="Last"
+          >
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Last</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    } @if (perPageSelect && perPageSelect.length > 0) {
+    <nav class="ng2-smart-pagination-per-page">
+      <label for="per-page"> Per Page: </label>
+      <select
+        (change)="onChangePerPage()"
+        [(ngModel)]="currentPerPage"
+        id="per-page"
+      >
+        @for (item of perPageSelect; track item) {
+        <option [value]="item">{{ item }}</option>
+        }
+      </select>
+    </nav>
+    }
+  `,
+  standalone: true,
+  imports: [FormsModule],
 })
 export class PagerComponent implements OnChanges {
-
   @Input() source!: LocalDataSource;
   @Input() perPageSelect: number[] = [];
 
-  @Output() changePage = new EventEmitter<any>();
+  readonly changePage = output<any>();
 
   currentPerPage: number = 0;
 
@@ -89,8 +128,8 @@ export class PagerComponent implements OnChanges {
   protected dataChangedSub: Subscription | undefined;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['source']) {
-      if (!changes['source'].firstChange && this.dataChangedSub) {
+    if (changes["source"]) {
+      if (!changes["source"].firstChange && this.dataChangedSub) {
         this.dataChangedSub.unsubscribe();
       }
       this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
@@ -118,10 +157,10 @@ export class PagerComponent implements OnChanges {
    * @param changes
    */
   processPageChange(changes: any) {
-    if (changes['action'] === 'prepend') {
+    if (changes["action"] === "prepend") {
       this.source.setPage(1);
     }
-    if (changes['action'] === 'append') {
+    if (changes["action"] === "append") {
       this.source.setPage(this.getLast());
     }
   }
@@ -158,7 +197,9 @@ export class PagerComponent implements OnChanges {
   }
 
   isPageOutOfBounce(): boolean {
-    return (this.page * this.perPage) >= (this.count + this.perPage) && this.page > 1;
+    return (
+      this.page * this.perPage >= this.count + this.perPage && this.page > 1
+    );
   }
 
   initPages() {
@@ -168,7 +209,6 @@ export class PagerComponent implements OnChanges {
     this.pages = [];
 
     if (this.shouldShow()) {
-
       let middleOne = Math.ceil(showPagesCount / 2);
       middleOne = this.page >= middleOne ? this.page : middleOne;
 
@@ -184,7 +224,7 @@ export class PagerComponent implements OnChanges {
   }
 
   onChangePerPage() {
-    const paging: SmartTablePagingItem | false = this.source.getPaging(); 
+    const paging: SmartTablePagingItem | false = this.source.getPaging();
     if (paging) {
       paging.perPage = this.currentPerPage * 1;
     }

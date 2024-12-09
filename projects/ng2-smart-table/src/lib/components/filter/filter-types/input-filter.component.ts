@@ -1,23 +1,31 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, skip } from 'rxjs/operators';
+import { Component, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormControl,
+} from "@angular/forms";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
-import { DefaultFilter } from './default-filter';
+import { DefaultFilter } from "./default-filter";
 
 @Component({
-    selector: 'input-filter',
-    template: `
+  selector: "input-filter",
+  template: `
     <input
-      [ngClass]="inputClass"
+      [class]="inputClass"
       [formControl]="inputControl"
       class="form-control"
       type="text"
-      placeholder="{{ column.title }}"/>
+      placeholder="{{ column.title }}"
+    />
   `,
-    standalone: false
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule],
 })
-export class InputFilterComponent extends DefaultFilter implements OnInit, OnChanges {
-
+export class InputFilterComponent
+  extends DefaultFilter
+  implements OnInit, OnChanges
+{
   inputControl = new UntypedFormControl();
 
   constructor() {
@@ -29,10 +37,7 @@ export class InputFilterComponent extends DefaultFilter implements OnInit, OnCha
       this.inputControl.setValue(this.query);
     }
     this.inputControl.valueChanges
-      .pipe(
-        distinctUntilChanged(),
-        debounceTime(this.delay),
-      )
+      .pipe(distinctUntilChanged(), debounceTime(this.delay))
       .subscribe((value: string) => {
         this.query = this.inputControl.value;
         this.setFilter();
@@ -40,7 +45,7 @@ export class InputFilterComponent extends DefaultFilter implements OnInit, OnCha
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes?.['query']) {
+    if (changes?.["query"]) {
       this.inputControl.setValue(this.query);
     }
   }

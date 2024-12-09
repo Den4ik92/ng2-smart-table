@@ -1,26 +1,24 @@
-import {Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { Cell } from '../../../lib/data-set/cell';
+import { Cell } from "../../../lib/data-set/cell";
+import { CustomViewComponent } from "./custom-view.component";
 
 @Component({
-    selector: 'table-cell-view-mode',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
+  selector: "table-cell-view-mode",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
     <div>
-      @switch (cell.getColumn().type) {
-        @case ('custom') {
-          <custom-view-component [cell]="cell"></custom-view-component>
-        }
-        @case ('html') {
-          <div [innerHTML]="cell.getValue()"></div>
-        }
-        @default {
-          <div>{{ cell.getValue() }}</div>
-        }
-      }
+      @switch (cell.getColumn().type) { @case ('custom') {
+      <custom-view-component [cell]="cell"></custom-view-component>
+      } @case ('html') {
+      <div [innerHTML]="cell.getValue()"></div>
+      } @default {
+      <div>{{ cell.getValue() }}</div>
+      } }
     </div>
-    `,
-    standalone: false
+  `,
+  standalone: true,
+  imports: [CustomViewComponent],
 })
 export class ViewCellComponent {
   @Input() cell!: Cell;

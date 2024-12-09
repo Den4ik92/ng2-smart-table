@@ -3,8 +3,8 @@ trackByIdOrIndex($index, row)) {
 <tr
   (click)="userClickedRow.emit(row)"
   class="ng2-smart-row"
-  [className]="rowClassFunction(row)"
-  [ngClass]="{ selected: row.isSelected }"
+  [class]="rowClassFunction(row)"
+  [class.selected]="row.isSelected"
 >
   @if (isMultiSelectVisible) {
   <td
@@ -48,7 +48,7 @@ trackByIdOrIndex($index, row)) {
     ></ng2-st-tbody-create-cancel>
   </td>
   } @for (cell of getVisibleCells(row.cells); track cell.getId()) {
-  <td [ngClass]="cell.getColumnClass()">
+  <td [class]="cell.getColumnClass()">
     <ng2-smart-table-cell
       [cell]="cell"
       [grid]="grid"

@@ -1,20 +1,17 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 
 import { Cell } from '../../../lib/data-set/cell';
 
-@Component({
-    template: '',
-    standalone: false
-})
+@Component({ template: '' })
 export class EditCellDefault {
 
   @Input() cell!: Cell;
   @Input() inputClass: string = '';
 
-  @Output() edited = new EventEmitter<any>();
+  readonly edited = output<any>();
 
   onEdited(event: any): boolean {
-    this.edited.next(event);
+    this.edited.emit(event);
     return false;
   }
 

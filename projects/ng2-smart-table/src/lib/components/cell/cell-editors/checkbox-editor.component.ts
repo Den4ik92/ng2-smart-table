@@ -1,24 +1,27 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
-import { DefaultEditor } from './default-editor';
+import { DefaultEditor } from "./default-editor";
 
 @Component({
-    selector: 'checkbox-editor',
-    styleUrls: ['./editor.component.scss'],
-    template: `
-    <input [ngClass]="inputClass"
-           type="checkbox"
-           class="form-control"
-           [name]="cell.getId()"
-           [disabled]="!cell.isEditable()"
-           [checked]="cell.getValue() === (cell.getColumn().getConfig()?.true || true)"
-           (click)="onClick.emit($event)"
-           (change)="onChange($event)">
-    `,
-    standalone: false
+  selector: "checkbox-editor",
+  styleUrls: ["./editor.component.scss"],
+  template: `
+    <input
+      [class]="inputClass"
+      type="checkbox"
+      class="form-control"
+      [name]="cell.getId()"
+      [disabled]="!cell.isEditable()"
+      [checked]="
+        cell.getValue() === (cell.getColumn().getConfig()?.true || true)
+      "
+      (click)="onClick.emit($event)"
+      (change)="onChange($event)"
+    />
+  `,
+  standalone: true,
 })
 export class CheckboxEditorComponent extends DefaultEditor {
-
   constructor() {
     super();
   }

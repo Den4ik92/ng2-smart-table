@@ -1,18 +1,19 @@
 import {
   Component,
-  EventEmitter,
   Input,
   OnChanges,
-  Output,
+  output
 } from "@angular/core";
 
 import { Column } from "../../../lib/data-set/column";
 import { LocalDataSource } from "../../../lib/data-source/local/local.data-source";
 import { Grid } from "../../../lib/grid";
+import { FilterComponent } from "../../filter/filter.component";
+import { AddButtonComponent } from "../cells/add-button.component";
 
 @Component({
-    selector: "[ng2-st-thead-filters-row]",
-    template: `
+  selector: "[ng2-st-thead-filters-row]",
+  template: `
     @if (isMultiSelectVisible) {
     <th></th>
     } @if (showActionColumnLeft) {
@@ -36,14 +37,15 @@ import { Grid } from "../../../lib/grid";
     ></th>
     }
   `,
-    standalone: false
+  standalone: true,
+  imports: [AddButtonComponent, FilterComponent],
 })
 export class TheadFitlersRowComponent implements OnChanges {
   @Input() grid!: Grid;
   @Input() source!: LocalDataSource;
 
-  @Output() create = new EventEmitter<any>();
-  @Output() filter = new EventEmitter<any>();
+  readonly create = output<any>();
+  readonly filter = output<any>();
 
   isMultiSelectVisible: boolean = false;
   showActionColumnLeft: boolean = false;

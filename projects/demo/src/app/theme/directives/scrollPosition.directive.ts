@@ -1,9 +1,6 @@
 import { Directive, Input, Output, EventEmitter, HostListener, OnInit } from '@angular/core';
 
-@Directive({
-    selector: '[scrollPosition]',
-    standalone: false
-})
+@Directive({ selector: '[scrollPosition]' })
 export class ScrollPositionDirective implements OnInit {
 
   @Input() maxHeight!: number;

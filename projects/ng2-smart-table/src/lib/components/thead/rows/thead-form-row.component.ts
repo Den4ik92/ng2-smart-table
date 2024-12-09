@@ -3,16 +3,19 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  Output,
+  output,
+  OutputEmitterRef
 } from "@angular/core";
 
 import { Cell } from "../../../lib/data-set/cell";
 import { Row } from "../../../lib/data-set/row";
 import { Grid } from "../../../lib/grid";
+import { CellComponent } from "../../cell/cell.component";
+import { ActionsComponent } from "../cells/actions.component";
 
 @Component({
-    selector: "[ng2-st-thead-form-row]",
-    template: `
+  selector: "[ng2-st-thead-form-row]",
+  template: `
     @if (grid.isMultiSelectVisible()) {
     <td></td>
     } @if (showActionColumnLeft) {
@@ -22,7 +25,8 @@ import { Grid } from "../../../lib/grid";
         (create)="onCreate($event)"
       ></ng2-st-actions>
     </td>
-    } @for (cell of getVisibleCells(grid.getNewRow().getCells()); track cell.getId()) {
+    } @for (cell of getVisibleCells(grid.getNewRow().getCells()); track
+    cell.getId()) {
     <td>
       <ng2-smart-table-cell
         [cell]="cell"
@@ -44,14 +48,15 @@ import { Grid } from "../../../lib/grid";
     </td>
     }
   `,
-    standalone: false
+  standalone: true,
+  imports: [ActionsComponent, CellComponent],
 })
 export class TheadFormRowComponent implements OnChanges {
   @Input() grid!: Grid;
   @Input() row!: Row;
-  @Input() createConfirm!: EventEmitter<any>;
+  @Input() createConfirm!: EventEmitter<any> | OutputEmitterRef<any>;
 
-  @Output() create = new EventEmitter<any>();
+  readonly create = output<any>();
 
   isMultiSelectVisible: boolean = false;
   showActionColumnLeft: boolean = false;
