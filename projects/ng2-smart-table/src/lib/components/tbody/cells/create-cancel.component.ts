@@ -4,8 +4,8 @@ import { Row } from "../../../lib/data-set/row";
 import { Grid } from "../../../lib/grid";
 
 @Component({
-  selector: "ng2-st-tbody-create-cancel",
-  template: `
+    selector: "ng2-st-tbody-create-cancel",
+    template: `
     @if (!row.pending) {
       <a
         href="#"
@@ -82,6 +82,7 @@ import { Grid } from "../../../lib/grid";
       </div>
     }
     `,
+    standalone: false
 })
 export class TbodyCreateCancelComponent implements OnChanges {
   @Input() grid!: Grid;

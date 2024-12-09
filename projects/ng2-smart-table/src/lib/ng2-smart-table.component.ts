@@ -7,9 +7,10 @@ import { LocalDataSource } from './lib/data-source/local/local.data-source';
 import { SmartTableConfirmDeleteEvent, SmartTableConfirmEditEvent, SmartTableCreateConfirm, SmartTableCustomEvent, SmartTableRowClickedEvent, SmartTableRowSelectEvent, SmartTableSettings } from './lib/interfaces/smart-table.models';
 
 @Component({
-  selector: 'ng2-smart-table',
-  styleUrls: ['./ng2-smart-table.component.scss'],
-  templateUrl: './ng2-smart-table.component.html',
+    selector: 'ng2-smart-table',
+    styleUrls: ['./ng2-smart-table.component.scss'],
+    templateUrl: './ng2-smart-table.component.html',
+    standalone: false
 })
 export class Ng2SmartTableComponent implements OnChanges {
   @Input() source!: LocalDataSource;

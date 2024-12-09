@@ -5,8 +5,8 @@ import { distinctUntilChanged, debounceTime, skip } from 'rxjs/operators';
 import { DefaultFilter } from './default-filter';
 
 @Component({
-  selector: 'select-filter',
-  template: `
+    selector: 'select-filter',
+    template: `
     <select [ngClass]="inputClass"
       class="form-control"
       #inputControl
@@ -20,6 +20,7 @@ import { DefaultFilter } from './default-filter';
       }
     </select>
     `,
+    standalone: false
 })
 export class SelectFilterComponent extends DefaultFilter implements OnInit {
   @ViewChild('inputControl', { read: NgControl, static: true }) inputControl!: NgControl;

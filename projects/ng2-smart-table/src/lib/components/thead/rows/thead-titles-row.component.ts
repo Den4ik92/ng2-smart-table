@@ -5,8 +5,8 @@ import { LocalDataSource } from '../../../lib/data-source/local/local.data-sourc
 import { Grid } from '../../../lib/grid';
 
 @Component({
-  selector: '[ng2-st-thead-titles-row]',
-  template: `
+    selector: '[ng2-st-thead-titles-row]',
+    template: `
     @if (isMultiSelectVisible) {
       <th ng2-st-checkbox-select-all
         [grid]="grid"
@@ -29,6 +29,7 @@ import { Grid } from '../../../lib/grid';
       <th ng2-st-actions-title [grid]="grid"></th>
     }
     `,
+    standalone: false
 })
 export class TheadTitlesRowComponent implements OnChanges {
 

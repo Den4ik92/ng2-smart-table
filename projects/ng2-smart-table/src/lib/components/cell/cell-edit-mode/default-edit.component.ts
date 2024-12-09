@@ -4,8 +4,9 @@ import { EditCellDefault } from './edit-cell-default';
 import { SmartTableEditorAndFilterTypes } from '../../../lib/interfaces/smart-table.models';
 
 @Component({
-  selector: 'table-cell-default-editor',
-  templateUrl: './default-edit.component.html',
+    selector: 'table-cell-default-editor',
+    templateUrl: './default-edit.component.html',
+    standalone: false
 })
 export class DefaultEditComponent extends EditCellDefault {
 

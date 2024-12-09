@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { DefaultEditor } from './default-editor';
 
 @Component({
-  selector: 'select-editor',
-  template: `
+    selector: 'select-editor',
+    template: `
     <select [ngClass]="inputClass"
       class="form-control"
       [(ngModel)]="cell.newValue"
@@ -21,6 +21,7 @@ import { DefaultEditor } from './default-editor';
       }
     </select>
     `,
+    standalone: false
 })
 export class SelectEditorComponent extends DefaultEditor {
 

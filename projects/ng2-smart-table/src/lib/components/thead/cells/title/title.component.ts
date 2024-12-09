@@ -5,9 +5,9 @@ import { Subscription } from 'rxjs';
 import { Column } from '../../../../lib/data-set/column';
 
 @Component({
-  selector: 'ng2-smart-table-title',
-  styleUrls: ['./title.component.scss'],
-  template: `
+    selector: 'ng2-smart-table-title',
+    styleUrls: ['./title.component.scss'],
+    template: `
     @if (column.isSortable) {
       <a href="#"
         (click)="_sort($event)"
@@ -20,6 +20,7 @@ import { Column } from '../../../../lib/data-set/column';
       <span class="ng2-smart-sort">{{ column.title }}</span>
     }
     `,
+    standalone: false
 })
 export class TitleComponent implements OnChanges {
 

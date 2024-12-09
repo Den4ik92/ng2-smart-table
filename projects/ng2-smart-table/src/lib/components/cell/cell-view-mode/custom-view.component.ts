@@ -6,8 +6,9 @@ import {
 import { Cell } from "../../../lib/data-set/cell";
 
 @Component({
-  selector: "custom-view-component",
-  templateUrl: "./custom-view.component.html",
+    selector: "custom-view-component",
+    templateUrl: "./custom-view.component.html",
+    standalone: false
 })
 export class CustomViewComponent {
   @Input() cell!: Cell;

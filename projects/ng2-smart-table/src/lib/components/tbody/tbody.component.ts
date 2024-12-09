@@ -5,9 +5,10 @@ import { Cell } from '../../lib/data-set/cell';
 import { LocalDataSource } from '../../lib/data-source/local/local.data-source';
 
 @Component({
-  selector: '[ng2-st-tbody]',
-  styleUrls: ['./tbody.component.scss'],
-  templateUrl: './tbody.component.html',
+    selector: '[ng2-st-tbody]',
+    styleUrls: ['./tbody.component.scss'],
+    templateUrl: './tbody.component.html',
+    standalone: false
 })
 export class Ng2SmartTableTbodyComponent {
 

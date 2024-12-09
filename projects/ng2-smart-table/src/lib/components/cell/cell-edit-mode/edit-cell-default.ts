@@ -3,7 +3,8 @@ import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { Cell } from '../../../lib/data-set/cell';
 
 @Component({
-  template: ''
+    template: '',
+    standalone: false
 })
 export class EditCellDefault {
 

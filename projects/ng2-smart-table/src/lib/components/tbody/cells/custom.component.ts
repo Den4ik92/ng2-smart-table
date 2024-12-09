@@ -12,9 +12,9 @@ import { Grid } from "../../../lib/grid";
 import { SmartTableCustomAction } from "../../../lib/interfaces/smart-table.models";
 
 @Component({
-  selector: "ng2-st-tbody-custom",
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
+    selector: "ng2-st-tbody-custom",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     @for (action of customActions(); track $index) {
       <a
         [id]="'row-' + row.index + '_action-' + action.name + '-button'"
@@ -25,6 +25,7 @@ import { SmartTableCustomAction } from "../../../lib/interfaces/smart-table.mode
       ></a>
     }
     `,
+    standalone: false
 })
 export class TbodyCustomComponent {
   @Input() grid!: Grid;

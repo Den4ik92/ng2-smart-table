@@ -5,8 +5,8 @@ import { Row } from '../../lib/data-set/row';
 import { Grid } from '../../lib/grid';
 
 @Component({
-  selector: 'ng2-smart-table-cell',
-  template: `
+    selector: 'ng2-smart-table-cell',
+    template: `
     @if (!isInEditing) {
       <table-cell-view-mode [cell]="cell"></table-cell-view-mode>
     }
@@ -17,6 +17,7 @@ import { Grid } from '../../lib/grid';
       </table-cell-edit-mode>
     }
     `,
+    standalone: false
 })
 export class CellComponent {
 

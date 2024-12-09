@@ -11,8 +11,8 @@ import { LocalDataSource } from "../../../lib/data-source/local/local.data-sourc
 import { Grid } from "../../../lib/grid";
 
 @Component({
-  selector: "[ng2-st-thead-filters-row]",
-  template: `
+    selector: "[ng2-st-thead-filters-row]",
+    template: `
     @if (isMultiSelectVisible) {
     <th></th>
     } @if (showActionColumnLeft) {
@@ -36,6 +36,7 @@ import { Grid } from "../../../lib/grid";
     ></th>
     }
   `,
+    standalone: false
 })
 export class TheadFitlersRowComponent implements OnChanges {
   @Input() grid!: Grid;

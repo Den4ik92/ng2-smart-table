@@ -11,8 +11,8 @@ import { Row } from "../../../lib/data-set/row";
 import { Grid } from "../../../lib/grid";
 
 @Component({
-  selector: "[ng2-st-thead-form-row]",
-  template: `
+    selector: "[ng2-st-thead-form-row]",
+    template: `
     @if (grid.isMultiSelectVisible()) {
     <td></td>
     } @if (showActionColumnLeft) {
@@ -44,6 +44,7 @@ import { Grid } from "../../../lib/grid";
     </td>
     }
   `,
+    standalone: false
 })
 export class TheadFormRowComponent implements OnChanges {
   @Input() grid!: Grid;

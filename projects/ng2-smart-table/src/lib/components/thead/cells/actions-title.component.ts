@@ -3,10 +3,11 @@ import {Component, Input, AfterViewInit, ElementRef, OnChanges} from '@angular/c
 import { Grid } from '../../../lib/grid';
 
 @Component({
-  selector: '[ng2-st-actions-title]',
-  template: `
+    selector: '[ng2-st-actions-title]',
+    template: `
     <div class="ng2-smart-title">{{ actionsColumnTitle }}</div>
   `,
+    standalone: false
 })
 export class ActionsTitleComponent implements AfterViewInit, OnChanges {
 

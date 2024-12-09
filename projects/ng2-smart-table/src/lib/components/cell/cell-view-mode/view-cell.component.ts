@@ -3,9 +3,9 @@ import {Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Cell } from '../../../lib/data-set/cell';
 
 @Component({
-  selector: 'table-cell-view-mode',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
+    selector: 'table-cell-view-mode',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     <div>
       @switch (cell.getColumn().type) {
         @case ('custom') {
@@ -20,6 +20,7 @@ import { Cell } from '../../../lib/data-set/cell';
       }
     </div>
     `,
+    standalone: false
 })
 export class ViewCellComponent {
   @Input() cell!: Cell;

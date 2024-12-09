@@ -4,8 +4,8 @@ import { Cell } from '../../../lib/data-set/cell';
 import { SmartTableEditorAndFilterTypes } from '../../../lib/interfaces/smart-table.models';
 
 @Component({
-  selector: 'table-cell-edit-mode',
-  template: `
+    selector: 'table-cell-edit-mode',
+    template: `
       <div>
         @switch (getEditorType()) {
           @case ('custom') {
@@ -25,6 +25,7 @@ import { SmartTableEditorAndFilterTypes } from '../../../lib/interfaces/smart-ta
         }
       </div>
       `,
+    standalone: false
 })
 export class EditCellComponent {
 

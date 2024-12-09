@@ -11,8 +11,8 @@ import { LocalDataSource } from "../../../lib/data-source/local/local.data-sourc
 import { Grid } from "../../../lib/grid";
 
 @Component({
-  selector: "ng2-st-tbody-edit-delete",
-  template: `
+    selector: "ng2-st-tbody-edit-delete",
+    template: `
     @if (!row.pending) {
       @if (isActionEdit) {
         <a
@@ -97,6 +97,7 @@ import { Grid } from "../../../lib/grid";
       </div>
     }
     `,
+    standalone: false
 })
 export class TbodyEditDeleteComponent implements OnChanges {
   @Input() grid!: Grid;

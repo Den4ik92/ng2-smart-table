@@ -3,8 +3,8 @@ import {Component, Input} from '@angular/core';
 import {FilterDefault} from "./filter-default";
 
 @Component({
-  selector: 'default-table-filter',
-  template: `
+    selector: 'default-table-filter',
+    template: `
 @switch (column.getFilterType()) {
   @case ('list') {
     <select-filter
@@ -32,6 +32,7 @@ import {FilterDefault} from "./filter-default";
 }
 }
 `,
+    standalone: false
 })
 export class DefaultFilterComponent extends FilterDefault {  
 

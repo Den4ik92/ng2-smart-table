@@ -4,9 +4,9 @@ import { Subscription } from 'rxjs';
 import { LocalDataSource } from '../../lib/data-source/local/local.data-source';
 
 @Component({
-  selector: 'ng2-smart-table-pager',
-  styleUrls: ['./pager.component.scss'],
-  template: `
+    selector: 'ng2-smart-table-pager',
+    styleUrls: ['./pager.component.scss'],
+    template: `
     @if (shouldShow()) {
       <nav class="ng2-smart-pagination-nav">
         <ul class="ng2-smart-pagination pagination">
@@ -70,6 +70,7 @@ import { LocalDataSource } from '../../lib/data-source/local/local.data-source';
         </nav>
       }
     `,
+    standalone: false
 })
 export class PagerComponent implements OnChanges {
 

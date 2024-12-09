@@ -3,9 +3,9 @@ import { FilterDefault } from './filter-default';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'ng2-smart-table-filter',
-  styleUrls: ['./filter.component.scss'],
-  template: `
+    selector: 'ng2-smart-table-filter',
+    styleUrls: ['./filter.component.scss'],
+    template: `
       @if (column.isFilterable) {
         <div class="ng2-smart-filter">
           @switch (column.getFilterType()) {
@@ -31,6 +31,7 @@ import { Subscription } from 'rxjs';
         </div>
       }
       `,
+    standalone: false
 })
 export class FilterComponent extends FilterDefault implements OnChanges {
   protected dataChangedSub?: Subscription;

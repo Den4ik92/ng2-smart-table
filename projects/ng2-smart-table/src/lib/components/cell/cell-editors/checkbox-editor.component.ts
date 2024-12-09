@@ -3,9 +3,9 @@ import { Component } from '@angular/core';
 import { DefaultEditor } from './default-editor';
 
 @Component({
-  selector: 'checkbox-editor',
-  styleUrls: ['./editor.component.scss'],
-  template: `
+    selector: 'checkbox-editor',
+    styleUrls: ['./editor.component.scss'],
+    template: `
     <input [ngClass]="inputClass"
            type="checkbox"
            class="form-control"
@@ -15,6 +15,7 @@ import { DefaultEditor } from './default-editor';
            (click)="onClick.emit($event)"
            (change)="onChange($event)">
     `,
+    standalone: false
 })
 export class CheckboxEditorComponent extends DefaultEditor {
 

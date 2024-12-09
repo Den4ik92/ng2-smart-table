@@ -3,8 +3,8 @@ import {Component, Input, Output, EventEmitter, OnChanges } from '@angular/core'
 import { Grid } from '../../../lib/grid';
 
 @Component({
-  selector: 'ng2-st-actions',
-  template: `
+    selector: 'ng2-st-actions',
+    template: `
     <a href="#" class="ng2-smart-action ng2-smart-action-add-create"
         [innerHTML]="createButtonContent"
         (click)="$event.preventDefault();create.emit($event)"></a>
@@ -12,6 +12,7 @@ import { Grid } from '../../../lib/grid';
         [innerHTML]="cancelButtonContent"
         (click)="$event.preventDefault();grid.createFormShown = false;"></a>
   `,
+    standalone: false
 })
 export class ActionsComponent implements OnChanges {
 

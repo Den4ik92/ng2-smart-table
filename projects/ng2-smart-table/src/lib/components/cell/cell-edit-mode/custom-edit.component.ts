@@ -12,10 +12,11 @@ import { EditCellDefault } from './edit-cell-default';
 import { SmartTableEditorAndFilter } from '../../../lib/interfaces/smart-table.models';
 
 @Component({
-  selector: 'table-cell-custom-editor',
-  template: `
+    selector: 'table-cell-custom-editor',
+    template: `
     <ng-template #dynamicTarget></ng-template>
   `,
+    standalone: false
 })
 export class CustomEditComponent extends EditCellDefault implements OnChanges, OnDestroy {
 

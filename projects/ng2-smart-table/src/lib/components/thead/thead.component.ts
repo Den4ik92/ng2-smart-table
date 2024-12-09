@@ -6,6 +6,7 @@ import { Grid } from '../../lib/grid';
 @Component({
     selector: '[ng2-st-thead]',
     templateUrl: './thead.component.html',
+    standalone: false
 })
 export class Ng2SmartTableTheadComponent implements OnChanges {
 

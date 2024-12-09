@@ -11,8 +11,9 @@ import {
 import { FilterDefault } from './filter-default';
 
 @Component({
-  selector: 'custom-table-filter',
-  template: `<ng-template #dynamicTarget></ng-template>`,
+    selector: 'custom-table-filter',
+    template: `<ng-template #dynamicTarget></ng-template>`,
+    standalone: false
 })
 export class CustomFilterComponent extends FilterDefault implements OnChanges, OnDestroy {
   customComponent: any;
