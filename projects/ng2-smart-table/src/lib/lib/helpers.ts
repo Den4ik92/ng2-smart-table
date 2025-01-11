@@ -7,7 +7,7 @@
  * object as first argument, like this:
  *   deepExtend({}, yourObj_1, [yourObj_N]);
  */
-export const deepExtend = function(...objects: Array<any>): any {
+export const deepExtend = function(...objects: any[]): any {
   if (arguments.length < 1 || typeof arguments[0] !== 'object') {
     return false;
   }
@@ -81,18 +81,44 @@ export class Deferred<T> {
 
 // getDeepFromObject({result: {data: 1}}, 'result.data', 2); // returns 1
 export function getDeepFromObject(object = {}, name: string, defaultValue: any = null) {
-  const keys = name.split('.');
-  // clone the object
-  let level = deepExtend({}, object);
-  keys.forEach((k) => {
-    if (level && typeof level[k] !== 'undefined') {
-      level = level[k];
+  try {
+    let level = deepExtend({}, object)
+    const keys = name.split('.');
+    if (keys.length === 1) {
+      return level[keys[0]] ?? defaultValue;
     }
-  });
-  return typeof level === 'undefined' ? defaultValue : level;
+    keys.forEach((k) => {
+      if (level && typeof level[k] !== 'undefined') {
+        level = level[k];
+      }
+    });
+  } catch {
+    return defaultValue
+  }
 }
 
 export function getPageForRowIndex(index: number, perPage: number): number {
   // we need to add 1 to convert 0-based index to 1-based page number.
   return Math.floor(index / perPage) + 1;
+}
+
+export function cloneArrayOfObject<T>(array: T[]): T[] {
+  return array.map((obj) => Object.assign({}, obj));
+}
+
+
+export function setLocalStorage(key: string, value: string | object | boolean): void {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+export function getLocalStorage<T = string>(key: string): T | null {
+  const valueString = localStorage.getItem(key);
+  if (!valueString) {
+    return null;
+  }
+  try {
+    return JSON.parse(valueString);
+  } catch {
+    return null;
+  }
 }

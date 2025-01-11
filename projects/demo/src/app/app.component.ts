@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { ColumnEditorDirective } from "projects/ng2-smart-table/src/lib/components/table-columns-editor/column-editor.directive";
 import { Ng2SmartTableComponent } from "../../../ng2-smart-table/src/lib/ng2-smart-table.component";
 import { LocalDataSource } from "./../../../ng2-smart-table/src/lib/lib/data-source/local/local.data-source";
 import {
@@ -12,11 +13,13 @@ import { CustomFilterComponent } from "./custom-filter/custom-filter.component";
   selector: "app-root",
   templateUrl: "./app.component.html",
   standalone: true,
-  imports: [Ng2SmartTableComponent],
+  imports: [Ng2SmartTableComponent, ColumnEditorDirective],
 })
 export class AppComponent {
   settings: SmartTableSettings = {
+    columnSortStorageKey: 'test1',
     pager: false,
+    withColumnSort: true,
     selectMode: "multi",
     actions: {
       add: true,
@@ -30,6 +33,14 @@ export class AppComponent {
       confirmSave: true,
     },
     columns: [
+      {
+        key: "email",
+        title: "Email Secondary",
+        type: "text",
+        valuePrepareFunction: (cell: string) => {
+          return cell + "-test"
+        }
+      },
       {
         key: "username",
         title: "User Name",
@@ -50,8 +61,19 @@ export class AppComponent {
         },
       },
       {
+        key: "name",
+        title: "Test +",
+        type: "text",
+        hide: true,
+        valuePrepareFunction: (cell: string) => {
+          return cell + "-test"
+        }
+      },
+      {
         key: "id",
         title: "ID",
+        hide: true,
+        sortDisabled: false,
         type: "text",
       },
 
@@ -134,7 +156,22 @@ export class AppComponent {
 
   source = new LocalDataSource(this.getGeneratedData(200));
 
-  getGeneratedData(count = 100, startId: number = 0): any {
+  columnsSorted(event: any) {
+    console.log(event);
+  }
+
+  setNewState(table: Ng2SmartTableComponent) {
+    let columns = table.grid.currentColumnsSortState;
+    columns = columns.map((column) => {
+      if (column.key === 'email') {
+        column.hide = true;
+      }
+      return column
+    })
+    table.grid.applyColumnsSortState(columns)
+  }
+
+  getGeneratedData(count = 100, startId = 0): any {
     const generatedData: any[] = [];
     for (let i = 0; i <= count; i++) {
       const userIndex = this.randomInteger(0, 10);

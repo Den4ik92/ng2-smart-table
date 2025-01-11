@@ -1,8 +1,14 @@
+<button tableColumnEditor title="Table columns settings" [tableComponent]="table">settings</button>
+
+<button title="Table columns settings" (click)="setNewState(table)">set new state</button>
+
 <ng2-smart-table
+  #table
   [settings]="settings"
   (rowClicked)="clickEvent($event)"
   (deleteConfirm)="deleteConfirm($event)"
   (editConfirm)="deleteConfirm($event)"
+  (columnsSorted)="columnsSorted($event)"
   (multiRowSelect)="multiRowSelect($event)"
   [source]="source"
 ></ng2-smart-table>

@@ -14,6 +14,7 @@ import { LocalDataSource } from "./lib/data-source/local/local.data-source";
 import { Grid } from "./lib/grid";
 import { deepExtend } from "./lib/helpers";
 import {
+  ColumnSortState,
   SmartTableConfirmDeleteEvent,
   SmartTableConfirmEditEvent,
   SmartTableCreateConfirm,
@@ -40,6 +41,7 @@ export class Ng2SmartTableComponent implements OnChanges {
 
   readonly multiRowSelect = output<SmartTableRowSelectEvent>();
   readonly rowClicked = output<SmartTableRowClickedEvent>();
+  readonly columnsSorted = output<ColumnSortState[]>();
   readonly delete = output<any>();
   readonly edit = output<any>();
   readonly editCancel = output<any>();
@@ -50,13 +52,13 @@ export class Ng2SmartTableComponent implements OnChanges {
   readonly createConfirm = output<SmartTableCreateConfirm>();
   readonly rowHover = output<any>();
 
-  tableClass: string = "";
-  tableId: string = "";
+  tableClass = "";
+  tableId = "";
   perPageSelect: number[] = [];
   isHideHeader = false;
   isHideSubHeader = false;
   isPagerDisplay = false;
-  rowClassFunction: Function = () => "";
+  rowClassFunction = () => "";
 
   grid!: Grid;
   defaultSettings: SmartTableSettings = {
@@ -105,7 +107,7 @@ export class Ng2SmartTableComponent implements OnChanges {
     rowClassFunction: () => "",
   };
 
-  ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+  ngOnChanges(changes: Record<string, SimpleChange>) {
     if (this.grid) {
       if (changes["settings"]) {
         this.grid.setSettings(this.prepareSettings());
@@ -132,7 +134,6 @@ export class Ng2SmartTableComponent implements OnChanges {
   }
 
   protected onSelectAllRows(): void {
-    this.grid.dataSet.isAllSelected;
     this.grid.selectAllRows(!this.grid.dataSet.isAllSelected);
     this.emitUserSelectRow(null);
   }
@@ -151,6 +152,7 @@ export class Ng2SmartTableComponent implements OnChanges {
   private initGrid(): void {
     this.source = this.prepareSource();
     this.grid = new Grid(this.source, this.prepareSettings());
+    this.grid.setColumnsSortedEmitter(this.columnsSorted)
   }
 
   private prepareSource(): LocalDataSource {

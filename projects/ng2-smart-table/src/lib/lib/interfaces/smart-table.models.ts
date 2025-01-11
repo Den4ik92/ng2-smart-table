@@ -1,18 +1,23 @@
 import { LocalDataSource } from "../data-source/local/local.data-source";
 import { Deferred } from "../helpers";
 
-export interface SelectOption {
+interface SelectOption {
 	title: string;
 	value: any;
 }
 
-interface ObjectAny {
-	[key: string]: any;
+export interface ColumnSortState {
+  key: string;
+  title: string;
+  hide: boolean;
+  sortDisabled: boolean;
 }
 
-export interface SmartTableSettings<T extends ObjectAny = any> {
+export interface SmartTableSettings<T extends Record<string, any> = any> {
 	mode?: 'inline' | 'external' | 'click-to-edit';
 	selectMode?: 'single' | 'multi';
+	columnSortStorageKey?: string;
+	withColumnSort?: boolean; // if you want to add column sort need to set true;
 	selectedRowIndex?: number; //if need deselect first item set value < 0;
 	switchPageToSelectedRowPage?: boolean;
 	hideHeader?: boolean;
@@ -71,15 +76,17 @@ export interface SmartTableCustomAction {
 
 export type SmartTableColumnSettingsTypes = 'text' | 'html' | 'custom'
 
-export type SmartTableColumnSettings<T=any> = SmartTableTextHtmlColumn<T> | SmartTableCustomColumn<T>;
+export type SmartTableColumnSettings<T extends Record<string, any> = any> = SmartTableTextHtmlColumn<T> | SmartTableCustomColumn<T>;
 
-interface SmartTableDefaultColumn<T> {
+interface SmartTableDefaultColumn<T extends Record<string, any>> {
 	key: keyof T;
 	title: string;
 	width?: string; //example: '20px', '20%'
 	class?: string;
 	editable?: boolean;
 	hide?: boolean;
+	//hide column in sort list
+	sortDisabled?: boolean;
 	sort?: boolean;
 	addable?: boolean;
 	sortDirection?: SmartTableSortDirection | false;
@@ -90,11 +97,11 @@ interface SmartTableDefaultColumn<T> {
 	filterFunction?: (columnData: any, search: string) => boolean;
 }
 
-interface SmartTableTextHtmlColumn<T> extends SmartTableDefaultColumn<T> {
+interface SmartTableTextHtmlColumn<T extends Record<string, any>> extends SmartTableDefaultColumn<T> {
 	type: 'text' | 'html';
 }
 
-interface SmartTableCustomColumn<T> extends SmartTableDefaultColumn<T> {
+interface SmartTableCustomColumn<T extends Record<string, any>> extends SmartTableDefaultColumn<T> {
 	type: 'custom';
 	renderComponent: any;
 }
@@ -117,19 +124,6 @@ interface SmartTableEditorList {
 	config: {
 		selectText?: string;
 		list: SelectOption[];
-	};
-}
-
-//deprecated
-interface SmartTableEditorCompleter {
-	type: 'completer';
-	config: {
-		completer: {
-			data: any[];
-			searchFields: string;
-			titleField: string;
-			descriptionField?: string;
-		};
 	};
 }
 
@@ -201,9 +195,7 @@ export interface SmartTableCreateConfirm<T = any> extends Omit<SmartTableDefault
 	newData: T;
 }
 
-export interface ObjectStringString {
-	[key: string]: string;
-}
+export type ObjectStringString = Record<string, string>;
 
 export enum SmartTableOnChangedEventName {
 	'load' = 'load',
@@ -222,7 +214,7 @@ export enum SmartTableOnChangedEventName {
 
 export type SmartTableOnChangedEventType = 'load' | 'prepend' | 'append' | 'update' | 'empty' | 'paging' | 'page' | 'filter' | 'sort' | 'add' | 'remove' | 'refresh';
 
-export interface SmartTableOnChangedEvent<T extends ObjectAny = any> {
+export interface SmartTableOnChangedEvent<T extends Record<string, any> = any> {
 	action: SmartTableOnChangedEventType;
 	elements: T[];
 	filter: SmartTableFilterConf;
