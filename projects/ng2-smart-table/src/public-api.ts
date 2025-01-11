@@ -7,6 +7,7 @@ export {
   DefaultFilter,
   Filter
 } from "./lib/components/filter/filter-types/default-filter";
+export { SmartTableColumnEditorDirective } from "./lib/components/table-columns-editor/column-editor.directive";
 export { Cell } from "./lib/lib/data-set/cell";
 export { Column } from "./lib/lib/data-set/column";
 export { Row } from "./lib/lib/data-set/row";

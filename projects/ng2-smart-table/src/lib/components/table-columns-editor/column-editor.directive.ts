@@ -13,12 +13,12 @@ import { Ng2SmartTableComponent } from "ng2-smart-table";
 import { TableColumnsEditorComponent } from "./table-columns-editor.component";
 
 @Directive({
-  selector: "[tableColumnEditor]",
+  selector: "[smartTableColumnEditor]",
   host: {
     "(click)": "buttonClick()",
   },
 })
-export class ColumnEditorDirective implements OnDestroy {
+export class SmartTableColumnEditorDirective implements OnDestroy {
   tableComponent = input.required<Ng2SmartTableComponent>();
 
   private readonly grid = computed(() => {

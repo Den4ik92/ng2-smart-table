@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { ColumnEditorDirective } from "projects/ng2-smart-table/src/lib/components/table-columns-editor/column-editor.directive";
+import { SmartTableColumnEditorDirective } from "ng2-smart-table";
 import { Ng2SmartTableComponent } from "../../../ng2-smart-table/src/lib/ng2-smart-table.component";
 import { LocalDataSource } from "./../../../ng2-smart-table/src/lib/lib/data-source/local/local.data-source";
 import {
@@ -13,7 +13,7 @@ import { CustomFilterComponent } from "./custom-filter/custom-filter.component";
   selector: "app-root",
   templateUrl: "./app.component.html",
   standalone: true,
-  imports: [Ng2SmartTableComponent, ColumnEditorDirective],
+  imports: [Ng2SmartTableComponent, SmartTableColumnEditorDirective],
 })
 export class AppComponent {
   settings: SmartTableSettings = {
