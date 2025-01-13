@@ -1,9 +1,9 @@
 import {
-  Component,
-  Input,
-  OnChanges,
-  SimpleChange,
-  output
+    Component,
+    Input,
+    OnChanges,
+    SimpleChange,
+    output
 } from "@angular/core";
 
 import { PagerComponent } from "./components/pager/pager.component";
@@ -14,14 +14,14 @@ import { LocalDataSource } from "./lib/data-source/local/local.data-source";
 import { Grid } from "./lib/grid";
 import { deepExtend } from "./lib/helpers";
 import {
-  ColumnSortState,
-  SmartTableConfirmDeleteEvent,
-  SmartTableConfirmEditEvent,
-  SmartTableCreateConfirm,
-  SmartTableCustomEvent,
-  SmartTableRowClickedEvent,
-  SmartTableRowSelectEvent,
-  SmartTableSettings,
+    ColumnPositionState,
+    SmartTableConfirmDeleteEvent,
+    SmartTableConfirmEditEvent,
+    SmartTableCreateConfirm,
+    SmartTableCustomEvent,
+    SmartTableRowClickedEvent,
+    SmartTableRowSelectEvent,
+    SmartTableSettings,
 } from "./lib/interfaces/smart-table.models";
 
 @Component({
@@ -41,7 +41,7 @@ export class Ng2SmartTableComponent implements OnChanges {
 
   readonly multiRowSelect = output<SmartTableRowSelectEvent>();
   readonly rowClicked = output<SmartTableRowClickedEvent>();
-  readonly columnsSorted = output<ColumnSortState[]>();
+  readonly columnsSorted = output<ColumnPositionState[]>();
   readonly delete = output<any>();
   readonly edit = output<any>();
   readonly editCancel = output<any>();

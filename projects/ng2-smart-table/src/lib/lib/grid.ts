@@ -12,7 +12,7 @@ import {
   setLocalStorage,
 } from "./helpers";
 import {
-  ColumnSortState,
+  ColumnPositionState,
   SmartTableColumnSettings,
   SmartTableSettings,
   SmartTableSortItem,
@@ -28,9 +28,9 @@ export class Grid {
   onSelectRowSource = new Subject<any>();
   onDeselectRowSource = new Subject<any>();
 
-  currentColumnsSortState: ColumnSortState[] = [];
+  currentColumnsSortState: ColumnPositionState[] = [];
 
-  private columnsSortedEmitter!: OutputEmitterRef<ColumnSortState[]>
+  private columnsSortedEmitter!: OutputEmitterRef<ColumnPositionState[]>
   private sourceOnChangedSubscription: Subscription | undefined;
   private sourceOnUpdatedSubscription: Subscription | undefined;
 
@@ -39,7 +39,7 @@ export class Grid {
     this.setSource(source);
   }
 
-  setColumnsSortedEmitter(emitter: OutputEmitterRef<ColumnSortState[]>) {
+  setColumnsSortedEmitter(emitter: OutputEmitterRef<ColumnPositionState[]>) {
     this.columnsSortedEmitter = emitter
   }
 
@@ -301,7 +301,7 @@ export class Grid {
   // ------------------------------- column sort
 
   private async getSortedTableColumns(
-    newState: ColumnSortState[],
+    newState: ColumnPositionState[],
     columns: SmartTableColumnSettings[]
   ): Promise<SmartTableColumnSettings[]> {
     const sortedArray: SmartTableColumnSettings[] = [];
@@ -316,7 +316,7 @@ export class Grid {
     return Promise.resolve(sortedArray);
   }
 
-  public async applyColumnsSortState(state: ColumnSortState[], emitEvent = true) {
+  public async applyColumnsSortState(state: ColumnPositionState[], emitEvent = true) {
     this.currentColumnsSortState = this.getMergedColumnStates(state);
     this.updateSettingsAndDataSet({
       ...this.settings,
@@ -333,7 +333,7 @@ export class Grid {
   private setColumnsSortState(columns?: SmartTableColumnSettings[]) {
     const columnsState = this.getColumnsStateFromSettings(columns);
     if (this.columnStateStorageKey) {
-      const storageState = getLocalStorage<ColumnSortState[]>(
+      const storageState = getLocalStorage<ColumnPositionState[]>(
         this.columnStateStorageKey
       );
       if (!storageState) {
@@ -348,28 +348,28 @@ export class Grid {
     this.applyColumnsSortState(columnsState, false);
   }
 
-  private getColumnsStateFromSettings(columns?: SmartTableColumnSettings[]): ColumnSortState[] {
+  private getColumnsStateFromSettings(columns?: SmartTableColumnSettings[]): ColumnPositionState[] {
     return (columns || this.settings.columns || []).map((column) => ({
       key: column.key as string,
       title: column.title,
       hide: !!column.hide,
-      sortDisabled: !!column.sortDisabled,
+      moveDisabled: !!column.moveDisabled,
     }));
   }
 
   private getMergedColumnStates(
-    newState: ColumnSortState[],
-    columnsState?: ColumnSortState[],
+    newState: ColumnPositionState[],
+    columnsState?: ColumnPositionState[],
   ) {
     const columnsSettings = columnsState || this.getColumnsStateFromSettings();
     // merge new columns state with state from storage
-    const filtered: ColumnSortState[] = [];
+    const filtered: ColumnPositionState[] = [];
     newState.forEach((state) => {
       const fined = columnsSettings.find(
         (column) => column.title === state.title && column.key === state.key
       );
       if (fined) {
-        filtered.push({ ...fined, hide: fined.sortDisabled ? fined.hide : state.hide });
+        filtered.push({ ...fined, hide: fined.moveDisabled ? fined.hide : state.hide });
       }
     });
     // find new columns witch not exist in storage state

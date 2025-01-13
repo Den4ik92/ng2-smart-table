@@ -6,11 +6,11 @@ interface SelectOption {
 	value: any;
 }
 
-export interface ColumnSortState {
+export interface ColumnPositionState {
   key: string;
   title: string;
   hide: boolean;
-  sortDisabled: boolean;
+  moveDisabled: boolean;
 }
 
 export interface SmartTableSettings<T extends Record<string, any> = any> {
@@ -85,8 +85,8 @@ interface SmartTableDefaultColumn<T extends Record<string, any>> {
 	class?: string;
 	editable?: boolean;
 	hide?: boolean;
-	//hide column in sort list
-	sortDisabled?: boolean;
+	// disable column move in column change position list
+	moveDisabled?: boolean;
 	sort?: boolean;
 	addable?: boolean;
 	sortDirection?: SmartTableSortDirection | false;

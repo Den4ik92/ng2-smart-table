@@ -10,6 +10,8 @@ import {
   OnDestroy
 } from "@angular/core";
 import { Ng2SmartTableComponent } from "ng2-smart-table";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { TableColumnsEditorComponent } from "./table-columns-editor.component";
 
 @Directive({
@@ -19,19 +21,24 @@ import { TableColumnsEditorComponent } from "./table-columns-editor.component";
   },
 })
 export class SmartTableColumnEditorDirective implements OnDestroy {
-  tableComponent = input.required<Ng2SmartTableComponent>();
+  tableComponent = input<Ng2SmartTableComponent>();
 
   private readonly grid = computed(() => {
-    return this.tableComponent().grid;
+    return this.tableComponent()?.grid;
   });
 
   private readonly overlay = inject(Overlay);
   private readonly elementRef = inject(ElementRef);
+  private readonly destroy$ = new Subject<void>()
 
   protected overlayRef?: OverlayRef;
 
+
+
   ngOnDestroy(): void {
     this.overlayRef?.dispose();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   protected showDropdown(): void {
@@ -41,12 +48,13 @@ export class SmartTableColumnEditorDirective implements OnDestroy {
       this.overlayRef.attach(componentPortal);
     dropdownRef.setInput("grid", this.grid());
     dropdownRef.setInput("close", this.hide.bind(this));
-    this.overlayRef?.backdropClick().subscribe(() => this.hide());
+    this.overlayRef?.backdropClick().pipe(takeUntil(this.destroy$)).subscribe(() => this.hide());
   }
 
   public hide() {
     this.overlayRef?.detach();
     this.overlayRef?.dispose();
+    this.destroy$.next();
   }
 
   buttonClick() {

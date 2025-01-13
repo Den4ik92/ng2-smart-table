@@ -73,7 +73,7 @@ export class AppComponent {
         key: "id",
         title: "ID",
         hide: true,
-        sortDisabled: false,
+        moveDisabled: true,
         type: "text",
       },
 

@@ -16,6 +16,11 @@
   background: var(--drag-row-background, #ffffff);
   box-shadow: 0 0 6px 1px rgb(235 235 235 / 20%);
 
+  &.cdk-drag-disabled {
+    filter: opacity(0.5);
+    cursor: not-allowed;
+  }
+
   .index-cell {
     min-width: 2.2rem;
     border-right: 1px solid var(--drag-row-border-color, #ccc);
@@ -74,7 +79,7 @@
     padding: 1rem;
     border-bottom: 1px solid var(--sort-card-header-divider-color, #edf1f7);
 
-    h5 {
+    h6 {
       margin: 0;
     }
   }
