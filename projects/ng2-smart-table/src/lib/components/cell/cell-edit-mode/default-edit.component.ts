@@ -5,7 +5,7 @@ import { CheckboxEditorComponent } from "../cell-editors/checkbox-editor.compone
 import { InputEditorComponent } from "../cell-editors/input-editor.component";
 import { SelectEditorComponent } from "../cell-editors/select-editor.component";
 import { TextareaEditorComponent } from "../cell-editors/textarea-editor.component";
-import { EditCellDefault } from "./edit-cell-default";
+import { EditCellDefaultComponent } from "./edit-cell-default";
 
 @Component({
   selector: "table-cell-default-editor",
@@ -18,15 +18,15 @@ import { EditCellDefault } from "./edit-cell-default";
   ],
   standalone: true,
 })
-export class DefaultEditComponent extends EditCellDefault {
+export class DefaultEditComponent extends EditCellDefaultComponent {
   constructor() {
     super();
   }
 
   getEditorType(): SmartTableEditorAndFilterTypes {
-    const editor = this.cell.getColumn().editor;
+    const editor = this.cell().getColumn().editor;
     if (editor) {
-      return editor.type;
+      return editor.type || "text";
     }
     return "text";
   }

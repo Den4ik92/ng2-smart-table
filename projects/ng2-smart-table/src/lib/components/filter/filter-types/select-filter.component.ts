@@ -7,13 +7,13 @@ import { DefaultFilter } from './default-filter';
 @Component({
     selector: 'select-filter',
     template: `
-    <select [class]="inputClass"
+    <select [class]="inputClass()"
       class="form-control"
       #inputControl
       [(ngModel)]="query">
 
-      <option value="">{{ column.getFilterConfig().selectText }}</option>
-      @for (option of column.getFilterConfig().list; track option.value) {
+      <option value="">{{ column().getFilterConfig().selectText }}</option>
+      @for (option of column().getFilterConfig().list; track option.value) {
         <option [value]="option.value">
           {{ option.title }}
         </option>

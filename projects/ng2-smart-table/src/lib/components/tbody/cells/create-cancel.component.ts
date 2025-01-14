@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnChanges, OutputEmitterRef } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  EventEmitter,
+  input,
+  OutputEmitterRef
+} from "@angular/core";
 
 import { Row } from "../../../lib/data-set/row";
 import { Grid } from "../../../lib/grid";
@@ -6,24 +13,25 @@ import { Grid } from "../../../lib/grid";
 @Component({
   selector: "ng2-st-tbody-create-cancel",
   template: `
-    @if (!row.pending) {
+    @if (!row().pending) {
     <a
       href="#"
-      [id]="'row-' + row.index + '_editing-confirm-button'"
+      [id]="'row-' + row().index + '_editing-confirm-button'"
       class="ng2-smart-action ng2-smart-action-edit-save"
-      [innerHTML]="saveButtonContent"
+      [innerHTML]="saveButtonContent()"
       (click)="onSave($event)"
     ></a>
     <a
       href="#"
-      [id]="'row-' + row.index + '_editing-cancel-button'"
+      [id]="'row-' + row().index + '_editing-cancel-button'"
       class="ng2-smart-action ng2-smart-action-edit-cancel"
-      [innerHTML]="cancelButtonContent"
+      [innerHTML]="cancelButtonContent()"
       (click)="onCancelEdit($event)"
     ></a>
     } @else {
     <div style="display: flex;">
       <svg
+        role="none"
         (click)="$event.stopPropagation()"
         style="height: 2rem; width: 2rem;"
         version="1.1"
@@ -52,6 +60,7 @@ import { Grid } from "../../../lib/grid";
         </path>
       </svg>
       <svg
+        role="none"
         (click)="$event.stopPropagation()"
         style="height: 2rem; width: 2rem; "
         version="1.1"
@@ -83,37 +92,33 @@ import { Grid } from "../../../lib/grid";
     }
   `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TbodyCreateCancelComponent implements OnChanges {
-  @Input() grid!: Grid;
-  @Input() row!: Row;
-  @Input() editConfirm!: EventEmitter<any> | OutputEmitterRef<any>;
-  @Input() editCancel!: EventEmitter<any> | OutputEmitterRef<any>;
+export class TbodyCreateCancelComponent {
+  readonly grid = input.required<Grid>();
+  readonly row = input.required<Row>();
+  readonly editConfirm = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
+  readonly editCancel = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
 
-  cancelButtonContent = "";
-  saveButtonContent = "";
+  readonly cancelButtonContent = computed(() => {
+    const edit = this.grid().settings().edit
+    return edit ? edit.cancelButtonContent || "Cancel" : "Cancel"
+  })
+  readonly saveButtonContent = computed(() => {
+    const edit = this.grid().settings().edit
+    return edit ? edit.saveButtonContent || "Update" : "Update"
+  })
 
   onSave(event: any) {
     event.preventDefault();
     event.stopPropagation();
-    this.grid.save(this.row, this.editConfirm);
+    this.grid().save(this.row(), this.editConfirm());
   }
 
   onCancelEdit(event: any) {
     event.preventDefault();
     event.stopPropagation();
-    this.editCancel.emit(true);
-    this.row.isInEditing = false;
-  }
-
-  ngOnChanges() {
-    this.saveButtonContent = this.grid.getSetting(
-      "edit.saveButtonContent",
-      "save"
-    );
-    this.cancelButtonContent = this.grid.getSetting(
-      "edit.cancelButtonContent",
-      "cancel"
-    );
+    this.editCancel().emit(true);
+    this.row().isInEditing = false;
   }
 }

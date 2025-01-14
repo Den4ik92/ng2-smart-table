@@ -8,15 +8,12 @@ import { DefaultEditor } from "./default-editor";
   styleUrls: ["./editor.component.scss"],
   template: `
     <input
-      [class]="inputClass"
+      [class]="inputClass()"
       class="form-control"
-      [(ngModel)]="cell.newValue"
-      [name]="cell.getId()"
-      [placeholder]="cell.getTitle()"
-      [disabled]="!cell.isEditable()"
-      (click)="onClick.emit($event)"
-      (keydown.enter)="onEdited.emit($event)"
-      (keydown.esc)="onStopEditing.emit('')"
+      [(ngModel)]="cell().newValue"
+      [name]="cell().getId()"
+      [placeholder]="cell().getTitle()"
+      [disabled]="!cell().isEditable()"
     />
   `,
   standalone: true,

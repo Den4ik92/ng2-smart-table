@@ -1,7 +1,7 @@
 import {
   Component,
-  Input,
-  OnChanges,
+  computed,
+  input,
   output
 } from "@angular/core";
 
@@ -13,27 +13,34 @@ import { Grid } from "../../../lib/grid";
     <a
       href="#"
       class="ng2-smart-action ng2-smart-action-add-create"
-      [innerHTML]="createButtonContent"
+      [innerHTML]="createButtonContent()"
       (click)="$event.preventDefault(); create.emit($event)"
     ></a>
     <a
       href="#"
       class="ng2-smart-action ng2-smart-action-add-cancel"
-      [innerHTML]="cancelButtonContent"
-      (click)="$event.preventDefault(); grid.createFormShown = false"
+      [innerHTML]="cancelButtonContent()"
+      (click)="$event.preventDefault(); grid().createFormShown = false"
     ></a>
   `,
   standalone: true,
 })
-export class ActionsComponent implements OnChanges {
-  @Input() grid!: Grid;
+export class ActionsComponent {
+  readonly grid = input.required<Grid>();
   readonly create = output<any>();
 
-  createButtonContent = "";
-  cancelButtonContent = "";
-
-  ngOnChanges() {
-    this.createButtonContent = this.grid.getSetting("add.createButtonContent");
-    this.cancelButtonContent = this.grid.getSetting("add.cancelButtonContent");
-  }
+  createButtonContent = computed(() => {
+    const addOptions = this.grid().settings().add
+    if (!addOptions) {
+      return "Create"
+    }
+    return addOptions?.createButtonContent || "Create"
+  });
+  cancelButtonContent = computed(() => {
+    const addOptions = this.grid().settings().add
+    if (!addOptions) {
+      return "Cancel"
+    }
+    return addOptions?.cancelButtonContent || "Cancel"
+  });
 }

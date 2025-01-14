@@ -17,7 +17,7 @@ import { TableColumnsEditorComponent } from "./table-columns-editor.component";
 @Directive({
   selector: "[smartTableColumnEditor]",
   host: {
-    "(click)": "buttonClick()",
+    "(click)": "buttclicked()",
   },
 })
 export class SmartTableColumnEditorDirective implements OnDestroy {
@@ -57,7 +57,7 @@ export class SmartTableColumnEditorDirective implements OnDestroy {
     this.destroy$.next();
   }
 
-  buttonClick() {
+  buttclicked() {
     this.showDropdown();
   }
 

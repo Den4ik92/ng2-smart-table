@@ -1,4 +1,4 @@
-import { EventEmitter, OutputEmitterRef } from "@angular/core";
+import { computed, EventEmitter, OutputEmitterRef, signal } from "@angular/core";
 import { Observable, Subject, Subscription } from "rxjs";
 import { LocalDataSource } from "./data-source/local/local.data-source";
 
@@ -22,7 +22,6 @@ export class Grid {
   createFormShown = false;
 
   source!: LocalDataSource;
-  settings!: SmartTableSettings;
   dataSet!: DataSet;
 
   onSelectRowSource = new Subject<any>();
@@ -33,6 +32,23 @@ export class Grid {
   private columnsSortedEmitter!: OutputEmitterRef<ColumnPositionState[]>
   private sourceOnChangedSubscription: Subscription | undefined;
   private sourceOnUpdatedSubscription: Subscription | undefined;
+
+  readonly settings = signal<SmartTableSettings>({} as SmartTableSettings);
+
+  readonly isMultiSelectVisible = computed(() => {
+    return this.settings().selectMode === "multi";
+  })
+  readonly isActionsVisible = computed<boolean>(() => {
+    const actions = this.settings().actions
+    if (!actions) return false;
+    return actions.add || actions.edit || actions.delete || !!actions?.custom?.length;
+  })
+  readonly actionIsOnLeft = computed<boolean>(() => {
+    return (this.settings().actionsPosition || 'left') === 'left';
+  })
+  readonly actionIsOnRight = computed<boolean>(() => {
+    return this.settings().actionsPosition === 'right';
+  })
 
   constructor(source: LocalDataSource, settings: SmartTableSettings) {
     this.setSettings(settings);
@@ -52,43 +68,22 @@ export class Grid {
     }
   }
 
-  showActionColumn(position: string): boolean {
-    return this.isCurrentActionsPosition(position) && this.isActionsVisible();
-  }
-
-  isCurrentActionsPosition(position: string): boolean {
-    return position == this.getSetting("actions.position");
-  }
-
-  isActionsVisible(): boolean {
-    return (
-      this.getSetting<boolean>("actions.add", false) ||
-      this.getSetting<boolean>("actions.edit", false) ||
-      this.getSetting<boolean>("actions.delete", false) ||
-      !!this.getSetting<[]>("actions.custom", [])?.length
-    );
-  }
-
-  isMultiSelectVisible(): boolean {
-    return this.getSetting("selectMode") === "multi";
-  }
-
   getNewRow(): Row {
     return this.dataSet.newRow;
   }
 
   setSettings(settings: SmartTableSettings) {
     this.updateSettingsAndDataSet(settings);
-    if (this.getSetting('withColumnSort', false)) {
+    if (this.getSetting('columnSort', false)) {
       this.setColumnsSortState(settings.columns);
     }
   }
 
   private updateSettingsAndDataSet(settings: SmartTableSettings) {
-    this.settings = settings;
+    this.settings.set(settings);
     this.dataSet = new DataSet(
       [],
-      this.getSetting<SmartTableColumnSettings[]>("columns")
+      settings.columns
     );
 
     if (this.source) {
@@ -119,7 +114,7 @@ export class Grid {
   }
 
   getSetting<T>(name: string, defaultValue?: any): T {
-    return getDeepFromObject(this.settings, name, defaultValue);
+    return getDeepFromObject(this.settings(), name, defaultValue);
   }
 
   getColumns(): Column[] {
@@ -156,7 +151,7 @@ export class Grid {
     deferred.promise
       .then((newData) => {
         row.pending = false;
-        newData = newData ? newData : row.getNewData();
+        newData = newData || row.getNewData();
         this.source.prepend(newData).then(() => {
           this.createFormShown = false;
           this.dataSet.createNewRow();
@@ -183,7 +178,7 @@ export class Grid {
     deferred.promise
       .then((newData) => {
         row.pending = false;
-        newData = newData ? newData : row.getNewData();
+        newData = newData || row.getNewData();
         this.source.update(row.getData(), newData).then(() => {
           row.isInEditing = false;
         });
@@ -192,7 +187,7 @@ export class Grid {
         row.pending = false;
       });
 
-    if (this.getSetting("edit.confirmSave")) {
+    if (this.getSetting("edit.confirmSave", false)) {
       confirmEmitter.emit({
         data: row.getData(),
         newData: row.getNewData(),
@@ -319,8 +314,8 @@ export class Grid {
   public async applyColumnsSortState(state: ColumnPositionState[], emitEvent = true) {
     this.currentColumnsSortState = this.getMergedColumnStates(state);
     this.updateSettingsAndDataSet({
-      ...this.settings,
-      columns: await this.getSortedTableColumns(this.currentColumnsSortState, this.settings?.columns),
+      ...this.settings(),
+      columns: await this.getSortedTableColumns(this.currentColumnsSortState, this.settings()?.columns),
     });
     if (this.columnStateStorageKey) {
       setLocalStorage(this.columnStateStorageKey, this.currentColumnsSortState);
@@ -349,7 +344,7 @@ export class Grid {
   }
 
   private getColumnsStateFromSettings(columns?: SmartTableColumnSettings[]): ColumnPositionState[] {
-    return (columns || this.settings.columns || []).map((column) => ({
+    return (columns || this.settings().columns || []).map((column) => ({
       key: column.key as string,
       title: column.title,
       hide: !!column.hide,
@@ -382,6 +377,6 @@ export class Grid {
   }
 
   private get columnStateStorageKey(): string | undefined {
-    return this.settings.columnSortStorageKey;
+    return this.settings().columnSortStorageKey;
   }
 }

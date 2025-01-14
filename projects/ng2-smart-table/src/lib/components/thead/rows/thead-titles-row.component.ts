@@ -1,9 +1,4 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  output
-} from "@angular/core";
+import { Component, input, output } from "@angular/core";
 
 import { Column } from "../../../lib/data-set/column";
 import { LocalDataSource } from "../../../lib/data-source/local/local.data-source";
@@ -15,29 +10,30 @@ import { ColumnTitleComponent } from "../cells/column-title.component";
 @Component({
   selector: "[ng2-st-thead-titles-row]",
   template: `
-    @if (isMultiSelectVisible) {
+    @if (grid().isMultiSelectVisible()) {
     <th
       ng2-st-checkbox-select-all
-      [grid]="grid"
-      [source]="source"
+      [grid]="grid()"
+      [source]="source()"
       (click)="selectAllRows.emit($event)"
     ></th>
-    } @if (showActionColumnLeft) {
-    <th ng2-st-actions-title [grid]="grid"></th>
-    } @for (column of getVisibleColumns(grid.getColumns()); track column.id) {
+    } @if (grid().actionIsOnLeft() && grid().isActionsVisible()) {
+
+    <th ng2-st-actions-title [grid]="grid()"></th>
+    } @for (column of getVisibleColumns(); track column.id) {
     <th
       class="ng2-smart-th {{ column.id }}"
       [class]="column.class"
       [style.width]="column.width"
     >
       <ng2-st-column-title
-        [source]="source"
+        [source]="source()"
         [column]="column"
         (sort)="sort.emit($event)"
       ></ng2-st-column-title>
     </th>
-    } @if (showActionColumnRight) {
-    <th ng2-st-actions-title [grid]="grid"></th>
+    } @if (grid().actionIsOnRight() && grid().isActionsVisible()) {
+    <th ng2-st-actions-title [grid]="grid()"></th>
     }
   `,
   standalone: true,
@@ -47,24 +43,16 @@ import { ColumnTitleComponent } from "../cells/column-title.component";
     ColumnTitleComponent,
   ],
 })
-export class TheadTitlesRowComponent implements OnChanges {
-  @Input() grid!: Grid;
-  @Input() source!: LocalDataSource;
+export class TheadTitlesRowComponent {
+  readonly grid = input.required<Grid>();
+  readonly source = input.required<LocalDataSource>();
 
   readonly sort = output<any>();
   readonly selectAllRows = output<any>();
 
-  isMultiSelectVisible = false;
-  showActionColumnLeft = false;
-  showActionColumnRight = false;
-
-  ngOnChanges() {
-    this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
-    this.showActionColumnLeft = this.grid.showActionColumn("left");
-    this.showActionColumnRight = this.grid.showActionColumn("right");
-  }
-
-  getVisibleColumns(columns: Array<Column>): Array<Column> {
-    return (columns || []).filter((column: Column) => !column.hide);
+  getVisibleColumns(): Column[] {
+    return (this.grid().getColumns() || []).filter(
+      (column: Column) => !column.hide
+    );
   }
 }

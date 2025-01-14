@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
 import { Cell } from "../../../lib/data-set/cell";
 import { CustomViewComponent } from "./custom-view.component";
@@ -8,12 +8,12 @@ import { CustomViewComponent } from "./custom-view.component";
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div>
-      @switch (cell.getColumn().type) { @case ('custom') {
-      <custom-view-component [cell]="cell"></custom-view-component>
+      @switch (cell().getColumn().type) { @case ('custom') {
+      <custom-view-component [cell]="cell()"></custom-view-component>
       } @case ('html') {
-      <div [innerHTML]="cell.getValue()"></div>
+      <div [innerHTML]="cell().getValue()"></div>
       } @default {
-      <div>{{ cell.getValue() }}</div>
+      <div>{{ cell().getValue() }}</div>
       } }
     </div>
   `,
@@ -21,5 +21,5 @@ import { CustomViewComponent } from "./custom-view.component";
   imports: [CustomViewComponent],
 })
 export class ViewCellComponent {
-  @Input() cell!: Cell;
+  readonly cell = input.required< Cell>()
 }

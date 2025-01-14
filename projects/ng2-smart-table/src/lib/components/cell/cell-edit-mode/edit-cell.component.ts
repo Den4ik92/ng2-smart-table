@@ -1,4 +1,4 @@
-import { Component, Input, output } from "@angular/core";
+import { Component, input } from "@angular/core";
 
 import { Cell } from "../../../lib/data-set/cell";
 import { SmartTableEditorAndFilterTypes } from "../../../lib/interfaces/smart-table.models";
@@ -11,16 +11,14 @@ import { DefaultEditComponent } from "./default-edit.component";
     <div>
       @switch (getEditorType()) { @case ('custom') {
       <table-cell-custom-editor
-        [cell]="cell"
-        [inputClass]="inputClass"
-        (edited)="onEdited($event)"
+        [cell]="cell()"
+        [inputClass]="inputClass()"
       >
       </table-cell-custom-editor>
       } @default {
       <table-cell-default-editor
-        [cell]="cell"
-        [inputClass]="inputClass"
-        (edited)="onEdited($event)"
+        [cell]="cell()"
+        [inputClass]="inputClass()"
       >
       </table-cell-default-editor>
       } }
@@ -30,18 +28,11 @@ import { DefaultEditComponent } from "./default-edit.component";
   imports: [CustomEditComponent, DefaultEditComponent],
 })
 export class EditCellComponent {
-  @Input() cell!: Cell;
-  @Input() inputClass = "";
-
-  readonly edited = output<any>();
-
-  onEdited(event: any): boolean {
-    this.edited.emit(event);
-    return false;
-  }
+  readonly cell = input.required<Cell>();
+  readonly inputClass = input("");
 
   getEditorType(): SmartTableEditorAndFilterTypes {
-    const editor = this.cell.getColumn().editor;
+    const editor = this.cell().getColumn().editor;
     if (editor) {
       return editor.type;
     }

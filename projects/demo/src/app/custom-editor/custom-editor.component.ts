@@ -12,6 +12,6 @@ import { DefaultEditor } from "ng2-smart-table";
 export class CustomEditorComponent extends DefaultEditor {
   onInput(event: Event) {
     const target = event.target as HTMLInputElement;
-    this.cell.newValue = target.value
+    this.cell().newValue = target.value
   }
 }

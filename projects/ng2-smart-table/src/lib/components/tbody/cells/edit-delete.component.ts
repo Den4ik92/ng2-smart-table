@@ -1,8 +1,11 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  effect,
   EventEmitter,
-  Input,
-  OnChanges,
+  inject,
+  input,
   output,
   OutputEmitterRef
 } from "@angular/core";
@@ -14,10 +17,10 @@ import { Grid } from "../../../lib/grid";
 @Component({
   selector: "ng2-st-tbody-edit-delete",
   template: `
-    @if (!row.pending) { @if (isActionEdit) {
+    @if (!row().pending) { @if (isActionEdit) {
     <a
       href="#"
-      [id]="'row-' + row.index + '_action-edit-button'"
+      [id]="'row-' + row().index + '_action-edit-button'"
       class="ng2-smart-action ng2-smart-action-edit-edit"
       [innerHTML]="editRowButtonContent"
       (click)="onEdit($event)"
@@ -25,7 +28,7 @@ import { Grid } from "../../../lib/grid";
     } @if (isActionDelete) {
     <a
       href="#"
-      [id]="'row-' + row.index + '_action-delete-button'"
+      [id]="'row-' + row().index + '_action-delete-button'"
       class="ng2-smart-action ng2-smart-action-delete-delete"
       [innerHTML]="deleteRowButtonContent"
       (click)="onDelete($event)"
@@ -34,6 +37,7 @@ import { Grid } from "../../../lib/grid";
     <div style="display: flex;">
       @if (isActionEdit) {
       <svg
+        role="none"
         (click)="$event.stopPropagation()"
         style="height: 2rem; width: 2rem;"
         version="1.1"
@@ -63,6 +67,7 @@ import { Grid } from "../../../lib/grid";
       </svg>
       } @if (isActionDelete) {
       <svg
+        role="none"
         (click)="$event.stopPropagation()"
         style="height: 2rem; width: 2rem;"
         version="1.1"
@@ -95,58 +100,49 @@ import { Grid } from "../../../lib/grid";
     }
   `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TbodyEditDeleteComponent implements OnChanges {
-  @Input() grid!: Grid;
-  @Input() row!: Row;
-  @Input() source!: LocalDataSource;
-  @Input() deleteConfirm!: EventEmitter<any> | OutputEmitterRef<any>;
-  @Input() editConfirm!: EventEmitter<any> | OutputEmitterRef<any>;
+export class TbodyEditDeleteComponent {
+  private readonly cdr = inject(ChangeDetectorRef)
+  readonly grid = input.required<Grid>();
+  readonly row = input.required<Row>();
+  readonly source = input.required<LocalDataSource>();
+  readonly deleteConfirm = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
 
   readonly edit = output<any>();
   readonly delete = output<any>();
-  readonly editRowSelect = output<any>();
 
   isActionEdit = false;
   isActionDelete = false;
-  editRowButtonContent = "";
-  deleteRowButtonContent = "";
+  editRowButtonContent = "Edit";
+  deleteRowButtonContent = "Delete";
+
+  constructor() {
+    effect(() => {
+      const settings = this.grid().settings()
+      const actions = settings.actions
+      if (!actions) return
+      this.isActionDelete = !!actions.delete
+      this.isActionEdit = !!actions.edit
+      this.editRowButtonContent = settings.edit ? settings.edit.editButtonContent || "Edit" : "Edit"
+      this.deleteRowButtonContent = settings.delete ? settings.delete.deleteButtonContent || "Delete" : "Delete"
+      this.cdr.detectChanges();
+    })
+  }
 
   onEdit(event: any) {
     event.preventDefault();
     event.stopPropagation();
-
-    this.editRowSelect.emit(this.row);
-
     this.edit.emit({
-      data: this.row.getData(),
+      data: this.row().getData(),
       source: this.source,
     });
-    if (this.grid.getSetting("mode") !== "external") {
-      this.grid.edit(this.row);
-    }
+    this.grid().edit(this.row());
   }
 
   onDelete(event: any) {
     event.preventDefault();
     event.stopPropagation();
-
-    if (this.grid.getSetting("mode") === "external") {
-      this.delete.emit({
-        data: this.row.getData(),
-        source: this.source,
-      });
-    } else {
-      this.grid.delete(this.row, this.deleteConfirm);
-    }
-  }
-
-  ngOnChanges() {
-    this.isActionEdit = this.grid.getSetting("actions.edit");
-    this.isActionDelete = this.grid.getSetting("actions.delete");
-    this.editRowButtonContent = this.grid.getSetting("edit.editButtonContent");
-    this.deleteRowButtonContent = this.grid.getSetting(
-      "delete.deleteButtonContent"
-    );
+    this.grid().delete(this.row(), this.deleteConfirm());
   }
 }

@@ -14,12 +14,12 @@ import { DefaultFilter } from "./default-filter";
     <input
       type="checkbox"
       [formControl]="inputControl"
-      [class]="inputClass"
+      [class]="inputClass()"
       class="form-control"
     />
     @if (filterActive) {
     <a href="#" (click)="resetFilter($event)">{{
-      column.getFilterConfig()?.resetText || "reset"
+      column().getFilterConfig()?.resetText || "reset"
     }}</a>
     }
   `,
@@ -27,7 +27,7 @@ import { DefaultFilter } from "./default-filter";
   imports: [FormsModule, ReactiveFormsModule],
 })
 export class CheckboxFilterComponent extends DefaultFilter implements OnInit {
-  filterActive: boolean = false;
+  filterActive = false;
   inputControl = new UntypedFormControl();
 
   constructor() {
@@ -40,12 +40,12 @@ export class CheckboxFilterComponent extends DefaultFilter implements OnInit {
       .subscribe((checked: boolean) => {
         this.filterActive = true;
         const trueVal =
-          (this.column.getFilterConfig() &&
-            this.column.getFilterConfig().true) ||
+          (this.column().getFilterConfig() &&
+            this.column().getFilterConfig().true) ||
           true;
         const falseVal =
-          (this.column.getFilterConfig() &&
-            this.column.getFilterConfig().false) ||
+          (this.column().getFilterConfig() &&
+            this.column().getFilterConfig().false) ||
           false;
         this.query = checked ? trueVal : falseVal;
         this.setFilter();

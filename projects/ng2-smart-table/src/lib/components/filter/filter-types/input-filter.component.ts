@@ -12,11 +12,11 @@ import { DefaultFilter } from "./default-filter";
   selector: "input-filter",
   template: `
     <input
-      [class]="inputClass"
+      [class]="inputClass()"
       [formControl]="inputControl"
       class="form-control"
       type="text"
-      placeholder="{{ column.title }}"
+      placeholder="{{ column().title }}"
     />
   `,
   standalone: true,

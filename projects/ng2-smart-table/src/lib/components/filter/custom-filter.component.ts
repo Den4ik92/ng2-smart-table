@@ -1,5 +1,6 @@
 import {
   Component,
+  ComponentRef,
   OnChanges,
   OnDestroy,
   SimpleChanges,
@@ -7,6 +8,7 @@ import {
   ViewContainerRef,
 } from "@angular/core";
 
+import { DefaultFilter } from "ng2-smart-table";
 import { FilterDefault } from "./filter-default";
 
 @Component({
@@ -18,31 +20,38 @@ export class CustomFilterComponent
   extends FilterDefault
   implements OnChanges, OnDestroy
 {
-  customComponent: any;
   @ViewChild("dynamicTarget", { read: ViewContainerRef, static: true })
-  dynamicTarget: any;
+  dynamicTarget?: ViewContainerRef;
+
+  customComponent?: ComponentRef<DefaultFilter>;
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.customComponent) {
-      if (this.customComponent.instance?.ngOnChanges) {
-        this.customComponent.instance?.ngOnChanges(changes);
+      if (
+        this.customComponent?.instance &&
+        "ngOnChanges" in this.customComponent.instance
+      ) {
+        const onChanges = this.customComponent.instance.ngOnChanges as (
+          changes: SimpleChanges
+        ) => void;
+        onChanges(changes);
       }
       return;
     }
-    if (this.column.filter && this.column.filter.type === "custom") {
-      this.customComponent = this.dynamicTarget.createComponent(
-        this.column.filter?.component
+    const columnFilter = this.column().filter;
+    if (columnFilter && columnFilter.type === "custom") {
+      this.customComponent = this.dynamicTarget?.createComponent(
+        columnFilter?.component
+      );
+      // set @Inputs and @Outputs of custom component
+      this.customComponent?.setInput("query", this.query);
+      this.customComponent?.setInput("column", this.column());
+      this.customComponent?.setInput("source", this.source());
+      this.customComponent?.setInput("inputClass", this.inputClass());
+      this.customComponent?.instance.filter.subscribe((event: any) =>
+        this.onFilter(event)
       );
     }
-
-    // set @Inputs and @Outputs of custom component
-    this.customComponent.instance.query = this.query;
-    this.customComponent.instance.column = this.column;
-    this.customComponent.instance.source = this.source;
-    this.customComponent.instance.inputClass = this.inputClass;
-    this.customComponent.instance.filter.subscribe((event: any) =>
-      this.onFilter(event)
-    );
   }
 
   ngOnDestroy() {

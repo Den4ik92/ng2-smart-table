@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, computed } from "@angular/core";
 
 import { DefaultEditor } from "./default-editor";
 
@@ -7,29 +7,33 @@ import { DefaultEditor } from "./default-editor";
   styleUrls: ["./editor.component.scss"],
   template: `
     <input
-      [class]="inputClass"
+      [class]="inputClass()"
       type="checkbox"
       class="form-control"
-      [name]="cell.getId()"
-      [disabled]="!cell.isEditable()"
-      [checked]="
-        cell.getValue() === (cell.getColumn().getConfig()?.true || true)
-      "
-      (click)="onClick.emit($event)"
+      [name]="cell().getId()"
+      [disabled]="!cell().isEditable()"
       (change)="onChange($event)"
+      [checked]="
+        cell().getValue() === trueVal()
+      "
     />
   `,
   standalone: true,
 })
 export class CheckboxEditorComponent extends DefaultEditor {
+  readonly trueVal = computed(() => {
+    return this.cell().getColumn().getConfig()?.true || true
+  })
+  readonly falseVal = computed(() => {
+    return this.cell().getColumn().getConfig()?.false || false
+  })
+
+
   constructor() {
     super();
   }
 
   onChange(event: any) {
-    const config: any = this.cell.getColumn().getConfig();
-    const trueVal = (config && config?.true) || true;
-    const falseVal = (config && config?.false) || false;
-    this.cell.newValue = event.target.checked ? trueVal : falseVal;
+    this.cell().newValue = event.target.checked ? this.trueVal() : this.falseVal();
   }
 }

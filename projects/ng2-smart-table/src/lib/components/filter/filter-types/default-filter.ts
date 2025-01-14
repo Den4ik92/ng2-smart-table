@@ -1,16 +1,15 @@
-import { Component, EventEmitter, Input, OnDestroy, output, OutputEmitterRef } from '@angular/core';
+import { Component, EventEmitter, Input, input, InputSignal, OnDestroy, output, OutputEmitterRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { Column } from '../../../lib/data-set/column';
 
 @Component({ template: '' })
 export class DefaultFilter implements Filter, OnDestroy {
-
-  delay: number = 300;
+  delay = 300;
   changesSubscription?: Subscription;
-  @Input() query = '';
-  @Input() inputClass = '';
-  @Input() column!: Column;
+  @Input()query = '';
+  readonly inputClass = input<string>('');
+  readonly column = input.required<Column>();
   readonly filter = output<string>();
 
   ngOnDestroy() {
@@ -25,11 +24,10 @@ export class DefaultFilter implements Filter, OnDestroy {
 }
 
 export interface Filter {
-
   delay?: number;
   changesSubscription?: Subscription;
   query: string;
-  inputClass: string;
-  column: Column;
+  inputClass:  InputSignal<string>;
+  column: InputSignal<Column>;
   filter: EventEmitter<string> | OutputEmitterRef<any>;
 }

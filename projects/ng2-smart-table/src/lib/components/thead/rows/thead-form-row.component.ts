@@ -1,14 +1,14 @@
 import {
   Component,
+  computed,
   EventEmitter,
+  input,
   Input,
-  OnChanges,
   output,
   OutputEmitterRef
 } from "@angular/core";
 
 import { Cell } from "../../../lib/data-set/cell";
-import { Row } from "../../../lib/data-set/row";
 import { Grid } from "../../../lib/grid";
 import { CellComponent } from "../../cell/cell.component";
 import { ActionsComponent } from "../cells/actions.component";
@@ -16,33 +16,28 @@ import { ActionsComponent } from "../cells/actions.component";
 @Component({
   selector: "[ng2-st-thead-form-row]",
   template: `
-    @if (grid.isMultiSelectVisible()) {
+    @if (grid().isMultiSelectVisible()) {
     <td></td>
-    } @if (showActionColumnLeft) {
+    } @if (grid().actionIsOnLeft() && grid().isActionsVisible()) {
     <td class="ng2-smart-actions">
       <ng2-st-actions
-        [grid]="grid"
+        [grid]="grid()"
         (create)="onCreate($event)"
       ></ng2-st-actions>
     </td>
-    } @for (cell of getVisibleCells(grid.getNewRow().getCells()); track
-    cell.getId()) {
+    } @for (cell of getVisibleCells(); track cell.getId()) {
     <td>
       <ng2-smart-table-cell
         [cell]="cell"
-        [grid]="grid"
-        [isNew]="true"
-        [createConfirm]="createConfirm"
-        [inputClass]="addInputClass"
-        [isInEditing]="grid.getNewRow().isInEditing"
-        (edited)="onCreate($event)"
+        [inputClass]="addInputClass()"
+        [isInEditing]="grid().getNewRow().isInEditing"
       >
       </ng2-smart-table-cell>
     </td>
-    } @if (showActionColumnRight) {
+    } @if (grid().actionIsOnRight() && grid().isActionsVisible()) {
     <td class="ng2-smart-actions">
       <ng2-st-actions
-        [grid]="grid"
+        [grid]="grid()"
         (create)="onCreate($event)"
       ></ng2-st-actions>
     </td>
@@ -51,32 +46,27 @@ import { ActionsComponent } from "../cells/actions.component";
   standalone: true,
   imports: [ActionsComponent, CellComponent],
 })
-export class TheadFormRowComponent implements OnChanges {
-  @Input() grid!: Grid;
-  @Input() row!: Row;
+export class TheadFormRowComponent {
+  readonly grid = input.required<Grid>();
   @Input() createConfirm!: EventEmitter<any> | OutputEmitterRef<any>;
 
   readonly create = output<any>();
-
-  isMultiSelectVisible: boolean = false;
-  showActionColumnLeft: boolean = false;
-  showActionColumnRight: boolean = false;
-  addInputClass = "";
+  addInputClass = computed<string>(() => {
+    const addOptions = this.grid().settings()?.add;
+    if (!addOptions) {
+      return "";
+    }
+    return addOptions.inputClass || "";
+  });
 
   onCreate(event: any) {
     event.stopPropagation();
-
-    this.grid.create(this.grid.getNewRow(), this.createConfirm);
+    this.grid().create(this.grid().getNewRow(), this.createConfirm);
   }
 
-  ngOnChanges() {
-    this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
-    this.showActionColumnLeft = this.grid.showActionColumn("left");
-    this.showActionColumnRight = this.grid.showActionColumn("right");
-    this.addInputClass = this.grid.getSetting("add.inputClass", "");
-  }
-
-  getVisibleCells(cells: Array<Cell>): Array<Cell> {
-    return (cells || []).filter((cell: Cell) => !cell.getColumn().hide);
+  getVisibleCells(): Cell[] {
+    return (this.grid().getNewRow().getCells() || []).filter(
+      (cell: Cell) => !cell.getColumn().hide
+    );
   }
 }

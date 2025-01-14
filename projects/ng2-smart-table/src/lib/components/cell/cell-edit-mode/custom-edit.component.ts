@@ -1,5 +1,6 @@
 import {
   Component,
+  ComponentRef,
   OnChanges,
   OnDestroy,
   SimpleChanges,
@@ -7,53 +8,43 @@ import {
   ViewContainerRef,
 } from "@angular/core";
 
+
 import { SmartTableEditorAndFilter } from "../../../lib/interfaces/smart-table.models";
-import { EditCellDefault } from "./edit-cell-default";
+import { DefaultEditor } from "../cell-editors/default-editor";
+import { EditCellDefaultComponent } from "./edit-cell-default";
 
 @Component({
   selector: "table-cell-custom-editor",
   template: ` <ng-template #dynamicTarget></ng-template> `,
   standalone: true,
 })
-export class CustomEditComponent
-  extends EditCellDefault
-  implements OnChanges, OnDestroy
-{
-  customComponent: any;
+export class CustomEditComponent extends EditCellDefaultComponent implements OnChanges, OnDestroy {
   @ViewChild("dynamicTarget", { read: ViewContainerRef, static: true })
-  dynamicTarget: any;
+  dynamicTarget?: ViewContainerRef;
+
+  private customComponent?: ComponentRef<DefaultEditor>;
 
   ngOnChanges(changes: SimpleChanges) {
     const editor: SmartTableEditorAndFilter | false =
-      this.cell.getColumn().editor;
+      this.cell().getColumn().editor;
     if (this.customComponent) {
-      if (this.customComponent.instance?.ngOnChanges){
-        this.customComponent.instance.ngOnChanges(changes);
+      if (this.customComponent?.instance && 'ngOnChanges' in this.customComponent.instance){
+        const onChanges = this.customComponent.instance.ngOnChanges as (changes: SimpleChanges) => void
+        onChanges(changes);
       }
       return;
     }
     if (
-      this.cell &&
+      this.cell() &&
       !this.customComponent &&
       editor &&
       editor.type == "custom"
     ) {
-      this.customComponent = this.dynamicTarget.createComponent(
+      this.customComponent = this.dynamicTarget?.createComponent(
         editor.component
-      );
-
-      // set @Inputs and @Outputs of custom component
-      this.customComponent.instance.cell = this.cell;
-      this.customComponent.instance.inputClass = this.inputClass;
-      this.customComponent.instance.onStopEditing.subscribe(() =>
-        this.onStopEditing()
-      );
-      this.customComponent.instance.onEdited.subscribe((event: any) =>
-        this.onEdited(event)
-      );
-      this.customComponent.instance.onClick.subscribe((event: any) =>
-        this.onClick(event)
-      );
+      )
+      this.customComponent?.setInput('cell', this.cell())
+      this.customComponent?.setInput('inputClass', this.inputClass())
     }
   }
 

@@ -1,24 +1,27 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, inject } from "@angular/core";
+import {
+  Component,
+  computed,
+  input
+} from "@angular/core";
 
 import { Grid } from "../../../lib/grid";
 
 @Component({
   selector: "[ng2-st-actions-title]",
-  template: ` <div class="ng2-smart-title">{{ actionsColumnTitle }}</div> `,
+  template: ` <div class="ng2-smart-title">{{ actionsColumnTitle() }}</div> `,
   standalone: true,
+  host: {
+    class: "ng2-smart-actions",
+  },
 })
-export class ActionsTitleComponent implements AfterViewInit, OnChanges {
-  private ref = inject(ElementRef);
+export class ActionsTitleComponent {
+  readonly grid = input.required<Grid>();
 
-  @Input() grid!: Grid;
-
-  actionsColumnTitle = "";
-
-  ngAfterViewInit() {
-    this.ref.nativeElement.classList.add("ng2-smart-actions");
-  }
-
-  ngOnChanges() {
-    this.actionsColumnTitle = this.grid.getSetting("actions.columnTitle");
-  }
+  actionsColumnTitle = computed(() => {
+    const actions = this.grid().settings().actions;
+    if (!actions) {
+      return "Actions";
+    }
+    return actions.columnTitle || "Actions";
+  });
 }

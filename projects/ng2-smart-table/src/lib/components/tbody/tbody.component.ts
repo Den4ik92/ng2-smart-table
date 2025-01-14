@@ -1,5 +1,13 @@
-import { Component, EventEmitter, Input, output, OutputEmitterRef } from "@angular/core";
+import {
+  Component,
+  computed,
+  EventEmitter,
+  input,
+  output,
+  OutputEmitterRef
+} from "@angular/core";
 
+import { NgTemplateOutlet } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { Cell } from "../../lib/data-set/cell";
 import { LocalDataSource } from "../../lib/data-source/local/local.data-source";
@@ -19,18 +27,19 @@ import { TbodyEditDeleteComponent } from "./cells/edit-delete.component";
     TbodyCustomComponent,
     TbodyEditDeleteComponent,
     TbodyCreateCancelComponent,
+    NgTemplateOutlet,
     CellComponent,
   ],
 })
 export class Ng2SmartTableTbodyComponent {
-  @Input() grid!: Grid;
-  @Input() source!: LocalDataSource;
-  @Input() deleteConfirm!: EventEmitter<any> | OutputEmitterRef<any>;
-  @Input() editConfirm!: EventEmitter<any> | OutputEmitterRef<any>;
-  @Input() rowClassFunction: Function = () => "";
+  readonly grid = input.required<Grid>();
+  readonly source = input.required<LocalDataSource>();
+  readonly deleteConfirm = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
+  readonly createConfirm = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
+  readonly editConfirm  = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
+  readonly rowClassFunction = input<(row: any) => string>(() => "");
 
   readonly save = output<any>();
-  readonly cancel = output<any>();
   readonly edit = output<any>();
   readonly editCancel = output<any>();
   readonly delete = output<any>();
@@ -38,36 +47,18 @@ export class Ng2SmartTableTbodyComponent {
   readonly edited = output<any>();
   readonly userSelectRow = output<any>();
   readonly userClickedRow = output<any>();
-  readonly editRowSelect = output<any>();
   readonly multipleSelectRow = output<any>();
 
-  isMultiSelectVisible = false;
-  showActionColumnLeft = false;
-  showActionColumnRight = false;
-  mode: "inline" | "external" | "click-to-edit" = "inline";
-  editInputClass = "";
-  isActionAdd = false;
-  isActionEdit = false;
-  isActionDelete = false;
-  noDataMessage = false;
-
-  get tableColumnsCount() {
-    const actionColumns =
-      this.isActionAdd || this.isActionEdit || this.isActionDelete ? 1 : 0;
-    return this.grid.getColumns().length + actionColumns;
-  }
-
-  ngOnChanges() {
-    this.isMultiSelectVisible = this.grid.isMultiSelectVisible();
-    this.showActionColumnLeft = this.grid.showActionColumn("left");
-    this.mode = this.grid.getSetting("mode", "inline");
-    this.editInputClass = this.grid.getSetting("edit.inputClass", "");
-    this.showActionColumnRight = this.grid.showActionColumn("right");
-    this.isActionAdd = this.grid.getSetting("actions.add", false);
-    this.isActionEdit = this.grid.getSetting("actions.edit", false);
-    this.isActionDelete = this.grid.getSetting("actions.delete", false);
-    this.noDataMessage = this.grid.getSetting("noDataMessage");
-  }
+  readonly editInputClass = computed<string>(() => {
+    const editOptions = this.grid().settings().edit;
+    if (!editOptions) {
+      return ''
+    }
+    return editOptions.inputClass || ''
+  })
+  readonly noDataMessage = computed<string>(() => {
+    return this.grid().settings().noDataMessage || "No data found"
+  })
 
   getVisibleCells(cells: Cell[]): Cell[] {
     return (cells || []).filter((cell: Cell) => !cell.getColumn().hide);
