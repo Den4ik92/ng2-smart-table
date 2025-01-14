@@ -14,7 +14,7 @@ import { DefaultEditor } from "../cell-editors/default-editor";
 import { EditCellDefaultComponent } from "./edit-cell-default";
 
 @Component({
-  selector: "table-cell-custom-editor",
+  selector: "ng2-table-cell-custom-editor",
   template: ` <ng-template #dynamicTarget></ng-template> `,
   standalone: true,
 })

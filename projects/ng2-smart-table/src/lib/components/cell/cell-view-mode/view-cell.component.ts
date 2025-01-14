@@ -4,12 +4,12 @@ import { Cell } from "../../../lib/data-set/cell";
 import { CustomViewComponent } from "./custom-view.component";
 
 @Component({
-  selector: "table-cell-view-mode",
+  selector: "ng2-table-cell-view-mode",
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div>
       @switch (cell().getColumn().type) { @case ('custom') {
-      <custom-view-component [cell]="cell()"></custom-view-component>
+      <ng2-custom-view-component [cell]="cell()"></ng2-custom-view-component>
       } @case ('html') {
       <div [innerHTML]="cell().getValue()"></div>
       } @default {

@@ -5,7 +5,7 @@ import { LocalFilter } from './local.filter';
 import { LocalPager } from './local.pager';
 import { LocalSorter } from './local.sorter';
 
-export class LocalDataSource<T = any> extends DataSource<T> {
+export class LocalDataSource<T extends Record<string, any> = any> extends DataSource<T> {
 
   protected data: T[] = [];
   protected filteredAndSorted: T[] = [];
@@ -247,7 +247,7 @@ export class LocalDataSource<T = any> extends DataSource<T> {
     if (this.sortConf) {
       this.sortConf.forEach((fieldConf) => {
         data = LocalSorter
-          .sort(data, fieldConf.field, fieldConf.direction, fieldConf.compare);
+          .sort<T>(data, fieldConf.field, fieldConf.direction, fieldConf.compare);
       });
     }
     return data;

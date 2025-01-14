@@ -1,4 +1,6 @@
-export function compareValues(direction: any, a: any, b: any) {
+import { SmartTableCompareFunction } from "../../interfaces/smart-table.models";
+
+export function compareValues(direction: number, a: any, b: any) {
   if (a < b) {
     return -1 * direction;
   }
@@ -9,11 +11,14 @@ export function compareValues(direction: any, a: any, b: any) {
 }
 
 export class LocalSorter {
-
-  static sort(data: Array<any>, field: string, direction: string, customCompare?: Function): Array<any> {
-
-    const dir: number = (direction === 'asc') ? 1 : -1;
-    const compare: Function = customCompare ? customCompare : compareValues;
+  static sort<T extends Record<string, any>>(
+    data: T[],
+    field: string,
+    direction: string,
+    customCompare?: SmartTableCompareFunction
+  ): T[] {
+    const dir: number = direction === "asc" ? 1 : -1;
+    const compare = customCompare ? customCompare : compareValues;
 
     return data.sort((a, b) => {
       return compare.call(null, dir, a[field], b[field]);

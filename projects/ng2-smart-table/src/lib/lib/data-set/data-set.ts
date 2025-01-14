@@ -86,10 +86,10 @@ export class DataSet {
    * @param settings
    * @private
    */
-  createColumns(settings: SmartTableColumnSettings[]) {
-    settings.forEach((columnSettings) => {
+  createColumns(columnsParams: SmartTableColumnSettings[]) {
+    columnsParams.forEach((params) => {
       this.columns.push(
-        new Column(columnSettings.key as string, columnSettings, this)
+        new Column(params.key as string, params, this)
       );
     });
   }

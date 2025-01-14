@@ -9,7 +9,7 @@ import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { DefaultFilter } from "./default-filter";
 
 @Component({
-  selector: "input-filter",
+  selector: "ng2-input-filter",
   template: `
     <input
       [class]="inputClass()"

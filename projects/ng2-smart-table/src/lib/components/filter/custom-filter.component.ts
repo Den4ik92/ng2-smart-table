@@ -12,7 +12,7 @@ import { DefaultFilter } from "ng2-smart-table";
 import { FilterDefault } from "./filter-default";
 
 @Component({
-  selector: "custom-table-filter",
+  selector: "ng2-custom-table-filter",
   template: `<ng-template #dynamicTarget></ng-template>`,
   standalone: true,
 })

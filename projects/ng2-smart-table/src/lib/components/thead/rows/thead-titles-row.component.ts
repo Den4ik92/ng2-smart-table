@@ -14,7 +14,6 @@ import { ColumnTitleComponent } from "../cells/column-title.component";
     <th
       ng2-st-checkbox-select-all
       [grid]="grid()"
-      [source]="source()"
       (click)="selectAllRows.emit($event)"
     ></th>
     } @if (grid().actionIsOnLeft() && grid().isActionsVisible()) {

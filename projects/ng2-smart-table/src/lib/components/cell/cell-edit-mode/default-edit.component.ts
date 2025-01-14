@@ -8,7 +8,7 @@ import { TextareaEditorComponent } from "../cell-editors/textarea-editor.compone
 import { EditCellDefaultComponent } from "./edit-cell-default";
 
 @Component({
-  selector: "table-cell-default-editor",
+  selector: "ng2-table-cell-default-editor",
   templateUrl: "./default-edit.component.html",
   imports: [
     SelectEditorComponent,

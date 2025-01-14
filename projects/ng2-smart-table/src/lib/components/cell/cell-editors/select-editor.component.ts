@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { DefaultEditor } from "./default-editor";
 
 @Component({
-  selector: "select-editor",
+  selector: "ng2-select-editor",
   template: `
     <select
       [class]="inputClass()"

@@ -6,21 +6,18 @@ import { CustomEditComponent } from "./custom-edit.component";
 import { DefaultEditComponent } from "./default-edit.component";
 
 @Component({
-  selector: "table-cell-edit-mode",
+  selector: "ng2-table-cell-edit-mode",
   template: `
     <div>
       @switch (getEditorType()) { @case ('custom') {
-      <table-cell-custom-editor
-        [cell]="cell()"
-        [inputClass]="inputClass()"
-      >
-      </table-cell-custom-editor>
+      <ng2-table-cell-custom-editor [cell]="cell()" [inputClass]="inputClass()">
+      </ng2-table-cell-custom-editor>
       } @default {
-      <table-cell-default-editor
+      <ng2-table-cell-default-editor
         [cell]="cell()"
         [inputClass]="inputClass()"
       >
-      </table-cell-default-editor>
+      </ng2-table-cell-default-editor>
       } }
     </div>
   `,

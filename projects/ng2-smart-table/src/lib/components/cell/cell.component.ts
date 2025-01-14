@@ -8,13 +8,13 @@ import { ViewCellComponent } from "./cell-view-mode/view-cell.component";
   selector: "ng2-smart-table-cell",
   template: `
     @if (!isInEditing()) {
-    <table-cell-view-mode [cell]="cell()"></table-cell-view-mode>
+    <ng2-table-cell-view-mode [cell]="cell()"></ng2-table-cell-view-mode>
     } @else {
-    <table-cell-edit-mode
+    <ng2-table-cell-edit-mode
       [cell]="cell()"
       [inputClass]="inputClass()"
     >
-    </table-cell-edit-mode>
+    </ng2-table-cell-edit-mode>
     }
   `,
   standalone: true,

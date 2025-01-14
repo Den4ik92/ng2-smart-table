@@ -3,7 +3,7 @@ import { Component, input, Input, output } from '@angular/core';
 import { Column } from '../../lib/data-set/column';
 import { LocalDataSource } from '../../lib/data-source/local/local.data-source';
 
-@Component({ template: '' })
+@Component({ template: '', selector: 'ng2-filter-default-component' })
 export class FilterDefault {
   readonly column = input.required<Column>();
   readonly source = input.required<LocalDataSource>();

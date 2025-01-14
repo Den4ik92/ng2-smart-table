@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { DefaultEditor } from "./default-editor";
 
 @Component({
-  selector: "textarea-editor",
+  selector: "ng2-textarea-editor",
   styleUrls: ["./editor.component.scss"],
   template: `
     <textarea

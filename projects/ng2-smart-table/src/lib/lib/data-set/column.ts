@@ -1,39 +1,39 @@
-import { SmartTableEditorAndFilter } from '../interfaces/smart-table.models';
+import { SmartTableCompareFunction, SmartTableEditorAndFilter, SmartTableFilterFunction, SmartTableValuePrepareFunction } from '../interfaces/smart-table.models';
 import { SmartTableColumnSettings, SmartTableColumnSettingsTypes, SmartTableSortDirection } from './../interfaces/smart-table.models';
 import { DataSet } from './data-set';
 
 export class Column {
-  title: string = '';
+  title = '';
   type: SmartTableColumnSettingsTypes = 'text';
-  class: string = '';
-  width: string = '';
-  hide: boolean = false;
-  isSortable: boolean = false;
-  isEditable: boolean = true;
-  isAddable: boolean = true;
-  isFilterable: boolean = false;
+  class = '';
+  width = '';
+  hide = false;
+  isSortable = false;
+  isEditable = true;
+  isAddable = true;
+  isFilterable = false;
   sortDirection: SmartTableSortDirection = 'asc';
   defaultSortDirection: SmartTableSortDirection | false = false;
   editor: SmartTableEditorAndFilter | false = false;
   filter: SmartTableEditorAndFilter | false = false;
   renderComponent: any;
-  compareFunction: Function | undefined;
-  valuePrepareFunction: Function | undefined;
-  filterFunction: Function | undefined;
+  compareFunction?: SmartTableCompareFunction;
+  valuePrepareFunction?: SmartTableValuePrepareFunction;
+  filterFunction?: SmartTableFilterFunction;
 
   constructor(public id: string, private settings: SmartTableColumnSettings, protected dataSet: DataSet) {
     this.process(this.settings);
   }
 
-  getCompareFunction(): Function | undefined {
+  getCompareFunction(): SmartTableCompareFunction | undefined {
     return this.compareFunction;
   }
 
-  getValuePrepareFunction(): Function | undefined  {
+  getValuePrepareFunction(): SmartTableValuePrepareFunction | undefined  {
     return this.valuePrepareFunction;
   }
 
-  getFilterFunction(): Function | undefined  {
+  getFilterFunction(): SmartTableFilterFunction | undefined  {
     return this.filterFunction;
   }
 
@@ -44,7 +44,7 @@ export class Column {
     return false
   }
 
-  getFilterType(): any {
+  getFilterType() {
     return this.filter && this.filter.type;
   }
 

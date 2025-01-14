@@ -1,3 +1,4 @@
+import { Cell } from "../data-set/cell";
 import { LocalDataSource } from "../data-source/local/local.data-source";
 import { Deferred } from "../helpers";
 
@@ -83,6 +84,10 @@ export type SmartTableColumnSettingsTypes = 'text' | 'html' | 'custom'
 
 export type SmartTableColumnSettings<T extends Record<string, any> = any> = SmartTableTextHtmlColumn<T> | SmartTableCustomColumn<T>;
 
+export type SmartTableCompareFunction = (direction: number, a: any, b: any) => number;
+export type SmartTableValuePrepareFunction<T extends Record<string, any> = any> = (columnData: any, rowData: T, cell: Cell) => any;
+export type SmartTableFilterFunction = (columnData: any, search: string) => boolean;
+
 interface SmartTableDefaultColumn<T extends Record<string, any>> {
 	key: keyof T;
 	title: string;
@@ -97,9 +102,9 @@ interface SmartTableDefaultColumn<T extends Record<string, any>> {
 	sortDirection?: SmartTableSortDirection | false;
 	editor?: SmartTableEditorAndFilter;
 	filter?: SmartTableEditorAndFilter | false;
-	compareFunction?: (itemA: T, itemB: T) => number;
-	valuePrepareFunction?: (columnData: any, rowData: T) => any;
-	filterFunction?: (columnData: any, search: string) => boolean;
+	compareFunction?: SmartTableCompareFunction;
+	valuePrepareFunction?: SmartTableValuePrepareFunction<T>;
+	filterFunction?: SmartTableFilterFunction;
 }
 
 interface SmartTableTextHtmlColumn<T extends Record<string, any>> extends SmartTableDefaultColumn<T> {
@@ -170,7 +175,7 @@ export type SmartTableSortDirection = 'asc' | 'desc';
 export interface SmartTableSortItem {
 	field: string;
 	direction: SmartTableSortDirection;
-	compare?: any;
+	compare?: SmartTableCompareFunction
 }
 
 interface SmartTableDefaultEvent<T> {

@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { Column } from '../../../lib/data-set/column';
 
-@Component({ template: '' })
+@Component({ template: '', selector: 'ng2-default-base-filter-component' })
 export class DefaultFilter implements Filter, OnDestroy {
   delay = 300;
   changesSubscription?: Subscription;

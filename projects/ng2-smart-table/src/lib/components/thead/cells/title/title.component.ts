@@ -1,8 +1,9 @@
 import {
   Component,
-  Input,
   OnChanges,
+  OnDestroy,
   SimpleChanges,
+  input,
   output
 } from "@angular/core";
 import { Subscription } from "rxjs";
@@ -14,25 +15,27 @@ import { SmartTableSortDirection } from "./../../../../lib/interfaces/smart-tabl
   selector: "ng2-smart-table-title",
   styleUrls: ["./title.component.scss"],
   template: `
-    @if (column.isSortable) {
+    @if (column().isSortable) {
     <a
       href="#"
       (click)="_sort($event)"
       class="ng2-smart-sort-link sort"
       [class]="currentDirection"
     >
-      {{ column.title }}
+      {{ column().title }}
     </a>
     } @else {
-    <span class="ng2-smart-sort">{{ column.title }}</span>
+    <span class="ng2-smart-sort">{{ column().title }}</span>
     }
   `,
   standalone: true,
 })
-export class TitleComponent implements OnChanges {
+export class TitleComponent implements OnChanges, OnDestroy {
+
   currentDirection: SmartTableSortDirection | "" = "";
-  @Input() column!: Column;
-  @Input() source!: LocalDataSource;
+  readonly source = input.required<LocalDataSource>();
+  readonly column = input.required<Column>();
+
   readonly sort = output<any>();
 
   protected dataChangedSub: Subscription | false = false;
@@ -42,10 +45,10 @@ export class TitleComponent implements OnChanges {
       if (!changes["source"].firstChange && this.dataChangedSub) {
         this.dataChangedSub.unsubscribe();
       }
-      this.dataChangedSub = this.source.onChanged().subscribe((dataChanges) => {
-        const sortConf = this.source.getSort();
+      this.dataChangedSub = this.source().onChanged().subscribe((dataChanges) => {
+        const sortConf = this.source().getSort();
 
-        if (sortConf.length > 0 && sortConf[0]["field"] === this.column.id) {
+        if (sortConf.length > 0 && sortConf[0]["field"] === this.column().id) {
           this.currentDirection = sortConf[0]["direction"];
         } else {
           this.currentDirection = "";
@@ -54,14 +57,20 @@ export class TitleComponent implements OnChanges {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.dataChangedSub) {
+      this.dataChangedSub?.unsubscribe();
+    }
+  }
+
   _sort(event: any) {
     event.preventDefault();
     this.changeSortDirection();
-    this.source.setSort([
+    this.source().setSort([
       {
-        field: this.column.id,
+        field: this.column().id,
         direction: this.currentDirection === "desc" ? "desc" : "asc",
-        compare: this.column.getCompareFunction(),
+        compare: this.column().getCompareFunction(),
       },
     ]);
     this.sort.emit(null);
@@ -72,7 +81,7 @@ export class TitleComponent implements OnChanges {
       const newDirection = this.currentDirection === "asc" ? "desc" : "asc";
       this.currentDirection = newDirection;
     } else {
-      this.currentDirection = this.column.sortDirection;
+      this.currentDirection = this.column().sortDirection;
     }
     return this.currentDirection;
   }

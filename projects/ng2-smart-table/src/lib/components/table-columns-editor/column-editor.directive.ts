@@ -15,7 +15,7 @@ import { takeUntil } from "rxjs/operators";
 import { TableColumnsEditorComponent } from "./table-columns-editor.component";
 
 @Directive({
-  selector: "[smartTableColumnEditor]",
+  selector: "[ng2SmartTableColumnEditor]",
   host: {
     "(click)": "buttclicked()",
   },

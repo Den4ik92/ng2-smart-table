@@ -6,32 +6,32 @@ import { InputFilterComponent } from "./filter-types/input-filter.component";
 import { SelectFilterComponent } from "./filter-types/select-filter.component";
 
 @Component({
-  selector: "default-table-filter",
+  selector: "ng2-default-table-filter",
   template: `
     @switch (column().getFilterType()) { @case ('list') {
-    <select-filter
+    <ng2-select-filter
       [query]="query"
       [class]="inputClass()"
       [column]="column()"
       (filter)="onFilter($event)"
     >
-    </select-filter>
+    </ng2-select-filter>
     } @case ('checkbox') {
-    <checkbox-filter
+    <ng2-checkbox-filter
       [query]="query"
       [class]="inputClass()"
       [column]="column()"
       (filter)="onFilter($event)"
     >
-    </checkbox-filter>
+    </ng2-checkbox-filter>
     } @default {
-    <input-filter
+    <ng2-input-filter
       [query]="query"
       [class]="inputClass()"
       [column]="column()"
       (filter)="onFilter($event)"
     >
-    </input-filter>
+    </ng2-input-filter>
     } }
   `,
   standalone: true,

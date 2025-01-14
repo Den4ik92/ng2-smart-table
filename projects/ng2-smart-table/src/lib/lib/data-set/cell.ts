@@ -2,12 +2,9 @@ import { Column } from './column';
 import { DataSet } from './data-set';
 import { Row } from './row';
 
-export function prepareValue (value: any) { return value }
-
 export class Cell {
-
+  private prepareValue = (value: any) => value
   newValue: any = '';
-  protected static PREPARE = prepareValue;
 
   constructor(protected value: any, protected row: Row, protected column: Column, protected dataSet: DataSet) {
     this.newValue = value;
@@ -26,8 +23,12 @@ export class Cell {
   }
 
   getValue(): any {
-    const prepare = this.column.getValuePrepareFunction() || Cell.PREPARE;
+    const prepare = this.column.getValuePrepareFunction() || this.prepareValue;
     return prepare.call(null, this.value, this.row.getData(), this);
+  }
+
+  getNotPrepareValue(): any {
+    return this.value
   }
 
   setValue(value: any): any {

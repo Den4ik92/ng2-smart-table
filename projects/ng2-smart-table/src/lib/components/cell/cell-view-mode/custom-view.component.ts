@@ -4,7 +4,7 @@ import { NgComponentOutlet } from "@angular/common";
 import { Cell } from "../../../lib/data-set/cell";
 
 @Component({
-  selector: "custom-view-component",
+  selector: "ng2-custom-view-component",
   template: `<ng-template
     *ngComponentOutlet="
       cell().getColumn().renderComponent;

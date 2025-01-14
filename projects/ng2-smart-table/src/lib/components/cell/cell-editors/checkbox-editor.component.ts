@@ -3,7 +3,7 @@ import { Component, computed } from "@angular/core";
 import { DefaultEditor } from "./default-editor";
 
 @Component({
-  selector: "checkbox-editor",
+  selector: "ng2-checkbox-editor",
   styleUrls: ["./editor.component.scss"],
   template: `
     <input

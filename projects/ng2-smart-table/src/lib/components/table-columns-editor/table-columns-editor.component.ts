@@ -11,7 +11,7 @@ import { Grid } from "../../lib/grid";
 import { cloneArrayOfObject } from "../../lib/helpers";
 
 @Component({
-  selector: "ngx-table-columns-editor",
+  selector: "ng2-table-columns-editor",
   templateUrl: "./table-columns-editor.component.html",
   styleUrls: ["./table-columns-editor.component.scss"],
   imports: [CdkDropList, CdkDrag, CdkDragPlaceholder],

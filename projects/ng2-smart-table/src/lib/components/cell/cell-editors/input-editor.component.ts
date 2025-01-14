@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { DefaultEditor } from "./default-editor";
 
 @Component({
-  selector: "input-editor",
+  selector: "ng2-input-editor",
   styleUrls: ["./editor.component.scss"],
   template: `
     <input

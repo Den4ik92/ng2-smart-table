@@ -12,22 +12,22 @@ import { FilterDefault } from './filter-default';
         <div class="ng2-smart-filter">
           @switch (column().getFilterType()) {
             @case ('custom') {
-              <custom-table-filter
+              <ng2-custom-table-filter
                 [query]="query"
                 [column]="column()"
                 [source]="source()"
                 [inputClass]="inputClass()"
                 (filter)="onFilter($event)">
-              </custom-table-filter>
+              </ng2-custom-table-filter>
             }
             @default {
-              <default-table-filter
+              <ng2-default-table-filter
                 [query]="query"
                 [column]="column()"
                 [source]="source()"
                 [inputClass]="inputClass()"
                 (filter)="onFilter($event)">
-              </default-table-filter>
+              </ng2-default-table-filter>
             }
           }
         </div>

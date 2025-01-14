@@ -1,4 +1,4 @@
-import { Component, Input, output } from "@angular/core";
+import { Component, input, output } from "@angular/core";
 
 import { Column } from "../../../lib/data-set/column";
 import { LocalDataSource } from "../../../lib/data-source/local/local.data-source";
@@ -9,8 +9,8 @@ import { TitleComponent } from "./title/title.component";
   template: `
     <div class="ng2-smart-title">
       <ng2-smart-table-title
-        [source]="source"
-        [column]="column"
+        [source]="source()"
+        [column]="column()"
         (sort)="sort.emit($event)"
       ></ng2-smart-table-title>
     </div>
@@ -19,8 +19,8 @@ import { TitleComponent } from "./title/title.component";
   imports: [TitleComponent],
 })
 export class ColumnTitleComponent {
-  @Input() column!: Column;
-  @Input() source!: LocalDataSource;
+  readonly source = input.required<LocalDataSource>();
+  readonly column = input.required<Column>();
 
   readonly sort = output<any>();
 }

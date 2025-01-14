@@ -9,7 +9,7 @@ import { debounceTime } from "rxjs/operators";
 import { DefaultFilter } from "./default-filter";
 
 @Component({
-  selector: "checkbox-filter",
+  selector: "ng2-checkbox-filter",
   template: `
     <input
       type="checkbox"
