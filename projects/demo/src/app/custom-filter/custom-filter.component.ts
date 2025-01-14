@@ -9,5 +9,6 @@ import { DefaultFilter } from 'ng2-smart-table';
   standalone: true,
   imports: [FormsModule]
 })
-export class CustomFilterComponent extends DefaultFilter {
+export class CustomFilterComponent extends DefaultFilter  {
+
 }
