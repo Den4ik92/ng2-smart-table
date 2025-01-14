@@ -12,7 +12,12 @@ import { AddButtonComponent } from "../cells/add-button.component";
     @if (grid().isMultiSelectVisible()) {
     <th></th>
     } @if (grid().actionIsOnLeft() && grid().isActionsVisible()) {
-    <th ng2-st-add-button [grid]="grid()" (create)="create.emit($event)"></th>
+    <th
+      ng2-st-add-button
+      [source]="source()"
+      [grid]="grid()"
+      (create)="create.emit($event)"
+    ></th>
     } @for (column of getVisibleColumns(); track column.id) {
     <th class="ng2-smart-th {{ column.id }}">
       <ng2-smart-table-filter
@@ -27,6 +32,7 @@ import { AddButtonComponent } from "../cells/add-button.component";
     <th
       ng2-st-add-button
       [grid]="grid()"
+      [source]="source()"
       (create)="create.emit($event)"
     ></th>
     }

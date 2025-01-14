@@ -7,7 +7,7 @@ import {
   inject,
   input,
   output,
-  OutputEmitterRef
+  OutputEmitterRef,
 } from "@angular/core";
 
 import { Row } from "../../../lib/data-set/row";
@@ -103,31 +103,42 @@ import { Grid } from "../../../lib/grid";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TbodyEditDeleteComponent {
-  private readonly cdr = inject(ChangeDetectorRef)
+  private readonly cdr = inject(ChangeDetectorRef);
   readonly grid = input.required<Grid>();
   readonly row = input.required<Row>();
   readonly source = input.required<LocalDataSource>();
-  readonly deleteConfirm = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
+  readonly deleteConfirm = input.required<
+    EventEmitter<any> | OutputEmitterRef<any>
+  >();
 
   readonly edit = output<any>();
   readonly delete = output<any>();
 
   isActionEdit = false;
   isActionDelete = false;
+  isExternalMode = false;
   editRowButtonContent = "Edit";
   deleteRowButtonContent = "Delete";
 
   constructor() {
     effect(() => {
-      const settings = this.grid().settings()
-      const actions = settings.actions
-      if (!actions) return
-      this.isActionDelete = !!actions.delete
-      this.isActionEdit = !!actions.edit
-      this.editRowButtonContent = settings.edit ? settings.edit.editButtonContent || "Edit" : "Edit"
-      this.deleteRowButtonContent = settings.delete ? settings.delete.deleteButtonContent || "Delete" : "Delete"
+      const settings = this.grid().settings();
+      const actions = settings.actions;
+      if (actions) {
+        this.isActionDelete = !!actions.delete;
+        this.isActionEdit = !!actions.edit;
+      }
+      this.isExternalMode = settings.mode === 'external';
+      this.editRowButtonContent = settings.edit
+        ? settings.edit.editButtonContent || "Edit"
+        : "Edit";
+      this.deleteRowButtonContent = settings.delete
+        ? settings.delete.deleteButtonContent || "Delete"
+        : "Delete";
       this.cdr.detectChanges();
-    })
+
+
+    });
   }
 
   onEdit(event: any) {
@@ -137,12 +148,21 @@ export class TbodyEditDeleteComponent {
       data: this.row().getData(),
       source: this.source,
     });
-    this.grid().edit(this.row());
+    if (!this.isExternalMode) {
+      this.grid().edit(this.row());
+    }
   }
 
   onDelete(event: any) {
     event.preventDefault();
     event.stopPropagation();
-    this.grid().delete(this.row(), this.deleteConfirm());
+    if (this.isExternalMode) {
+      this.delete.emit({
+        data: this.row().getData(),
+        source: this.source(),
+      });
+    } else {
+      this.grid().delete(this.row(), this.deleteConfirm());
+    }
   }
 }

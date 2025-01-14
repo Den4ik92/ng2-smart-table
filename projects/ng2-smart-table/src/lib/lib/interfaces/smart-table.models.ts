@@ -22,6 +22,7 @@ export interface ColumnPositionState {
 
 export interface SmartTableSettings<T extends Record<string, any> = any> {
 	selectMode?: 'single' | 'multi';
+	mode?: "inline" | "external";
 	columnSortStorageKey?: string;
 	columnSort?: boolean; // if you want to add column sort need to set true;
 	hideHeader?: boolean;

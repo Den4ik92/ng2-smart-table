@@ -5,6 +5,7 @@ import {
   output
 } from "@angular/core";
 
+import { LocalDataSource } from "../../../lib/data-source/local/local.data-source";
 import { Grid } from "../../../lib/grid";
 
 @Component({
@@ -26,6 +27,7 @@ import { Grid } from "../../../lib/grid";
 })
 export class AddButtonComponent {
   readonly grid = input.required<Grid>();
+  readonly source = input.required<LocalDataSource>();
   readonly create = output<any>();
 
   readonly isActionAdd = computed(() => {
@@ -46,12 +48,13 @@ export class AddButtonComponent {
   onAdd(event: any) {
     event.preventDefault();
     event.stopPropagation();
-    // if (this.grid.getSetting("mode") === "external") {
-    //   this.create.emit({
-    //     source: this.source,
-    //   });
-    // } else {
+
+    if (this.grid().getSetting("mode") === "external") {
+      this.create.emit({
+        source: this.source(),
+      });
+    } else {
     this.grid().createFormShown = true;
-    // }
+    }
   }
 }
