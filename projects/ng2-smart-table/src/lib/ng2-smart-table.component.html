@@ -1,33 +1,31 @@
 <table [id]="tableId" [class]="tableClass">
+  <thead
+    ng2-st-thead
+    [grid]="grid"
+    [source]="source"
+    [createConfirm]="createConfirm"
+    (create)="create.emit($event)"
+    (selectAllRows)="onSelectAllRows()"
+  ></thead>
 
-  @if (!isHideHeader || !isHideSubHeader) {
-    <thead ng2-st-thead
-      [grid]="grid"
-      [source]="source"
-      [createConfirm]="createConfirm"
-      (create)="create.emit($event)"
-      (selectAllRows)="onSelectAllRows()">
-    </thead>
-  }
-
-  <tbody ng2-st-tbody [grid]="grid"
+  <tbody
+    ng2-st-tbody
+    [grid]="grid"
     [source]="source"
     [deleteConfirm]="deleteConfirm"
     [editConfirm]="editConfirm"
+    [createConfirm]="createConfirm"
     [rowClassFunction]="rowClassFunction"
     (edit)="edit.emit($event)"
     (editCancel)="editCancel.emit($event)"
     (delete)="delete.emit($event)"
     (custom)="custom.emit($event)"
     (userClickedRow)="emitUserRowClicked($event)"
-    (multipleSelectRow)="multipleSelectRow($event)">
-  </tbody>
-
+    (multipleSelectRow)="multipleSelectRow($event)"
+  ></tbody>
 </table>
 
 @if (isPagerDisplay) {
-  <ng2-smart-table-pager
-    [source]="source"
-    [perPageSelect]="perPageSelect">
-  </ng2-smart-table-pager>
+<ng2-smart-table-pager [source]="source" [perPageSelect]="perPageSelect">
+</ng2-smart-table-pager>
 }

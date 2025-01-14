@@ -6,6 +6,13 @@ interface SelectOption {
 	value: any;
 }
 
+export interface ViewCell<V=any, R=any> {
+  value: V;
+  rowData: R;
+}
+
+export type ActionPosition = 'left' | 'right'
+
 export interface ColumnPositionState {
   key: string;
   title: string;
@@ -14,15 +21,13 @@ export interface ColumnPositionState {
 }
 
 export interface SmartTableSettings<T extends Record<string, any> = any> {
-	mode?: 'inline' | 'external' | 'click-to-edit';
 	selectMode?: 'single' | 'multi';
 	columnSortStorageKey?: string;
-	withColumnSort?: boolean; // if you want to add column sort need to set true;
-	selectedRowIndex?: number; //if need deselect first item set value < 0;
-	switchPageToSelectedRowPage?: boolean;
+	columnSort?: boolean; // if you want to add column sort need to set true;
 	hideHeader?: boolean;
 	hideSubHeader?: boolean;
 	actions?: SmartTableAction | false;
+	actionsPosition?: ActionPosition;
 	filter?: {
 		inputClass: string;
 	};
@@ -66,7 +71,6 @@ export interface SmartTableAction {
 	edit?: boolean;
 	delete?: boolean;
 	custom?: SmartTableCustomAction[];
-	position?: 'left' | 'right';
 }
 
 export interface SmartTableCustomAction {

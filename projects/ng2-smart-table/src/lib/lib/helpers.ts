@@ -8,18 +8,18 @@
  *   deepExtend({}, yourObj_1, [yourObj_N]);
  */
 export const deepExtend = function(...objects: any[]): any {
-  if (arguments.length < 1 || typeof arguments[0] !== 'object') {
+  if (objects.length < 1 || typeof objects[0] !== 'object') {
     return false;
   }
 
-  if (arguments.length < 2) {
-    return arguments[0];
+  if (objects.length < 2) {
+    return objects[0];
   }
 
-  const target = arguments[0];
+  const target = objects[0];
 
   // convert arguments to array and cut off target object
-  const args = Array.prototype.slice.call(arguments, 1);
+  const args = Array.prototype.slice.call(objects, 1);
 
   let val, src;
 
@@ -90,8 +90,11 @@ export function getDeepFromObject(object = {}, name: string, defaultValue: any =
     keys.forEach((k) => {
       if (level && typeof level[k] !== 'undefined') {
         level = level[k];
+      } else  {
+        level = defaultValue
       }
     });
+    return level ?? defaultValue
   } catch {
     return defaultValue
   }
@@ -106,6 +109,9 @@ export function cloneArrayOfObject<T>(array: T[]): T[] {
   return array.map((obj) => Object.assign({}, obj));
 }
 
+export function getRandomId(prefix = '', suffix = ''): string {
+  return `${prefix ? `${prefix}-` : ''}${Math.random().toString(16).slice(2)}${suffix ? `-${suffix}` : ''}`;
+}
 
 export function setLocalStorage(key: string, value: string | object | boolean): void {
   localStorage.setItem(key, JSON.stringify(value));

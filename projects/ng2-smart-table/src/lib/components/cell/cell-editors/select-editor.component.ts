@@ -7,19 +7,16 @@ import { DefaultEditor } from "./default-editor";
   selector: "select-editor",
   template: `
     <select
-      [class]="inputClass"
+      [class]="inputClass()"
       class="form-control"
-      [(ngModel)]="cell.newValue"
-      [name]="cell.getId()"
-      [disabled]="!cell.isEditable()"
-      (click)="onClick.emit($event)"
-      (keydown.enter)="onEdited.emit($event)"
-      (keydown.esc)="onStopEditing.emit('')"
+      [(ngModel)]="cell().newValue"
+      [name]="cell().getId()"
+      [disabled]="!cell().isEditable()"
     >
-      @for (option of cell.getColumn().getConfig()?.list; track option.value) {
+      @for (option of cell().getColumn().getConfig()?.list; track option.value) {
       <option
         [value]="option.value"
-        [selected]="option.value === cell.getValue()"
+        [selected]="option.value === cell().getValue()"
       >
         {{ option.title }}
       </option>

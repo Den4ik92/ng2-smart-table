@@ -1,37 +1,27 @@
-<div>
+<div role="none" (click)="$event.stopPropagation()">
   @switch (getEditorType()) {
     @case ('list') {
       <select-editor
-        [cell]="cell"
-        [inputClass]="inputClass"
-        (onClick)="onClick($event)"
-        (onEdited)="onEdited($event)"
-        (onStopEditing)="onStopEditing()">
+        [cell]="cell()"
+        [inputClass]="inputClass()">
       </select-editor>
     }
     @case ('textarea') {
       <textarea-editor
-        [cell]="cell"
-        [inputClass]="inputClass"
-        (onClick)="onClick($event)"
-        (onEdited)="onEdited($event)"
-        (onStopEditing)="onStopEditing()">
+        [cell]="cell()"
+        [inputClass]="inputClass()">
       </textarea-editor>
     }
     @case ('checkbox') {
       <checkbox-editor
-        [cell]="cell"
-        [inputClass]="inputClass"
-        (onClick)="onClick($event)">
+        [cell]="cell()"
+        [inputClass]="inputClass()">
       </checkbox-editor>
     }
     @default {
       <input-editor
-        [cell]="cell"
-        [inputClass]="inputClass"
-        (onClick)="onClick($event)"
-        (onEdited)="onEdited($event)"
-        (onStopEditing)="onStopEditing()">
+        [cell]="cell()"
+        [inputClass]="inputClass()">
     </input-editor>
   }
 }

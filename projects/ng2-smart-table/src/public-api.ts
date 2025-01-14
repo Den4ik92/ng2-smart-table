@@ -2,7 +2,6 @@ export {
   DefaultEditor,
   Editor
 } from "./lib/components/cell/cell-editors/default-editor";
-export { ViewCell } from "./lib/components/cell/cell-view-mode/view-cell";
 export {
   DefaultFilter,
   Filter

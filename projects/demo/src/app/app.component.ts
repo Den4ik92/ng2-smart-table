@@ -4,6 +4,7 @@ import { Ng2SmartTableComponent } from "../../../ng2-smart-table/src/lib/ng2-sma
 import { LocalDataSource } from "./../../../ng2-smart-table/src/lib/lib/data-source/local/local.data-source";
 import {
   SmartTableConfirmDeleteEvent,
+  SmartTableConfirmEditEvent,
   SmartTableSettings,
 } from "./../../../ng2-smart-table/src/lib/lib/interfaces/smart-table.models";
 import { CustomEditorComponent } from "./custom-editor/custom-editor.component";
@@ -19,11 +20,11 @@ export class AppComponent {
   settings: SmartTableSettings = {
     columnSortStorageKey: 'test1',
     pager: false,
-    withColumnSort: true,
+    columnSort: true,
     selectMode: "multi",
     actions: {
       add: true,
-      delete: true,
+      delete: false,
       edit: true,
     },
     delete: {
@@ -50,7 +51,6 @@ export class AppComponent {
           component: CustomEditorComponent,
         },
       },
-
       {
         key: "name",
         title: "Full Name",
@@ -157,7 +157,7 @@ export class AppComponent {
   source = new LocalDataSource(this.getGeneratedData(200));
 
   columnsSorted(event: any) {
-    console.log(event);
+    console.log('columnsSorted',event);
   }
 
   setNewState(table: Ng2SmartTableComponent) {
@@ -191,6 +191,32 @@ export class AppComponent {
     setTimeout(() => {
       event.confirm.resolve();
     }, 1000);
+  }
+  editConfirm(event: SmartTableConfirmEditEvent): void {
+    setTimeout(() => {
+      console.log(event);
+
+      event.confirm.resolve(event.newData);
+    }, 500);
+  }
+
+  disableMulti(table: Ng2SmartTableComponent): void {
+    const settings = table.grid.settings();
+    settings.selectMode = 'single'
+    table.grid.setSettings(settings);
+  }
+
+  enableDelete(table: Ng2SmartTableComponent): void {
+
+    this.settings.actions =  {...this.settings.actions, delete: true,}
+
+    table.grid.setSettings(this.settings);
+  }
+  updateEditButtons(table: Ng2SmartTableComponent): void {
+
+    this.settings.edit =  {saveButtonContent: 'NewSave',}
+    this.settings = Object.assign({}, this.settings)
+    // table.grid.setSettings(this.settings);
   }
 
   randomInteger(min: number, max: number) {

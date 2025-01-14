@@ -4,13 +4,13 @@ import { DataSet } from './data-set';
 
 export class Row {
 
-  pending: boolean = false;
-  isSelected: boolean = false;
-  isInEditing: boolean = false;
+  pending = false;
+  isSelected = false;
+  isInEditing = false;
   cells: Cell[] = [];
 
 
-  constructor(public index: number, protected data: any, protected _dataSet: DataSet) {
+  constructor(public index: number, private data: any, protected _dataSet: DataSet) {
     this.process();
   }
 

@@ -1,9 +1,9 @@
-import { LocalSorter } from './local.sorter';
-import { LocalFilter } from './local.filter';
-import { LocalPager } from './local.pager';
-import { DataSource } from '../data-source';
 import { deepExtend } from '../../helpers';
 import { SmartTableFilterConf, SmartTableFilterItem, SmartTablePagingItem, SmartTableSortItem } from '../../interfaces/smart-table.models';
+import { DataSource } from '../data-source';
+import { LocalFilter } from './local.filter';
+import { LocalPager } from './local.pager';
+import { LocalSorter } from './local.sorter';
 
 export class LocalDataSource<T = any> extends DataSource<T> {
 
@@ -59,7 +59,7 @@ export class LocalDataSource<T = any> extends DataSource<T> {
   update(element: T, values: T): Promise<true> {
     return new Promise((resolve, reject) => {
       this.find(element).then((found) => {
-        found = deepExtend(found, values);
+        found = deepExtend(found as any, values);
         super.updateEmit(found).then(resolve).catch(reject);
       }).catch(reject);
     });
@@ -79,7 +79,7 @@ export class LocalDataSource<T = any> extends DataSource<T> {
   }
 
   getFilteredAndSorted(): Promise<T[]> {
-    let data = this.data.slice(0);
+    const data = this.data.slice(0);
     this.prepareData(data);
     return Promise.resolve(this.filteredAndSorted);
   }
@@ -174,7 +174,7 @@ export class LocalDataSource<T = any> extends DataSource<T> {
     return this;
   }
 
-  addFilter(fieldConf: SmartTableFilterItem, andOperator = true, doEmit: boolean = true): LocalDataSource {
+  addFilter(fieldConf: SmartTableFilterItem, andOperator = true, doEmit = true): LocalDataSource {
     if (!fieldConf.field || typeof fieldConf.search === 'undefined') {
       throw new Error('Filter configuration object is not valid');
     }
@@ -196,7 +196,7 @@ export class LocalDataSource<T = any> extends DataSource<T> {
     return this;
   }
 
-  setPaging(page: number = 1, perPage: number, doEmit: boolean = true): void {
+  setPaging(page = 1, perPage: number, doEmit = true): void {
     if (this.pagingConf) {
       this.pagingConf.page = page;
       this.pagingConf.perPage = perPage;
@@ -211,7 +211,7 @@ export class LocalDataSource<T = any> extends DataSource<T> {
     return;
   }
 
-  setPage(page: number, doEmit: boolean = true): void {
+  setPage(page: number, doEmit = true): void {
     if (!this.pagingConf) {
       return;
     }

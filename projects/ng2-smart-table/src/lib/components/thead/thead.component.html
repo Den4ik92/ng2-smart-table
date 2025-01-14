@@ -1,26 +1,26 @@
-@if (!isHideHeader) {
+@if (!isHideHeader()) {
   <tr ng2-st-thead-titles-row
     class="ng2-smart-titles"
-    [grid]="grid"
-    [source]="source"
+    [grid]="grid()"
+    [source]="source()"
     (sort)="sort.emit($event)"
     (selectAllRows)="selectAllRows.emit($event)">
   </tr>
 }
 
-@if (!isHideSubHeader) {
+@if (!isHideSubHeader()) {
   <tr ng2-st-thead-filters-row
     class="ng2-smart-filters"
-    [grid]="grid"
-    [source]="source"
+    [grid]="grid()"
+    [source]="source()"
     (create)="create.emit($event)"
     (filter)="filter.emit($event)">
   </tr>
 }
 
-@if (grid.createFormShown) {
+@if (grid().createFormShown) {
   <tr ng2-st-thead-form-row
-    [grid]="grid"
+    [grid]="grid()"
     [createConfirm]="createConfirm">
   </tr>
 }

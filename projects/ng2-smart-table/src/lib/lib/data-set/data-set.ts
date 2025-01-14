@@ -1,32 +1,35 @@
-import { Row } from './row';
-import { Column } from './column';
-import { SmartTableColumnSettings } from '../interfaces/smart-table.models';
+import { SmartTableColumnSettings } from "../interfaces/smart-table.models";
+import { Column } from "./column";
+import { Row } from "./row";
 
 export class DataSet {
   newRow!: Row;
 
-  protected data: Array<any> = [];
-  protected columns: Array<Column> = [];
-  protected rows: Array<Row> = [];
+  protected data: any[] = [];
+  protected columns: Column[] = [];
+  protected rows: Row[] = [];
   protected selectedRows = new Set<Row>();
 
-  constructor(data: any[] = [], protected columnSettings: SmartTableColumnSettings[]) {
+  constructor(
+    data: any[] = [],
+    protected columnSettings: SmartTableColumnSettings[]
+  ) {
     this.createColumns(columnSettings);
     this.setData(data);
 
     this.createNewRow();
   }
 
-  setData(data: Array<any>) {
+  setData(data: any[]) {
     this.data = data;
     this.createRows();
   }
 
-  getColumns(): Array<Column> {
+  getColumns(): Column[] {
     return this.columns;
   }
 
-  getRows(): Array<Row> {
+  getRows(): Row[] {
     return this.rows;
   }
 
@@ -69,8 +72,8 @@ export class DataSet {
     return row;
   }
 
-  getSelectedRowsData(): Array<any> {
-    return [...this.selectedRows]
+  getSelectedRowsData(): any[] {
+    return [...this.selectedRows];
   }
 
   createNewRow() {
@@ -85,8 +88,10 @@ export class DataSet {
    */
   createColumns(settings: SmartTableColumnSettings[]) {
     settings.forEach((columnSettings) => {
-      this.columns.push(new Column(columnSettings.key as string, columnSettings, this));
-    })
+      this.columns.push(
+        new Column(columnSettings.key as string, columnSettings, this)
+      );
+    });
   }
 
   /**
@@ -103,11 +108,11 @@ export class DataSet {
   }
 
   public get isAllSelected(): boolean {
-    return this.rows.every((row) => row.isSelected)
+    return this.rows.every((row) => row.isSelected);
   }
 
   private storeSelectedRow(row: Row): void {
-    if(row.isSelected) {
+    if (row.isSelected) {
       this.selectedRows.add(row.getData());
     } else {
       this.selectedRows.delete(row.getData());

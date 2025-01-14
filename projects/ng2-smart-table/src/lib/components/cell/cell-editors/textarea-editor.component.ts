@@ -8,15 +8,12 @@ import { DefaultEditor } from "./default-editor";
   styleUrls: ["./editor.component.scss"],
   template: `
     <textarea
-      [class]="inputClass"
+      [class]="inputClass()"
       class="form-control"
-      [(ngModel)]="cell.newValue"
-      [name]="cell.getId()"
-      [disabled]="!cell.isEditable()"
-      [placeholder]="cell.getTitle()"
-      (click)="onClick.emit($event)"
-      (keydown.enter)="onEdited.emit($event)"
-      (keydown.esc)="onStopEditing.emit('')"
+      [(ngModel)]="cell().newValue"
+      [name]="cell().getId()"
+      [disabled]="!cell().isEditable()"
+      [placeholder]="cell().getTitle()"
     >
     </textarea>
   `,

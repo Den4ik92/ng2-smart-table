@@ -10,5 +10,4 @@ import { DefaultFilter } from 'ng2-smart-table';
   imports: [FormsModule]
 })
 export class CustomFilterComponent extends DefaultFilter {
-
 }
