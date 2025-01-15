@@ -17,7 +17,7 @@ import { Grid } from "../../../lib/grid";
 @Component({
   selector: "ng2-st-tbody-edit-delete",
   template: `
-    @if (!row().pending) { @if (isActionEdit) {
+    @if (!row().pending()) { @if (isActionEdit) {
     <a
       href="#"
       [id]="'row-' + row().index + '_action-edit-button'"

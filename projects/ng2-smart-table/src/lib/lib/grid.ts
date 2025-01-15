@@ -146,11 +146,11 @@ export class Grid {
   }
 
   create(row: Row, confirmEmitter: EventEmitter<any> | OutputEmitterRef<any>) {
-    row.pending = true;
+    row.pending.set(true);
     const deferred = new Deferred();
     deferred.promise
       .then((newData) => {
-        row.pending = false;
+        row.pending.set(false);
         newData = newData || row.getNewData();
         this.source.prepend(newData).then(() => {
           this.createFormShown = false;
@@ -158,10 +158,10 @@ export class Grid {
         });
       })
       .catch((err) => {
-        row.pending = false;
+        row.pending.set(false);
       });
 
-    if (this.getSetting("add.confirmCreate")) {
+    if (this.getSetting("add.confirmCreate", false)) {
       confirmEmitter.emit({
         newData: row.getNewData(),
         source: this.source,
@@ -169,22 +169,23 @@ export class Grid {
       });
     } else {
       deferred.resolve(false);
+      row.pending.set(false);
     }
   }
 
   save(row: Row, confirmEmitter: EventEmitter<any> | OutputEmitterRef<any>) {
-    row.pending = true;
+    row.pending.set(true);
     const deferred = new Deferred();
     deferred.promise
       .then((newData) => {
-        row.pending = false;
+        row.pending.set(false);
         newData = newData || row.getNewData();
         this.source.update(row.getData(), newData).then(() => {
           row.isInEditing = false;
         });
       })
-      .catch((err) => {
-        row.pending = false;
+      .catch(() => {
+        row.pending.set(false);
       });
 
     if (this.getSetting("edit.confirmSave", false)) {
@@ -196,19 +197,20 @@ export class Grid {
       });
     } else {
       deferred.resolve(false);
+      row.pending.set(false);
     }
   }
 
   delete(row: Row, confirmEmitter: EventEmitter<any> | OutputEmitterRef<any>) {
-    row.pending = true;
+    row.pending.set(true);
     const deferred = new Deferred();
     deferred.promise
       .then(() => {
-        row.pending = false;
+        row.pending.set(false);
         this.source.remove(row.getData());
       })
-      .catch((err) => {
-        row.pending = false;
+      .catch(() => {
+        row.pending.set(false);
         // doing nothing
       });
     if (this.getSetting("delete.confirmDelete")) {
@@ -219,6 +221,7 @@ export class Grid {
       });
     } else {
       deferred.resolve(false);
+      row.pending.set(false);
     }
     if (row.isSelected) {
       this.dataSet.selectRow(row, false);

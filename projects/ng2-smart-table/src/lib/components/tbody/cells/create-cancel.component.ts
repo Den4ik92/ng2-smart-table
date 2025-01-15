@@ -13,7 +13,7 @@ import { Grid } from "../../../lib/grid";
 @Component({
   selector: "ng2-st-tbody-create-cancel",
   template: `
-    @if (!row().pending) {
+    @if (!row().pending()) {
     <a
       href="#"
       [id]="'row-' + row().index + '_editing-confirm-button'"

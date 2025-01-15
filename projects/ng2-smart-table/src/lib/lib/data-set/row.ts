@@ -1,10 +1,11 @@
+import { signal } from '@angular/core';
 import { Cell } from './cell';
 import { Column } from './column';
 import { DataSet } from './data-set';
 
 export class Row {
 
-  pending = false;
+  readonly pending = signal(false);
   isSelected = false;
   isInEditing = false;
   cells: Cell[] = [];
