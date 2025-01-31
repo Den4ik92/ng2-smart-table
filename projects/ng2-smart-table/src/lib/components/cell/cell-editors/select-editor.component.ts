@@ -13,7 +13,7 @@ import { DefaultEditor } from "./default-editor";
       [name]="cell().getId()"
       [disabled]="!cell().isEditable()"
     >
-      @for (option of cell().getColumn().getConfig()?.list; track option.value) {
+      @for (option of cell().getColumn().getConfig()?.list; track $index) {
       <option
         [value]="option.value"
         [selected]="option.value === cell().getValue()"

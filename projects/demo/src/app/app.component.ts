@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { SmartTableColumnEditorDirective } from "ng2-smart-table";
 import { Ng2SmartTableComponent } from "../../../ng2-smart-table/src/lib/ng2-smart-table.component";
 import { LocalDataSource } from "./../../../ng2-smart-table/src/lib/lib/data-source/local/local.data-source";
@@ -15,6 +15,7 @@ import { CustomFilterComponent } from "./custom-filter/custom-filter.component";
   templateUrl: "./app.component.html",
   standalone: true,
   imports: [Ng2SmartTableComponent, SmartTableColumnEditorDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   settings: SmartTableSettings = {
@@ -154,7 +155,7 @@ export class AppComponent {
     },
   ];
 
-  source = new LocalDataSource(this.getGeneratedData(200));
+  source = new LocalDataSource(this.getGeneratedData(20));
 
   columnsSorted(event: any) {
     console.log('columnsSorted',event);
@@ -197,7 +198,7 @@ export class AppComponent {
       console.log(event);
 
       event.confirm.resolve(event.newData);
-    }, 500);
+    }, 1500);
   }
 
   disableMulti(table: Ng2SmartTableComponent): void {
@@ -217,6 +218,15 @@ export class AppComponent {
     this.settings.edit =  {saveButtonContent: 'NewSave',}
     this.settings = Object.assign({}, this.settings)
     // table.grid.setSettings(this.settings);
+  }
+  addNewRow(): void {
+
+    this.source.add({id: 100, name: 'new', username: 'new', email: 'new'})
+  }
+
+  prependNewRow(): void {
+
+    this.source.prepend({id: 100, name: 'new', username: 'new', email: 'new'})
   }
 
   randomInteger(min: number, max: number) {

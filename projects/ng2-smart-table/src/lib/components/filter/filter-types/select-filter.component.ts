@@ -13,7 +13,7 @@ import { DefaultFilter } from './default-filter';
       [(ngModel)]="query">
 
       <option value="">{{ column().getFilterConfig().selectText }}</option>
-      @for (option of column().getFilterConfig().list; track option.value) {
+      @for (option of column().getFilterConfig().list; track $index) {
         <option [value]="option.value">
           {{ option.title }}
         </option>

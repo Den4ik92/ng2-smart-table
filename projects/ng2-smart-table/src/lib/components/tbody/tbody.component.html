@@ -3,7 +3,7 @@
   (click)="userClickedRow.emit(row)"
   class="ng2-smart-row"
   [class]="rowClassFunction()(row)"
-  [class.selected]="row.isSelected"
+  [class.selected]="row.isSelected()"
 >
   @if (grid().isMultiSelectVisible()) {
   <td
@@ -14,17 +14,17 @@
       type="checkbox"
       [id]="'row-' + row.index + '_select-checkbox'"
       class="form-control"
-      [ngModel]="row.isSelected"
+      [ngModel]="row.isSelected()"
     />
   </td>
   } @if (grid().actionIsOnLeft()) {
   <ng-container [ngTemplateOutlet]="actions"></ng-container>
-  } @for (cell of getVisibleCells(row.cells); track cell.getId()) {
+  } @for (cell of getVisibleCells(row.cells); track cell.getId() + $index) {
   <td [class]="cell.getColumnClass()">
     <ng2-smart-table-cell
       [cell]="cell"
       [inputClass]="editInputClass()"
-      [isInEditing]="row.isInEditing"
+      [isInEditing]="row.isInEditing()"
     >
     </ng2-smart-table-cell>
   </td>
@@ -34,7 +34,7 @@
 </tr>
 
 <ng-template #actions>
-  @if (row.isInEditing) {
+  @if (row.isInEditing()) {
   <td class="ng2-smart-actions">
     <ng2-st-tbody-create-cancel
       [grid]="grid()"
@@ -43,7 +43,7 @@
       [editCancel]="editCancel"
     ></ng2-st-tbody-create-cancel>
   </td>
-  } @if (!row.isInEditing && grid().isActionsVisible() ) {
+  } @if (!row.isInEditing() && grid().isActionsVisible() ) {
   <td class="ng2-smart-actions" (click)="$event.stopPropagation()">
     <ng2-st-tbody-custom
       [grid]="grid()"

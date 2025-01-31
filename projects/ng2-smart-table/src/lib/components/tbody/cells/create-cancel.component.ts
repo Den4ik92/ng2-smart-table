@@ -119,6 +119,6 @@ export class TbodyCreateCancelComponent {
     event.preventDefault();
     event.stopPropagation();
     this.editCancel().emit(true);
-    this.row().isInEditing = false;
+    this.row().isInEditing.set(false);
   }
 }

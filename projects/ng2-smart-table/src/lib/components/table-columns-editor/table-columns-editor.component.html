@@ -9,7 +9,7 @@
       [cdkDropListData]="currentState"
       (cdkDropListDropped)="drop($event)"
     >
-      @for (column of currentState; track column.key; let i = $index) {
+      @for (column of currentState; track column.key + i; let i = $index) {
 
       <div
         cdkDrag

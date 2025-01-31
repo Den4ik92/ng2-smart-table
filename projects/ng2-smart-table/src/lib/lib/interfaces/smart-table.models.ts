@@ -222,7 +222,7 @@ export enum SmartTableOnChangedEventName {
 	'refresh' = 'refresh',
 }
 
-export type SmartTableOnChangedEventType = 'load' | 'prepend' | 'append' | 'update' | 'empty' | 'paging' | 'page' | 'filter' | 'sort' | 'add' | 'remove' | 'refresh';
+export type SmartTableOnChangedEventType = `${SmartTableOnChangedEventName}`;
 
 export interface SmartTableOnChangedEvent<T extends Record<string, any> = any> {
 	action: SmartTableOnChangedEventType;

@@ -18,7 +18,7 @@ import { AddButtonComponent } from "../cells/add-button.component";
       [grid]="grid()"
       (create)="create.emit($event)"
     ></th>
-    } @for (column of getVisibleColumns(); track column.id) {
+    } @for (column of getVisibleColumns(); track column.id + $index) {
     <th class="ng2-smart-th {{ column.id }}">
       <ng2-smart-table-filter
         [source]="source()"

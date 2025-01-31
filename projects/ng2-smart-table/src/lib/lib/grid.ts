@@ -14,8 +14,9 @@ import {
 import {
   ColumnPositionState,
   SmartTableColumnSettings,
+  SmartTableOnChangedEvent,
   SmartTableSettings,
-  SmartTableSortItem,
+  SmartTableSortItem
 } from "./interfaces/smart-table.models";
 
 export class Grid {
@@ -50,7 +51,7 @@ export class Grid {
     return this.settings().actionsPosition === 'right';
   })
 
-  constructor(source: LocalDataSource, settings: SmartTableSettings) {
+  constructor(source: LocalDataSource | undefined, settings: SmartTableSettings) {
     this.setSettings(settings);
     this.setSource(source);
   }
@@ -79,38 +80,8 @@ export class Grid {
     }
   }
 
-  private updateSettingsAndDataSet(settings: SmartTableSettings) {
-    this.settings.set(settings);
-    this.dataSet = new DataSet(
-      [],
-      settings.columns
-    );
-
-    if (this.source) {
-      this.source.refresh();
-    }
-  }
-
   getDataSet(): DataSet {
     return this.dataSet;
-  }
-
-  setSource(source: LocalDataSource) {
-    this.source = this.prepareSource(source);
-    this.detach();
-
-    this.sourceOnChangedSubscription = this.source
-      .onChanged()
-      .subscribe((changes: any) => this.processDataChange(changes));
-
-    this.sourceOnUpdatedSubscription = this.source
-      .onUpdated()
-      .subscribe((data: any) => {
-        const changedRow = this.dataSet.findRowByData(data);
-        if (changedRow) {
-          changedRow.setData(data);
-        }
-      });
   }
 
   getSetting<T>(name: string, defaultValue?: any): T {
@@ -142,7 +113,7 @@ export class Grid {
   }
 
   edit(row: Row) {
-    row.isInEditing = true;
+    row.isInEditing.set(true);
   }
 
   create(row: Row, confirmEmitter: EventEmitter<any> | OutputEmitterRef<any>) {
@@ -181,11 +152,12 @@ export class Grid {
         row.pending.set(false);
         newData = newData || row.getNewData();
         this.source.update(row.getData(), newData).then(() => {
-          row.isInEditing = false;
+          row.isInEditing.set(false);
         });
       })
       .catch(() => {
         row.pending.set(false);
+        row.isInEditing.set(false);
       });
 
     if (this.getSetting("edit.confirmSave", false)) {
@@ -223,50 +195,35 @@ export class Grid {
       deferred.resolve(false);
       row.pending.set(false);
     }
-    if (row.isSelected) {
+    if (row.isSelected()) {
       this.dataSet.selectRow(row, false);
     }
   }
 
-  processDataChange(changes: any) {
-    if (this.shouldProcessChange(changes)) {
-      if (changes["action"] === "load") {
-        this.dataSet.deselectAll();
-      }
-      this.dataSet.setData(changes["elements"]);
+  private processDataChange({action, elements}: SmartTableOnChangedEvent) {
+    if (action === "load") {
+      this.dataSet.deselectAll();
+    }
+    if (action !== "update") {
+      this.dataSet.setData(elements);
     }
   }
 
-  shouldProcessChange(changes: any): boolean {
-    if (
-      ["filter", "sort", "page", "remove", "refresh", "load", "paging"].indexOf(
-        changes["action"]
-      ) !== -1
-    ) {
-      return true;
-    } else if (
-      ["prepend", "append"].indexOf(changes["action"]) !== -1 &&
-      !this.getSetting("pager.display")
-    ) {
-      return true;
-    }
-    return false;
-  }
-
-  prepareSource(source: LocalDataSource): LocalDataSource {
+  private prepareSource(source: LocalDataSource | undefined): LocalDataSource {
+    const preparedSource = source || new LocalDataSource();
     const initialSort: SmartTableSortItem | false = this.getInitialSort();
     if (initialSort) {
-      source.setSort([initialSort], false);
+      preparedSource.setSort([initialSort], false);
     }
-    if (this.getSetting("pager.display") === true) {
-      source.setPaging(1, this.getSetting("pager.perPage"), false);
+    if (this.getSetting("pager.display", false) === true) {
+      preparedSource.setPaging(1, this.getSetting("pager.perPage"), false);
     }
 
-    source.refresh();
-    return source;
+    preparedSource.refresh();
+    return preparedSource;
   }
 
-  getInitialSort(): SmartTableSortItem | false {
+  private getInitialSort(): SmartTableSortItem | false {
     const defaultSortColumn = this.getColumns().find(
       (column: Column) => column.isSortable && column.defaultSortDirection
     );
@@ -294,6 +251,36 @@ export class Grid {
 
   getLastRow(): Row {
     return this.dataSet.getLastRow();
+  }
+
+  private updateSettingsAndDataSet(settings: SmartTableSettings) {
+    this.settings.set(settings);
+    this.dataSet = new DataSet(
+      [],
+      settings.columns
+    );
+
+    if (this.source) {
+      this.source.refresh();
+    }
+  }
+
+  private setSource(source: LocalDataSource | undefined) {
+    this.source = this.prepareSource(source);
+    this.detach();
+
+    this.sourceOnChangedSubscription = this.source
+      .onChanged()
+      .subscribe((changes) => this.processDataChange(changes));
+
+    this.sourceOnUpdatedSubscription = this.source
+      .onUpdated()
+      .subscribe((data: any) => {
+        const changedRow = this.dataSet.findRowByData(data);
+        if (changedRow) {
+          changedRow.setData(data);
+        }
+      });
   }
 
   // ------------------------------- column sort

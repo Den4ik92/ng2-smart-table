@@ -1,9 +1,10 @@
 import {
   Component,
-  Input,
   OnChanges,
+  OnDestroy,
   SimpleChange,
-  effect,
+  computed,
+  input,
   output
 } from "@angular/core";
 
@@ -36,9 +37,9 @@ import {
     PagerComponent,
   ],
 })
-export class Ng2SmartTableComponent implements OnChanges {
-  @Input({required: true}) source!: LocalDataSource;
-  @Input({required: true}) settings!: SmartTableSettings;
+export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
+  readonly source = input.required<LocalDataSource>();
+  readonly settings = input.required<SmartTableSettings>();
 
   readonly multiRowSelect = output<SmartTableRowSelectEvent>();
   readonly rowClicked = output<SmartTableRowClickedEvent>();
@@ -52,37 +53,38 @@ export class Ng2SmartTableComponent implements OnChanges {
   readonly editConfirm = output<SmartTableConfirmEditEvent>();
   readonly createConfirm = output<SmartTableCreateConfirm>();
 
-  tableClass = "";
-  tableId = "";
-  perPageSelect: number[] = [];
-  isPagerDisplay = false;
-  rowClassFunction: (row: any) => string = () => '';
+  protected readonly tableClass = computed<string>(() => {
+    return this.settings().attr?.class || "";
+  });
+  protected readonly tableId = computed<string>(() => {
+    return this.settings().attr?.id || getRandomId();
+  });
+  protected readonly perPageSelect = computed<number[]>(() => {
+    const { pager } = this.settings();
+    return pager ? pager.perPageSelect || [] : [];
+  });
+  protected readonly isPagerDisplay = computed<boolean>(() => {
+    const { pager } = this.settings();
+    return pager ? pager.display : false;
+  });
+  protected readonly rowClassFunction = computed<(row: any) => string>(() => {
+    return this.settings().rowClassFunction || (() => "");
+  });
 
   grid!: Grid;
 
-  constructor() {
-    effect(() => {
-      const settings = this.grid.settings();
-      this.tableId = settings.attr?.id || getRandomId();
-      this.tableClass = settings.attr?.class || '';
-      this.isPagerDisplay = this.grid.getSetting("pager.display", false);
-      this.perPageSelect = this.grid.getSetting("pager.perPageSelect");
-      this.rowClassFunction = settings.rowClassFunction || (() => "");
-    })
-  }
-
-  ngOnChanges({settings, source}: Record<string, SimpleChange>) {
+  ngOnChanges({ settings }: Record<string, SimpleChange>) {
     if (this.grid) {
       if (settings) {
-        this.grid.setSettings(this.settings);
-      }
-      if (source) {
-        this.source = this.prepareSource();
-        this.grid.setSource(this.source);
+        this.grid.setSettings(this.settings());
       }
     } else {
       this.initGrid();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.grid.detach();
   }
 
   protected multipleSelectRow(row: Row): void {
@@ -102,28 +104,20 @@ export class Ng2SmartTableComponent implements OnChanges {
   protected emitUserRowClicked(row: Row): void {
     this.rowClicked.emit({
       data: row ? row.getData() : null,
-      source: this.source,
+      source: this.source(),
     });
   }
 
   private initGrid(): void {
-    this.source = this.prepareSource();
-    this.grid = new Grid(this.source, this.settings);
-    this.grid.setColumnsSortedEmitter(this.columnsSorted)
-  }
-
-  private prepareSource(): LocalDataSource {
-    if (this.source instanceof LocalDataSource) {
-      return this.source;
-    }
-    return new LocalDataSource();
+    this.grid = new Grid(this.source(), this.settings());
+    this.grid.setColumnsSortedEmitter(this.columnsSorted);
   }
 
   private emitUserSelectRow(row: Row | null): void {
     this.multiRowSelect.emit({
       data: row ? row.getData() : null,
-      isSelected: row ? row.getIsSelected() : false,
-      source: this.source,
+      isSelected: row ? row.isSelected() : false,
+      source: this.source(),
       selected: this.grid.dataSet.getSelectedRowsData(),
     });
   }

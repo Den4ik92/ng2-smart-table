@@ -102,7 +102,7 @@ import { SmartTablePagingItem } from "./../../lib/interfaces/smart-table.models"
         [(ngModel)]="currentPerPage"
         id="per-page"
       >
-        @for (item of perPageSelect; track item) {
+        @for (item of perPageSelect; track $index) {
         <option [value]="item">{{ item }}</option>
         }
       </select>

@@ -25,12 +25,12 @@ import { ActionsComponent } from "../cells/actions.component";
         (create)="onCreate($event)"
       ></ng2-st-actions>
     </td>
-    } @for (cell of getVisibleCells(); track cell.getId()) {
+    } @for (cell of getVisibleCells(); track cell.getId()+ $index) {
     <td>
       <ng2-smart-table-cell
         [cell]="cell"
         [inputClass]="addInputClass()"
-        [isInEditing]="grid().getNewRow().isInEditing"
+        [isInEditing]="grid().getNewRow().isInEditing()"
       >
       </ng2-smart-table-cell>
     </td>

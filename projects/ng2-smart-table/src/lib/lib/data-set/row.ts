@@ -6,8 +6,8 @@ import { DataSet } from './data-set';
 export class Row {
 
   readonly pending = signal(false);
-  isSelected = false;
-  isInEditing = false;
+  readonly isSelected = signal(false);
+  readonly isInEditing = signal(false);
   cells: Cell[] = [];
 
 
@@ -25,10 +25,6 @@ export class Row {
 
   getData(): any {
     return this.data;
-  }
-
-  getIsSelected(): boolean {
-    return this.isSelected;
   }
 
   getNewData(): any {

@@ -1,5 +1,4 @@
-import { Subject } from 'rxjs';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { SmartTableFilterConf, SmartTableOnChangedEvent, SmartTableOnChangedEventName, SmartTableOnChangedEventType, SmartTablePagingItem, SmartTableSortItem } from '../interfaces/smart-table.models';
 
 export abstract class DataSource<T=any> {
@@ -20,7 +19,7 @@ export abstract class DataSource<T=any> {
     this.emitOnChanged(SmartTableOnChangedEventName.refresh);
   }
 
-  loadEmit<T>(): Promise<true> {
+  loadEmit(): Promise<true> {
     this.emitOnChanged(SmartTableOnChangedEventName.load);
     return Promise.resolve(true);
   }

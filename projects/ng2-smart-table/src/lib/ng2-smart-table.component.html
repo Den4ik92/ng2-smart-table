@@ -1,8 +1,8 @@
-<table [id]="tableId" [class]="tableClass">
+<table [id]="tableId()" [class]="tableClass()">
   <thead
     ng2-st-thead
     [grid]="grid"
-    [source]="source"
+    [source]="source()"
     [createConfirm]="createConfirm"
     (create)="create.emit($event)"
     (selectAllRows)="onSelectAllRows()"
@@ -11,11 +11,11 @@
   <tbody
     ng2-st-tbody
     [grid]="grid"
-    [source]="source"
+    [source]="source()"
     [deleteConfirm]="deleteConfirm"
     [editConfirm]="editConfirm"
     [createConfirm]="createConfirm"
-    [rowClassFunction]="rowClassFunction"
+    [rowClassFunction]="rowClassFunction()"
     (edit)="edit.emit($event)"
     (editCancel)="editCancel.emit($event)"
     (delete)="delete.emit($event)"
@@ -25,7 +25,7 @@
   ></tbody>
 </table>
 
-@if (isPagerDisplay) {
-<ng2-smart-table-pager [source]="source" [perPageSelect]="perPageSelect">
+@if (isPagerDisplay()) {
+<ng2-smart-table-pager [source]="source()" [perPageSelect]="perPageSelect()">
 </ng2-smart-table-pager>
 }

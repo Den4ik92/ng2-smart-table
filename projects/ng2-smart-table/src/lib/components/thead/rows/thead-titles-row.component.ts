@@ -19,7 +19,7 @@ import { ColumnTitleComponent } from "../cells/column-title.component";
     } @if (grid().actionIsOnLeft() && grid().isActionsVisible()) {
 
     <th ng2-st-actions-title [grid]="grid()"></th>
-    } @for (column of getVisibleColumns(); track column.id) {
+    } @for (column of getVisibleColumns(); track column.id + $index) {
     <th
       class="ng2-smart-th {{ column.id }}"
       [class]="column.class"

@@ -47,26 +47,26 @@ export class DataSet {
 
   setSelectAll(state: boolean): void {
     this.rows.forEach((row) => {
-      row.isSelected = state;
+      row.isSelected.set(state);
       this.storeSelectedRow(row);
     });
   }
 
   deselectAll() {
     this.rows.forEach((row) => {
-      row.isSelected = false;
+      row.isSelected.set(false);
     });
     // we need to clear selectedRow field because no one row selected
     this.selectedRows.clear();
   }
 
   selectRow(row: Row, state: boolean): void {
-    row.isSelected = state;
+    row.isSelected.set(state);
     this.storeSelectedRow(row);
   }
 
   multipleSelectRow(row: Row): Row {
-    row.isSelected = !row.isSelected;
+    row.isSelected.set(!row.isSelected());
     this.storeSelectedRow(row);
 
     return row;
@@ -78,7 +78,7 @@ export class DataSet {
 
   createNewRow() {
     this.newRow = new Row(-1, {}, this);
-    this.newRow.isInEditing = true;
+    this.newRow.isInEditing.set(true);
   }
 
   /**
@@ -102,17 +102,17 @@ export class DataSet {
     this.rows = [];
     this.data.forEach((el, index) => {
       const row = new Row(index, el, this);
-      row.isSelected = this.selectedRows.has(row.getData());
+      row.isSelected.set(this.selectedRows.has(row.getData()));
       this.rows.push(row);
     });
   }
 
   public get isAllSelected(): boolean {
-    return this.rows.every((row) => row.isSelected);
+    return this.rows.every((row) => row.isSelected());
   }
 
   private storeSelectedRow(row: Row): void {
-    if (row.isSelected) {
+    if (row.isSelected()) {
       this.selectedRows.add(row.getData());
     } else {
       this.selectedRows.delete(row.getData());
