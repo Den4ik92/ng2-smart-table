@@ -1,6 +1,7 @@
 import { Component, input, output } from '@angular/core';
 
-import { Column, DataSource } from 'ng2-smart-table';
+import { Column } from '../../lib/data-set/column';
+import { DataSource } from '../../lib/data-source/data-source';
 import { CheckboxFilterComponent } from './filter-types/checkbox-filter.component';
 import { InputFilterComponent } from './filter-types/input-filter.component';
 import { SelectFilterComponent } from './filter-types/select-filter.component';

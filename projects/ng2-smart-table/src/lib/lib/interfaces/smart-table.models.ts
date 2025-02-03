@@ -1,5 +1,5 @@
-import { DataSource } from 'ng2-smart-table';
 import { Cell } from '../data-set/cell';
+import { DataSource } from '../data-source/data-source';
 import { Deferred } from '../helpers';
 
 interface SelectOption {
@@ -87,11 +87,13 @@ export type SmartTableColumnSettings<T extends Record<string, any> = any> =
   | SmartTableCustomColumn<T>;
 
 export type SmartTableCompareFunction = (direction: number, a: any, b: any) => number;
+
 export type SmartTableValuePrepareFunction<T extends Record<string, any> = any> = (
   columnData: any,
   rowData: T,
   cell: Cell,
 ) => any;
+
 export type SmartTableFilterFunction = (columnData: any, search: string) => boolean;
 
 interface SmartTableDefaultColumn<T extends Record<string, any>> {

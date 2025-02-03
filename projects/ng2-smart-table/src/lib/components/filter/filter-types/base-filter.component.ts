@@ -13,9 +13,9 @@ import {
 import { Subscription } from 'rxjs';
 
 import { UntypedFormControl } from '@angular/forms';
-import { DataSource } from 'ng2-smart-table';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Column } from '../../../lib/data-set/column';
+import { DataSource } from '../../../lib/data-source/data-source';
 
 @Component({ template: '', selector: 'ng2-base-filter-component' })
 export class BaseFilterComponent implements FilterComponent, OnDestroy, OnChanges, OnInit {

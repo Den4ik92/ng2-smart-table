@@ -1,7 +1,7 @@
 import { Component, computed } from '@angular/core';
 
-import { BaseEditorComponent } from 'ng2-smart-table';
 import { SmartTableEditorAndFilterTypes } from '../../../lib/interfaces/smart-table.models';
+import { BaseEditorComponent } from '../cell-editors/base-editor.component';
 import { CheckboxEditorComponent } from '../cell-editors/checkbox-editor.component';
 import { InputEditorComponent } from '../cell-editors/input-editor.component';
 import { SelectEditorComponent } from '../cell-editors/select-editor.component';

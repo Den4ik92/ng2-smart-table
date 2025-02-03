@@ -1,45 +1,30 @@
-import {
-  Component,
-  computed,
-  EventEmitter,
-  input,
-  Input,
-  output,
-  OutputEmitterRef
-} from "@angular/core";
+import { Component, computed, EventEmitter, input, Input, output, OutputEmitterRef } from '@angular/core';
 
-import { Cell } from "../../../lib/data-set/cell";
-import { Grid } from "../../../lib/grid";
-import { CellComponent } from "../../cell/cell.component";
-import { ActionsComponent } from "../cells/actions.component";
+import { Cell } from '../../../lib/data-set/cell';
+import { Grid } from '../../../lib/grid';
+import { CellComponent } from '../../cell/cell.component';
+import { ActionsComponent } from '../cells/actions.component';
 
 @Component({
-  selector: "[ng2-st-thead-form-row]",
+  selector: '[ng2-st-thead-form-row]',
   template: `
     @if (grid().isMultiSelectVisible()) {
     <td></td>
     } @if (grid().actionIsOnLeft() && grid().isActionsVisible()) {
     <td class="ng2-smart-actions">
-      <ng2-st-actions
-        [grid]="grid()"
-        (create)="onCreate($event)"
-      ></ng2-st-actions>
+      <ng2-st-actions [grid]="grid()" (create)="onCreate($event)"></ng2-st-actions>
     </td>
     } @for (cell of getVisibleCells(); track cell.getId()+ $index) {
     <td>
       <ng2-smart-table-cell
         [cell]="cell"
         [inputClass]="addInputClass()"
-        [isInEditing]="grid().getNewRow().isInEditing()"
-      >
+        [isInEditing]="grid().getNewRow().isInEditing()">
       </ng2-smart-table-cell>
     </td>
     } @if (grid().actionIsOnRight() && grid().isActionsVisible()) {
     <td class="ng2-smart-actions">
-      <ng2-st-actions
-        [grid]="grid()"
-        (create)="onCreate($event)"
-      ></ng2-st-actions>
+      <ng2-st-actions [grid]="grid()" (create)="onCreate($event)"></ng2-st-actions>
     </td>
     }
   `,
@@ -54,9 +39,9 @@ export class TheadFormRowComponent {
   addInputClass = computed<string>(() => {
     const addOptions = this.grid().settings()?.add;
     if (!addOptions) {
-      return "";
+      return '';
     }
-    return addOptions.inputClass || "";
+    return addOptions.inputClass || '';
   });
 
   onCreate(event: any) {
@@ -65,8 +50,6 @@ export class TheadFormRowComponent {
   }
 
   getVisibleCells(): Cell[] {
-    return (this.grid().getNewRow().cells() || []).filter(
-      (cell: Cell) => !cell.getColumn().hide
-    );
+    return (this.grid().getNewRow().cells() || []).filter((cell: Cell) => !cell.getColumn().hide);
   }
 }

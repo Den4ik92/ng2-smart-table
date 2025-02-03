@@ -1,14 +1,14 @@
 import { HttpParams } from '@angular/common/http';
 import { computed } from '@angular/core';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import {
   SmartTableFilterItem,
   SmartTableOnChangedEventName,
   SmartTableOnChangedEventToEmit,
   SmartTablePagerSettings,
   SmartTableSortItem,
-} from 'ng2-smart-table';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+} from '../../interfaces/smart-table.models';
 import { DataSource } from '../data-source';
 
 // must return observable because of prepare can take some time

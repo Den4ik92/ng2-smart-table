@@ -9,11 +9,11 @@ import {
   output,
 } from '@angular/core';
 
-import { DataSource } from 'ng2-smart-table';
 import { PagerComponent } from './components/pager/pager.component';
 import { Ng2SmartTableTbodyComponent } from './components/tbody/tbody.component';
 import { Ng2SmartTableTheadComponent } from './components/thead/thead.component';
 import { Row } from './lib/data-set/row';
+import { DataSource } from './lib/data-source/data-source';
 import { Grid } from './lib/grid';
 import { getRandomId } from './lib/helpers';
 import {

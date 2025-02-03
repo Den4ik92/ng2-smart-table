@@ -1,17 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  output
-} from "@angular/core";
-import { Row } from "../../../lib/data-set/row";
+import { ChangeDetectionStrategy, Component, Input, output } from '@angular/core';
+import { Row } from '../../../lib/data-set/row';
 
-import { DataSource } from "ng2-smart-table";
-import { Grid } from "../../../lib/grid";
-import { SmartTableCustomAction } from "../../../lib/interfaces/smart-table.models";
+import { DataSource } from '../../../lib/data-source/data-source';
+import { Grid } from '../../../lib/grid';
+import { SmartTableCustomAction } from '../../../lib/interfaces/smart-table.models';
 
 @Component({
-  selector: "ng2-st-tbody-custom",
+  selector: 'ng2-st-tbody-custom',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @for (action of customActions(); track $index) {
@@ -20,10 +15,7 @@ import { SmartTableCustomAction } from "../../../lib/interfaces/smart-table.mode
       href="#"
       class="ng2-smart-action ng2-smart-action-custom-custom"
       [innerHTML]="action.title"
-      (click)="
-        $event.stopPropagation(); $event.preventDefault(); onCustom(action)
-      "
-    ></a>
+      (click)="$event.stopPropagation(); $event.preventDefault(); onCustom(action)"></a>
     }
   `,
   standalone: true,
@@ -43,8 +35,6 @@ export class TbodyCustomComponent {
   }
 
   customActions() {
-    return this.grid.getSetting<SmartTableCustomAction[] | undefined>(
-      "actions.custom"
-    );
+    return this.grid.getSetting<SmartTableCustomAction[] | undefined>('actions.custom');
   }
 }

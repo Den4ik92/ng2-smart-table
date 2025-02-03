@@ -1,6 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DataSource } from 'ng2-smart-table';
+import { DataSource } from '../../lib/data-source/data-source';
 
 @Component({
   selector: 'ng2-smart-table-pager',

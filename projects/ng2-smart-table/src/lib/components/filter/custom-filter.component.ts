@@ -8,10 +8,11 @@ import {
   OutputRefSubscription,
   SimpleChanges,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 
-import { Column, DataSource } from 'ng2-smart-table';
+import { Column } from '../../lib/data-set/column';
+import { DataSource } from '../../lib/data-source/data-source';
 import { BaseFilterComponent, FilterComponent } from './filter-types/base-filter.component';
 
 @Component({
@@ -50,7 +51,9 @@ export class CustomFilterComponent implements FilterComponent, OnChanges, OnDest
       this.customComponent?.setInput('column', this.column());
       this.customComponent?.setInput('source', this.source());
       this.customComponent?.setInput('inputClass', this.inputClass());
-      this.filterSubscription = this.customComponent?.instance.filter.subscribe((event: any) => this.filter.emit(event));
+      this.filterSubscription = this.customComponent?.instance.filter.subscribe((event: any) =>
+        this.filter.emit(event),
+      );
     }
   }
 

@@ -1,9 +1,9 @@
 import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DataSource } from 'ng2-smart-table';
 import { map } from 'rxjs/operators';
 import { Column } from '../../../../lib/data-set/column';
-import { SmartTableSortDirection } from './../../../../lib/interfaces/smart-table.models';
+import { DataSource } from '../../../../lib/data-source/data-source';
+import { SmartTableSortDirection } from '../../../../lib/interfaces/smart-table.models';
 
 @Component({
   selector: 'ng2-smart-table-title',

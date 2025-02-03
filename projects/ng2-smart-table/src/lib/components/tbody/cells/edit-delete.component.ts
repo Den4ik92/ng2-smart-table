@@ -8,14 +8,14 @@ import {
   input,
   output,
   OutputEmitterRef,
-} from "@angular/core";
+} from '@angular/core';
 
-import { DataSource } from "ng2-smart-table";
-import { Row } from "../../../lib/data-set/row";
-import { Grid } from "../../../lib/grid";
+import { Row } from '../../../lib/data-set/row';
+import { DataSource } from '../../../lib/data-source/data-source';
+import { Grid } from '../../../lib/grid';
 
 @Component({
-  selector: "ng2-st-tbody-edit-delete",
+  selector: 'ng2-st-tbody-edit-delete',
   template: `
     @if (!row().pending()) { @if (isActionEdit) {
     <a
@@ -23,16 +23,14 @@ import { Grid } from "../../../lib/grid";
       [id]="'row-' + row().index + '_action-edit-button'"
       class="ng2-smart-action ng2-smart-action-edit-edit"
       [innerHTML]="editRowButtonContent"
-      (click)="onEdit($event)"
-    ></a>
+      (click)="onEdit($event)"></a>
     } @if (isActionDelete) {
     <a
       href="#"
       [id]="'row-' + row().index + '_action-delete-button'"
       class="ng2-smart-action ng2-smart-action-delete-delete"
       [innerHTML]="deleteRowButtonContent"
-      (click)="onDelete($event)"
-    ></a>
+      (click)="onDelete($event)"></a>
     } } @else {
     <div style="display: flex;">
       @if (isActionEdit) {
@@ -48,12 +46,10 @@ import { Grid } from "../../../lib/grid";
         y="0px"
         viewBox="0 0 100 100"
         enable-background="new 0 0 0 0"
-        xml:space="preserve"
-      >
+        xml:space="preserve">
         <path
           fill="#e9e9e9"
-          d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-        >
+          d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
           <animateTransform
             attributeName="transform"
             attributeType="XML"
@@ -61,8 +57,7 @@ import { Grid } from "../../../lib/grid";
             dur="1s"
             from="0 50 50"
             to="360 50 50"
-            repeatCount="indefinite"
-          />
+            repeatCount="indefinite" />
         </path>
       </svg>
       } @if (isActionDelete) {
@@ -78,12 +73,10 @@ import { Grid } from "../../../lib/grid";
         y="0px"
         viewBox="0 0 100 100"
         enable-background="new 0 0 0 0"
-        xml:space="preserve"
-      >
+        xml:space="preserve">
         <path
           fill="#e9e9e9"
-          d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50"
-        >
+          d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
           <animateTransform
             attributeName="transform"
             attributeType="XML"
@@ -91,8 +84,7 @@ import { Grid } from "../../../lib/grid";
             dur="1s"
             from="0 50 50"
             to="360 50 50"
-            repeatCount="indefinite"
-          />
+            repeatCount="indefinite" />
         </path>
       </svg>
       }
@@ -107,9 +99,7 @@ export class TbodyEditDeleteComponent {
   readonly grid = input.required<Grid>();
   readonly row = input.required<Row>();
   readonly source = input.required<DataSource>();
-  readonly deleteConfirm = input.required<
-    EventEmitter<any> | OutputEmitterRef<any>
-  >();
+  readonly deleteConfirm = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
 
   readonly edit = output<any>();
   readonly delete = output<any>();
@@ -117,8 +107,8 @@ export class TbodyEditDeleteComponent {
   isActionEdit = false;
   isActionDelete = false;
   isExternalMode = false;
-  editRowButtonContent = "Edit";
-  deleteRowButtonContent = "Delete";
+  editRowButtonContent = 'Edit';
+  deleteRowButtonContent = 'Delete';
 
   constructor() {
     effect(() => {
@@ -129,15 +119,9 @@ export class TbodyEditDeleteComponent {
         this.isActionEdit = !!actions.edit;
       }
       this.isExternalMode = settings.mode === 'external';
-      this.editRowButtonContent = settings.edit
-        ? settings.edit.editButtonContent || "Edit"
-        : "Edit";
-      this.deleteRowButtonContent = settings.delete
-        ? settings.delete.deleteButtonContent || "Delete"
-        : "Delete";
+      this.editRowButtonContent = settings.edit ? settings.edit.editButtonContent || 'Edit' : 'Edit';
+      this.deleteRowButtonContent = settings.delete ? settings.delete.deleteButtonContent || 'Delete' : 'Delete';
       this.cdr.detectChanges();
-
-
     });
   }
 

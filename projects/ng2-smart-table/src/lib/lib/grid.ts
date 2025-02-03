@@ -2,9 +2,9 @@ import { computed, EventEmitter, OutputEmitterRef, signal } from '@angular/core'
 import { Subscription } from 'rxjs';
 import { LocalDataSource } from './data-source/local/local.data-source';
 
-import { DataSource } from 'ng2-smart-table';
 import { DataSet } from './data-set/data-set';
 import { Row } from './data-set/row';
+import { DataSource } from './data-source/data-source';
 import { Deferred, getDeepFromObject, getLocalStorage, setLocalStorage } from './helpers';
 import {
   ColumnPositionState,
@@ -251,7 +251,7 @@ export class Grid {
     this.dataSet = new DataSet([], settings.columns);
 
     if (this.source) {
-    console.log('updateSettingsAndDataSet', emittedEvent);
+      console.log('updateSettingsAndDataSet', emittedEvent);
 
       this.source.pagingConf.update((old) => ({
         ...old,

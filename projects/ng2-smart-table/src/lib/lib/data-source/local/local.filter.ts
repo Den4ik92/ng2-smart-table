@@ -1,4 +1,4 @@
-import { SmartTableFilterFunction, SmartTableFilterItem } from 'ng2-smart-table';
+import { SmartTableFilterFunction, SmartTableFilterItem } from "../../interfaces/smart-table.models";
 
 function filterValues(value: any, search: string): boolean {
   return value.toString().toLowerCase().includes(search.toString().toLowerCase());
