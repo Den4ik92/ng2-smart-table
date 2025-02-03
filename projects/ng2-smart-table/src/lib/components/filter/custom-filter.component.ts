@@ -11,8 +11,8 @@ import {
   ViewContainerRef
 } from '@angular/core';
 
-import { Column, DataSource, DefaultFilter } from 'ng2-smart-table';
-import { FilterComponent } from './filter-types/base-filter.component';
+import { Column, DataSource } from 'ng2-smart-table';
+import { BaseFilterComponent, FilterComponent } from './filter-types/base-filter.component';
 
 @Component({
   selector: 'ng2-custom-table-filter',
@@ -32,7 +32,7 @@ export class CustomFilterComponent implements FilterComponent, OnChanges, OnDest
   delay?: number | undefined;
   private filterSubscription?: OutputRefSubscription | undefined;
 
-  customComponent?: ComponentRef<DefaultFilter>;
+  customComponent?: ComponentRef<BaseFilterComponent>;
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.customComponent) {

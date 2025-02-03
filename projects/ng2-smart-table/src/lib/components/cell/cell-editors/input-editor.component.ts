@@ -1,11 +1,11 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
-import { FormsModule } from "@angular/forms";
-import { DefaultEditor } from "./default-editor";
+import { FormsModule } from '@angular/forms';
+import { BaseEditorComponent } from './base-editor.component';
 
 @Component({
-  selector: "ng2-input-editor",
-  styleUrls: ["./editor.component.scss"],
+  selector: 'ng2-input-editor',
+  styleUrls: ['./editor.component.scss'],
   template: `
     <input
       [class]="inputClass()"
@@ -13,14 +13,9 @@ import { DefaultEditor } from "./default-editor";
       [(ngModel)]="cell().newValue"
       [name]="cell().getId()"
       [placeholder]="cell().getTitle()"
-      [disabled]="!cell().isEditable()"
-    />
+      [disabled]="!cell().isEditable()" />
   `,
   standalone: true,
   imports: [FormsModule],
 })
-export class InputEditorComponent extends DefaultEditor {
-  constructor() {
-    super();
-  }
-}
+export class InputEditorComponent extends BaseEditorComponent {}

@@ -9,20 +9,19 @@ import {
 } from "@angular/core";
 
 
+import { BaseEditorComponent } from "ng2-smart-table";
 import { SmartTableEditorAndFilter } from "../../../lib/interfaces/smart-table.models";
-import { DefaultEditor } from "../cell-editors/default-editor";
-import { EditCellDefaultComponent } from "./edit-cell-default";
 
 @Component({
   selector: "ng2-table-cell-custom-editor",
   template: ` <ng-template #dynamicTarget></ng-template> `,
   standalone: true,
 })
-export class CustomEditComponent extends EditCellDefaultComponent implements OnChanges, OnDestroy {
+export class CustomEditComponent extends BaseEditorComponent implements OnChanges, OnDestroy {
   @ViewChild("dynamicTarget", { read: ViewContainerRef, static: true })
   dynamicTarget?: ViewContainerRef;
 
-  private customComponent?: ComponentRef<DefaultEditor>;
+  private customComponent?: ComponentRef<BaseEditorComponent>;
 
   ngOnChanges(changes: SimpleChanges) {
     const editor: SmartTableEditorAndFilter | false =

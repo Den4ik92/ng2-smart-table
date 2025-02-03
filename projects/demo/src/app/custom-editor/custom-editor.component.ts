@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { DefaultEditor } from "ng2-smart-table";
+import { BaseEditorComponent } from "ng2-smart-table";
 
 @Component({
   selector: "app-custom-editor",
@@ -9,7 +9,7 @@ import { DefaultEditor } from "ng2-smart-table";
   templateUrl: "./custom-editor.component.html",
   styleUrl: "./custom-editor.component.css",
 })
-export class CustomEditorComponent extends DefaultEditor {
+export class CustomEditorComponent extends BaseEditorComponent {
   onInput(event: Event) {
     const target = event.target as HTMLInputElement;
     this.cell().newValue = target.value
