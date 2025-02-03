@@ -198,7 +198,7 @@ export class Grid {
     initialPaging: Partial<SmartTablePagerSettings> | false,
   ): DataSource {
     const preparedSource = source || new LocalDataSource();
-    if (initialSort) {
+    if (initialSort && !source?.getSort().field) {
       preparedSource.setSort(initialSort, false);
     }
     if (initialPaging && initialPaging?.display) {
@@ -251,8 +251,6 @@ export class Grid {
     this.dataSet = new DataSet([], settings.columns);
 
     if (this.source) {
-      console.log('updateSettingsAndDataSet', emittedEvent);
-
       this.source.pagingConf.update((old) => ({
         ...old,
         display: this.getSetting('pager.display'),

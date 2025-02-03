@@ -46,7 +46,7 @@ export class BaseFilterComponent implements FilterComponent, OnDestroy, OnChange
 
   ngOnChanges({ query }: SimpleChanges) {
     if (query) {
-      this.inputControl.setValue(query.currentValue, { emitEvent: false });
+      this.inputControl?.setValue(query.currentValue, { emitEvent: false });
     }
   }
 

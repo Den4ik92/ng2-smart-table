@@ -1,10 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { SmartTableColumnEditorDirective } from 'ng2-smart-table';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { LocalDataSource, SmartTableColumnEditorDirective } from 'ng2-smart-table';
 import {
   ParamsPrepareFunction,
-  RequestFunction,
-  ServerDataSource
+  RequestFunction
 } from 'projects/ng2-smart-table/src/lib/lib/data-source/server/server.data-source';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -41,8 +40,7 @@ export interface Address {
   imports: [Ng2SmartTableComponent, SmartTableColumnEditorDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-
+export class AppComponent implements OnInit {
   private readonly http = inject(HttpClient);
 
   private requestFunction(): RequestFunction<User> {
@@ -70,15 +68,15 @@ export class AppComponent {
     });
   };
 
-  // ngOnInit(): void {
-    // this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 1000 } })).subscribe((res) => {
-    //   this.source.load(res.data);
-    // })
-  // }
+  ngOnInit(): void {
+    this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 1000 } })).subscribe((res) => {
+      this.source.load(res.data);
+    });
+  }
 
   readonly tableHide = signal(false);
-  readonly source = new ServerDataSource<User>(this.paramPrepareFunction, this.requestFunction());
-  // readonly source = new LocalDataSource<User>();
+  // readonly source = new ServerDataSource<User>(this.paramPrepareFunction, this.requestFunction());
+  readonly source = new LocalDataSource<User>();
 
   settings: SmartTableSettings<User> = {
     columnSortStorageKey: 'test1',
@@ -207,7 +205,10 @@ export class AppComponent {
   enableDelete(table: Ng2SmartTableComponent): void {
     this.settings.actions = { ...this.settings.actions, delete: true };
     this.settings = Object.assign({}, this.settings);
-      }
+  }
+  changeSort(): void {
+    this.source.setSort({ field: 'name', direction: 'asc' });
+  }
   updateEditButtons(table: Ng2SmartTableComponent): void {
     this.settings.edit = { saveButtonContent: 'NewSave' };
     this.settings = Object.assign({}, this.settings);

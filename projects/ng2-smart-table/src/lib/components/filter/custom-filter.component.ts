@@ -38,8 +38,12 @@ export class CustomFilterComponent implements FilterComponent, OnChanges, OnDest
   ngOnChanges(changes: SimpleChanges) {
     if (this.customComponent) {
       if (this.customComponent?.instance && 'ngOnChanges' in this.customComponent.instance) {
+        try {
         const onChanges = this.customComponent.instance.ngOnChanges as (changes: SimpleChanges) => void;
         onChanges(changes);
+        } catch {
+          // do nothing
+        }
       }
       return;
     }

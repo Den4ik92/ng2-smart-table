@@ -44,7 +44,7 @@ export class CheckboxFilterComponent extends BaseFilterComponent implements OnIn
 
   override ngOnChanges({ query }: SimpleChanges) {
     if (query) {
-      this.inputControl.setValue(query.currentValue === this.trueVal, { emitEvent: false });
+      this.inputControl?.setValue(query.currentValue === this.trueVal, { emitEvent: false });
     }
   }
 
