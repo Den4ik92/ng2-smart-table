@@ -3,8 +3,7 @@
     class="ng2-smart-titles"
     [grid]="grid()"
     [source]="source()"
-    (sort)="sort.emit($event)"
-    (selectAllRows)="selectAllRows.emit($event)">
+    (selectAllRows)="selectAllRows.emit()">
   </tr>
 }
 
@@ -13,8 +12,7 @@
     class="ng2-smart-filters"
     [grid]="grid()"
     [source]="source()"
-    (create)="create.emit($event)"
-    (filter)="filter.emit($event)">
+    (create)="create.emit($event)">
   </tr>
 }
 

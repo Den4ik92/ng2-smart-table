@@ -65,7 +65,7 @@ export class TheadFormRowComponent {
   }
 
   getVisibleCells(): Cell[] {
-    return (this.grid().getNewRow().getCells() || []).filter(
+    return (this.grid().getNewRow().cells() || []).filter(
       (cell: Cell) => !cell.getColumn().hide
     );
   }

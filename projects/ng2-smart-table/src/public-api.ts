@@ -3,9 +3,9 @@ export {
   Editor
 } from "./lib/components/cell/cell-editors/default-editor";
 export {
-  DefaultFilter,
-  Filter
-} from "./lib/components/filter/filter-types/default-filter";
+  BaseFilterComponent as DefaultFilter,
+  FilterComponent as Filter
+} from "./lib/components/filter/filter-types/base-filter.component";
 export { SmartTableColumnEditorDirective } from "./lib/components/table-columns-editor/column-editor.directive";
 export { Cell } from "./lib/lib/data-set/cell";
 export { Column } from "./lib/lib/data-set/column";

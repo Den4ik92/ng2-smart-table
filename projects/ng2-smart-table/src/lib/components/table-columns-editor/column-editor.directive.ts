@@ -21,7 +21,7 @@ import { TableColumnsEditorComponent } from "./table-columns-editor.component";
   },
 })
 export class SmartTableColumnEditorDirective implements OnDestroy {
-  tableComponent = input<Ng2SmartTableComponent>();
+  readonly tableComponent = input<Ng2SmartTableComponent>();
 
   private readonly grid = computed(() => {
     return this.tableComponent()?.grid;
@@ -32,8 +32,6 @@ export class SmartTableColumnEditorDirective implements OnDestroy {
   private readonly destroy$ = new Subject<void>()
 
   protected overlayRef?: OverlayRef;
-
-
 
   ngOnDestroy(): void {
     this.overlayRef?.dispose();

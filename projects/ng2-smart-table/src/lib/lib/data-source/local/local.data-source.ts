@@ -1,87 +1,43 @@
-import { deepExtend } from '../../helpers';
-import { SmartTableFilterConf, SmartTableFilterItem, SmartTablePagingItem, SmartTableSortItem } from '../../interfaces/smart-table.models';
+import { computed, signal } from '@angular/core';
+import {
+  SmartTableFilterItem,
+  SmartTableOnChangedEventName,
+  SmartTableOnChangedEventToEmit,
+  SmartTableOnChangedEventType,
+  SmartTableSortItem,
+} from '../../interfaces/smart-table.models';
 import { DataSource } from '../data-source';
-import { LocalFilter } from './local.filter';
-import { LocalPager } from './local.pager';
+import { isElementSatisfied } from './local.filter';
+import { paginateList } from './local.pager';
 import { LocalSorter } from './local.sorter';
 
 export class LocalDataSource<T extends Record<string, any> = any> extends DataSource<T> {
-
-  protected data: T[] = [];
-  protected filteredAndSorted: T[] = [];
-  protected sortConf: SmartTableSortItem[] = [];
-  protected filterConf: SmartTableFilterConf = {
-    filters: [],
-    andOperator: true,
-  };
-  protected pagingConf: SmartTablePagingItem | false = false;
+  private readonly filteredAndSorted = signal<T[]>([]);
 
   constructor(data: T[] = []) {
     super();
-
     this.data = data;
   }
 
-  load(data: any): Promise<true> {
+  load(data: T[]): Promise<true> {
     this.data = data;
-    return super.loadEmit();
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.load });
+    return Promise.resolve(true);
   }
 
-  prepend(element: T): Promise<true> {
+  override prepend(element: T): Promise<true> {
     this.reset(true);
-    this.data.unshift(element);
-    return super.prependEmit(element);
+    return super.prepend(element);
   }
 
-  appendMany(elements: T[]): Promise<true> {
+  override appendMany(elements: T[]): Promise<true> {
     this.reset(true);
-    this.data = [...this.data, ...elements];
-    return super.loadEmit();
+    return super.appendMany(elements);
   }
 
-  append(element: T): Promise<true> {
+  override append(element: T): Promise<true> {
     this.reset(true);
-
-    this.data.push(element);
-    return super.appendEmit(element);
-  }
-
-  add(element: T): Promise<true> {
-    this.data.push(element);
-    return super.addEmit(element);
-  }
-
-  remove(element: T): Promise<true> {
-    this.data = this.data.filter(el => el !== element);
-    return super.removeEmit(element);
-  }
-
-  update(element: T, values: T): Promise<true> {
-    return new Promise((resolve, reject) => {
-      this.find(element).then((found) => {
-        found = deepExtend(found as any, values);
-        super.updateEmit(found).then(resolve).catch(reject);
-      }).catch(reject);
-    });
-  }
-
-  find(element: T): Promise<T> {
-    const found = this.data.find(el => el === element);
-    if (found) {
-      return Promise.resolve(found);
-    }
-    return Promise.reject(new Error('Element was not found in the dataset'));
-  }
-
-  getElements(): Promise<T[]> {
-    const data = this.data.slice(0);
-    return Promise.resolve(this.prepareData(data));
-  }
-
-  getFilteredAndSorted(): Promise<T[]> {
-    const data = this.data.slice(0);
-    this.prepareData(data);
-    return Promise.resolve(this.filteredAndSorted);
+    return super.append(element);
   }
 
   getAll(): Promise<T[]> {
@@ -91,199 +47,80 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
 
   reset(silent = false) {
     if (silent) {
-      this.filterConf = {
-        filters: [],
-        andOperator: true,
-      };
-      this.sortConf = [];
-      if (this.pagingConf) {
-        this.pagingConf.page = 1;
-      }
+      this.filters = [];
+      this.sortConf = { field: '', direction: 'asc' };
+      this.pagingConf.update((old) => ({ ...old, page: 1 }));
     } else {
-      this.setFilter([], true, false);
-      this.setSort([], false);
-      if (this.pagingConf) {
+      this.setFilters([], false);
+      this.setSort({ field: '', direction: 'asc' }, false);
+      if (this.pagingConf().display) {
         this.setPage(1);
-       }
-    }
-  }
-
-  empty(): Promise<true> {
-    this.data = [];
-    return super.emptyEmit();
-  }
-
-  count(): number {
-    return this.filteredAndSorted.length;
-  }
-
-  /**
-   *
-   * Array of conf objects
-   * [
-   *  {field: string, direction: asc|desc|null, compare: Function|null},
-   * ]
-   * @param conf
-   * @param doEmit
-   * @returns {LocalDataSource}
-   */
-  setSort(conf: SmartTableSortItem[], doEmit = true): LocalDataSource {
-    if (conf !== null) {
-      conf.forEach((fieldConf) => {
-        if (!fieldConf.field || typeof fieldConf.direction === 'undefined') {
-          throw new Error('Sort configuration object is not valid');
-        }
-      });
-      this.sortConf = conf;
-    }
-    if (doEmit) {
-      super.setSortEmit();
-    }
-    return this;
-  }
-
-  /**
-   *
-   * Array of conf objects
-   * [
-   *  {field: string, search: string, filter: Function|null},
-   * ]
-   * @param conf
-   * @param andOperator
-   * @param doEmit
-   * @returns {LocalDataSource}
-   */
-  setFilter(conf: SmartTableFilterItem[], andOperator = true, doEmit = true): LocalDataSource {
-    if (conf && conf.length > 0) {
-      conf.forEach((fieldConf) => {
-        this.addFilter(fieldConf, andOperator, false);
-      });
-    } else {
-      this.filterConf = {
-        filters: [],
-        andOperator: true,
-      };
-    }
-    this.filterConf.andOperator = andOperator;
-    if (this.pagingConf) {
-      this.pagingConf.page = 1;
-    }
-    if (doEmit) {
-      super.setFilterEmit();
-    }
-    return this;
-  }
-
-  addFilter(fieldConf: SmartTableFilterItem, andOperator = true, doEmit = true): LocalDataSource {
-    if (!fieldConf.field || typeof fieldConf.search === 'undefined') {
-      throw new Error('Filter configuration object is not valid');
-    }
-
-    let found = false;
-    this.filterConf.filters.forEach((currentFieldConf: any, index: any) => {
-      if (currentFieldConf.field === fieldConf.field) {
-        this.filterConf.filters[index] = fieldConf;
-        found = true;
-      }
-    });
-    if (!found) {
-      this.filterConf.filters.push(fieldConf);
-    }
-    this.filterConf.andOperator = andOperator;
-    if (doEmit) {
-      super.addFilterEmit();
-    }
-    return this;
-  }
-
-  setPaging(page = 1, perPage: number, doEmit = true): void {
-    if (this.pagingConf) {
-      this.pagingConf.page = page;
-      this.pagingConf.perPage = perPage;
-    } else {
-      this.pagingConf = {
-        page, perPage
       }
     }
-    if (doEmit) {
-      super.setPagingEmit();
-    }
-    return;
   }
 
-  setPage(page: number, doEmit = true): void {
-    if (!this.pagingConf) {
-      return;
-    }
-    this.pagingConf.page = page;
-    if(doEmit) {
-      super.setPageEmit();
-    }
-    return;
-  }
+  readonly count = computed(() => this.filteredAndSorted().length);
 
-  getSort(): SmartTableSortItem[] {
+  getSort(): SmartTableSortItem {
     return this.sortConf;
   }
 
-  getFilter(): SmartTableFilterConf {
-    return this.filterConf;
+  getFilters(): SmartTableFilterItem[] {
+    return this.filters;
   }
 
-  getPaging(): SmartTablePagingItem | false {
-    return this.pagingConf;
-  }
+  override emitOnChanged(event: SmartTableOnChangedEventToEmit) {
+    let renderData: T[] = this.filteredAndSorted();
+    const action = event.action as any;
+    if ((['filter', 'refresh', 'load'] satisfies SmartTableOnChangedEventType[]).includes(action)) {
+      renderData = this.filter(this.data.slice(0));
+      this.filteredAndSorted.set(this.sort(renderData));
+      renderData = this.filteredAndSorted();
+    }
+    if ((['sort', 'filter', 'refresh', 'load'] satisfies SmartTableOnChangedEventType[]).includes(action)) {
+      this.filteredAndSorted.update((list) => this.sort(list));
+      renderData = this.filteredAndSorted();
+    }
+    if (
+      this.pagingConf().display &&
+      (['page', 'paging', 'refresh', 'load', 'sort', 'filter'] satisfies SmartTableOnChangedEventType[]).includes(
+        action,
+      )
+    ) {
+      renderData = this.paginate(this.filteredAndSorted());
+    }
+    super.emitOnChanged(event, renderData);
 
-  protected prepareData(data: T[]): T[] {
-    data = this.filter(data);
-    data = this.sort(data);
-    this.filteredAndSorted = data.slice(0);
-    if(this.pagingConf) {
-      return this.paginate(data);
-    } else return data
+    if (this.pagingConf().display && this.isPageOutOfBounce()) {
+      this.setPage(this.pagingConf().page - 1);
+    }
   }
 
   protected sort(data: T[]): T[] {
     if (this.sortConf) {
-      this.sortConf.forEach((fieldConf) => {
-        data = LocalSorter
-          .sort<T>(data, fieldConf.field, fieldConf.direction, fieldConf.compare);
-      });
+      data = LocalSorter.sort<T>(data, this.sortConf.field, this.sortConf.direction, this.sortConf.compare);
     }
     return data;
   }
 
-  // TODO: refactor?
   protected filter(data: T[]): T[] {
-    if (this.filterConf.filters) {
-      if (this.filterConf.andOperator) {
-        this.filterConf.filters.forEach((fieldConf: SmartTableFilterItem) => {
-          if (fieldConf.search?.length > 0) {
-            data = LocalFilter
-              .filter(data, fieldConf.field, fieldConf.search, fieldConf.filter);
-          }
-        });
-      } else {
-        let mergedData: T[] = [];
-        this.filterConf.filters.forEach((fieldConf: SmartTableFilterItem) => {
-          if (fieldConf.search?.length > 0) {
-            mergedData = mergedData.concat(LocalFilter
-              .filter(data, fieldConf.field, fieldConf.search, fieldConf.filter));
-          }
-        });
-        // remove non unique items
-        data = mergedData.filter((elem: any, pos: any, arr: any) => {
-          return arr.indexOf(elem) === pos;
-        });
-      }
+    if (this.filters.length > 0) {
+      return data.filter((item: T) => {
+        return isElementSatisfied(item, this.filters);
+      });
     }
     return data;
   }
 
   protected paginate(data: T[]): T[] {
-    if (this.pagingConf && this.pagingConf.page && this.pagingConf.perPage) {
-      data = LocalPager.paginate(data, this.pagingConf.page, this.pagingConf.perPage);
+    if (this.pagingConf().display) {
+      return paginateList(data, this.pagingConf().page, this.pagingConf().perPage);
     }
     return data;
+  }
+
+  private isPageOutOfBounce(): boolean {
+    const { page, perPage } = this.pagingConf();
+    return page * perPage >= this.count() + perPage && page > 1;
   }
 }

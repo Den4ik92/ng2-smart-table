@@ -22,16 +22,16 @@ export class Cell {
     return this.row;
   }
 
-  getValue(): any {
-    const prepare = this.column.getValuePrepareFunction() || this.prepareValue;
+  getValue() {
+    const prepare = this.column.valuePrepareFunction || this.prepareValue;
     return prepare.call(null, this.value, this.row.getData(), this);
   }
 
-  getNotPrepareValue(): any {
+  getNotPrepareValue() {
     return this.value
   }
 
-  setValue(value: any): any {
+  setValue(value: any) {
     this.newValue = value;
   }
 

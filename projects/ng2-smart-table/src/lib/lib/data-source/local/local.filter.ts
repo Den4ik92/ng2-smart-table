@@ -1,14 +1,20 @@
-export function filterValues(value: string, search: string) {
+import { SmartTableFilterFunction, SmartTableFilterItem } from 'ng2-smart-table';
+
+function filterValues(value: any, search: string): boolean {
   return value.toString().toLowerCase().includes(search.toString().toLowerCase());
 }
 
-export class LocalFilter {
-  static filter(data: any[], field: string, search: string, customFilter?: Function): any[] {
-    const filter: Function = customFilter ? customFilter : filterValues;
-
-    return data.filter((el) => {
-      const value = typeof el[field] === 'undefined' || el[field] === null ? '' : el[field];
-      return filter.call(null, value, search);
-    });
-  }
+export function isElementSatisfied<T extends Record<string, unknown>>(element: T, filters: SmartTableFilterItem[]): boolean {
+  return filters.every((filter: SmartTableFilterItem) => {
+    if (!filter.search?.length) {
+      return true;
+    }
+    const filterFunction: SmartTableFilterFunction = filter.filter || filterValues;
+    try {
+      const value = element[filter.field];
+      return filterFunction(value, filter.search);
+    } catch {
+      return false
+    }
+  });
 }

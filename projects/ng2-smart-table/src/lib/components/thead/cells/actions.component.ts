@@ -29,14 +29,14 @@ export class ActionsComponent {
   readonly grid = input.required<Grid>();
   readonly create = output<any>();
 
-  createButtonContent = computed(() => {
+  readonly createButtonContent = computed(() => {
     const addOptions = this.grid().settings().add
     if (!addOptions) {
       return "Create"
     }
     return addOptions?.createButtonContent || "Create"
   });
-  cancelButtonContent = computed(() => {
+  readonly cancelButtonContent = computed(() => {
     const addOptions = this.grid().settings().add
     if (!addOptions) {
       return "Cancel"

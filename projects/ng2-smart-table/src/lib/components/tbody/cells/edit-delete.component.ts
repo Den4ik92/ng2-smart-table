@@ -10,8 +10,8 @@ import {
   OutputEmitterRef,
 } from "@angular/core";
 
+import { DataSource } from "ng2-smart-table";
 import { Row } from "../../../lib/data-set/row";
-import { LocalDataSource } from "../../../lib/data-source/local/local.data-source";
 import { Grid } from "../../../lib/grid";
 
 @Component({
@@ -106,7 +106,7 @@ export class TbodyEditDeleteComponent {
   private readonly cdr = inject(ChangeDetectorRef);
   readonly grid = input.required<Grid>();
   readonly row = input.required<Row>();
-  readonly source = input.required<LocalDataSource>();
+  readonly source = input.required<DataSource>();
   readonly deleteConfirm = input.required<
     EventEmitter<any> | OutputEmitterRef<any>
   >();

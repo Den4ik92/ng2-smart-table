@@ -17,7 +17,7 @@ import { Grid } from "../../../lib/grid";
 export class ActionsTitleComponent {
   readonly grid = input.required<Grid>();
 
-  actionsColumnTitle = computed(() => {
+  readonly actionsColumnTitle = computed(() => {
     const actions = this.grid().settings().actions;
     if (!actions) {
       return "Actions";

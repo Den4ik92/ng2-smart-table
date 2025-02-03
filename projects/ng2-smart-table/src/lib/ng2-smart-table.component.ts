@@ -1,20 +1,21 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   OnChanges,
   OnDestroy,
   SimpleChange,
   computed,
   input,
-  output
-} from "@angular/core";
+  output,
+} from '@angular/core';
 
-import { PagerComponent } from "./components/pager/pager.component";
-import { Ng2SmartTableTbodyComponent } from "./components/tbody/tbody.component";
-import { Ng2SmartTableTheadComponent } from "./components/thead/thead.component";
-import { Row } from "./lib/data-set/row";
-import { LocalDataSource } from "./lib/data-source/local/local.data-source";
-import { Grid } from "./lib/grid";
-import { getRandomId } from "./lib/helpers";
+import { DataSource } from 'ng2-smart-table';
+import { PagerComponent } from './components/pager/pager.component';
+import { Ng2SmartTableTbodyComponent } from './components/tbody/tbody.component';
+import { Ng2SmartTableTheadComponent } from './components/thead/thead.component';
+import { Row } from './lib/data-set/row';
+import { Grid } from './lib/grid';
+import { getRandomId } from './lib/helpers';
 import {
   ColumnPositionState,
   SmartTableConfirmDeleteEvent,
@@ -24,21 +25,18 @@ import {
   SmartTableRowClickedEvent,
   SmartTableRowSelectEvent,
   SmartTableSettings,
-} from "./lib/interfaces/smart-table.models";
+} from './lib/interfaces/smart-table.models';
 
 @Component({
-  selector: "ng2-smart-table",
-  styleUrls: ["./ng2-smart-table.component.scss"],
-  templateUrl: "./ng2-smart-table.component.html",
+  selector: 'ng2-smart-table',
+  styleUrls: ['./ng2-smart-table.component.scss'],
+  templateUrl: './ng2-smart-table.component.html',
   standalone: true,
-  imports: [
-    Ng2SmartTableTheadComponent,
-    Ng2SmartTableTbodyComponent,
-    PagerComponent,
-  ],
+  imports: [Ng2SmartTableTheadComponent, Ng2SmartTableTbodyComponent, PagerComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
-  readonly source = input.required<LocalDataSource>();
+  readonly source = input.required<DataSource>();
   readonly settings = input.required<SmartTableSettings>();
 
   readonly multiRowSelect = output<SmartTableRowSelectEvent>();
@@ -54,21 +52,17 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
   readonly createConfirm = output<SmartTableCreateConfirm>();
 
   protected readonly tableClass = computed<string>(() => {
-    return this.settings().attr?.class || "";
+    return this.settings().attr?.class || '';
   });
   protected readonly tableId = computed<string>(() => {
     return this.settings().attr?.id || getRandomId();
-  });
-  protected readonly perPageSelect = computed<number[]>(() => {
-    const { pager } = this.settings();
-    return pager ? pager.perPageSelect || [] : [];
   });
   protected readonly isPagerDisplay = computed<boolean>(() => {
     const { pager } = this.settings();
     return pager ? pager.display : false;
   });
   protected readonly rowClassFunction = computed<(row: any) => string>(() => {
-    return this.settings().rowClassFunction || (() => "");
+    return this.settings().rowClassFunction || (() => '');
   });
 
   grid!: Grid;
@@ -93,7 +87,7 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
   }
 
   protected onSelectAllRows(): void {
-    this.grid.selectAllRows(!this.grid.dataSet.isAllSelected);
+    this.grid.selectAllRows(!this.grid.dataSet.isAllSelected());
     this.emitUserSelectRow(null);
   }
 

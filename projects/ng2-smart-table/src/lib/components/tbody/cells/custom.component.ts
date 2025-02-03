@@ -5,8 +5,8 @@ import {
   output
 } from "@angular/core";
 import { Row } from "../../../lib/data-set/row";
-import { LocalDataSource } from "./../../../lib/data-source/local/local.data-source";
 
+import { DataSource } from "ng2-smart-table";
 import { Grid } from "../../../lib/grid";
 import { SmartTableCustomAction } from "../../../lib/interfaces/smart-table.models";
 
@@ -31,7 +31,7 @@ import { SmartTableCustomAction } from "../../../lib/interfaces/smart-table.mode
 export class TbodyCustomComponent {
   @Input() grid!: Grid;
   @Input() row!: Row;
-  @Input() source!: LocalDataSource;
+  @Input() source!: DataSource;
   readonly custom = output<any>();
 
   onCustom(action: any) {

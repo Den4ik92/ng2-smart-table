@@ -5,7 +5,7 @@ import {
   output
 } from "@angular/core";
 
-import { LocalDataSource } from "../../../lib/data-source/local/local.data-source";
+import { DataSource } from "ng2-smart-table";
 import { Grid } from "../../../lib/grid";
 
 @Component({
@@ -27,7 +27,7 @@ import { Grid } from "../../../lib/grid";
 })
 export class AddButtonComponent {
   readonly grid = input.required<Grid>();
-  readonly source = input.required<LocalDataSource>();
+  readonly source = input.required<DataSource>();
   readonly create = output<any>();
 
   readonly isActionAdd = computed(() => {

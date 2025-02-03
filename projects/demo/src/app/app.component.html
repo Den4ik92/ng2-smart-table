@@ -1,12 +1,28 @@
-<button ng2SmartTableColumnEditor title="Table columns settings" [tableComponent]="table">settings</button>
+<button title="Table columns settings" (click)="tableHideToggle()">tableHide</button>
 
-<button title="Table columns settings" (click)="setNewState(table)">set new state</button>
-<button title="Table columns settings" (click)="disableMulti(table)">disableMulti</button>
-<button title="Table columns settings" (click)="enableDelete(table)">enableDelete</button>
-<button title="Table columns settings" (click)="updateEditButtons(table)">updateEditButtons</button>
+@if(!tableHide()) {
+<button
+  ng2SmartTableColumnEditor
+  title="Table columns settings"
+  [tableComponent]="table"
+>
+  settings
+</button>
+
+<button title="Table columns settings" (click)="setNewState(table)">
+  set new state
+</button>
+<button title="Table columns settings" (click)="disableMulti(table)">
+  disableMulti
+</button>
+<button title="Table columns settings" (click)="enableDelete(table)">
+  enableDelete
+</button>
+<button title="Table columns settings" (click)="updateEditButtons(table)">
+  updateEditButtons
+</button>
 <button title="Table columns settings" (click)="addNewRow()">addNewRow</button>
-<button title="Table columns settings" (click)="prependNewRow()">prependNewRow</button>
-
+<button title="Table columns settings" (click)="prepend()">prepend</button>
 <ng2-smart-table
   #table
   [settings]="settings"
@@ -17,3 +33,4 @@
   (multiRowSelect)="multiRowSelect($event)"
   [source]="source"
 ></ng2-smart-table>
+}

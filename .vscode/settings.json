@@ -1,0 +1,16 @@
+{
+  "cSpell.words": [
+    "linkbuilder",
+    "Linkbuilders",
+    "postpayment",
+    "teamlead",
+    "teamleads",
+    "Teamleds",
+    "Toastr"
+  ],
+  "editor.codeActionsOnSave": [
+    "source.organizeImports",
+    "source.fixAll.eslint"
+  ],
+  "editor.tabSize": 2
+}

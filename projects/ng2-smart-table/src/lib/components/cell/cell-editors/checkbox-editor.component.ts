@@ -22,10 +22,10 @@ import { DefaultEditor } from "./default-editor";
 })
 export class CheckboxEditorComponent extends DefaultEditor {
   readonly trueVal = computed(() => {
-    return this.cell().getColumn().getConfig()?.true || true
+    return this.cell().getColumn().getEditorConfig()?.true || true
   })
   readonly falseVal = computed(() => {
-    return this.cell().getColumn().getConfig()?.false || false
+    return this.cell().getColumn().getEditorConfig()?.false || false
   })
 
 

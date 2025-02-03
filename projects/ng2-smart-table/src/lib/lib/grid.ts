@@ -1,63 +1,57 @@
-import { computed, EventEmitter, OutputEmitterRef, signal } from "@angular/core";
-import { Observable, Subject, Subscription } from "rxjs";
-import { LocalDataSource } from "./data-source/local/local.data-source";
+import { computed, EventEmitter, OutputEmitterRef, signal } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { LocalDataSource } from './data-source/local/local.data-source';
 
-import { Column } from "./data-set/column";
-import { DataSet } from "./data-set/data-set";
-import { Row } from "./data-set/row";
-import {
-  Deferred,
-  getDeepFromObject,
-  getLocalStorage,
-  setLocalStorage,
-} from "./helpers";
+import { DataSource } from 'ng2-smart-table';
+import { DataSet } from './data-set/data-set';
+import { Row } from './data-set/row';
+import { Deferred, getDeepFromObject, getLocalStorage, setLocalStorage } from './helpers';
 import {
   ColumnPositionState,
   SmartTableColumnSettings,
   SmartTableOnChangedEvent,
+  SmartTableOnChangedEventName,
+  SmartTablePagerSettings,
   SmartTableSettings,
-  SmartTableSortItem
-} from "./interfaces/smart-table.models";
+  SmartTableSortItem,
+} from './interfaces/smart-table.models';
 
 export class Grid {
   createFormShown = false;
 
-  source!: LocalDataSource;
+  source!: DataSource;
   dataSet!: DataSet;
-
-  onSelectRowSource = new Subject<any>();
-  onDeselectRowSource = new Subject<any>();
 
   currentColumnsSortState: ColumnPositionState[] = [];
 
-  private columnsSortedEmitter!: OutputEmitterRef<ColumnPositionState[]>
+  private columnsSortedEmitter!: OutputEmitterRef<ColumnPositionState[]>;
   private sourceOnChangedSubscription: Subscription | undefined;
   private sourceOnUpdatedSubscription: Subscription | undefined;
 
   readonly settings = signal<SmartTableSettings>({} as SmartTableSettings);
 
   readonly isMultiSelectVisible = computed(() => {
-    return this.settings().selectMode === "multi";
-  })
+    return this.settings().selectMode === 'multi';
+  });
   readonly isActionsVisible = computed<boolean>(() => {
-    const actions = this.settings().actions
+    const actions = this.settings().actions;
     if (!actions) return false;
     return actions.add || actions.edit || actions.delete || !!actions?.custom?.length;
-  })
+  });
   readonly actionIsOnLeft = computed<boolean>(() => {
     return (this.settings().actionsPosition || 'left') === 'left';
-  })
+  });
   readonly actionIsOnRight = computed<boolean>(() => {
     return this.settings().actionsPosition === 'right';
-  })
+  });
 
-  constructor(source: LocalDataSource | undefined, settings: SmartTableSettings) {
+  constructor(source: DataSource | undefined, settings: SmartTableSettings) {
+    this.setSource(source, settings);
     this.setSettings(settings);
-    this.setSource(source);
   }
 
   setColumnsSortedEmitter(emitter: OutputEmitterRef<ColumnPositionState[]>) {
-    this.columnsSortedEmitter = emitter
+    this.columnsSortedEmitter = emitter;
   }
 
   detach(): void {
@@ -75,7 +69,7 @@ export class Grid {
 
   setSettings(settings: SmartTableSettings) {
     this.updateSettingsAndDataSet(settings);
-    if (this.getSetting('columnSort', false)) {
+    if (settings.columnSort) {
       this.setColumnsSortState(settings.columns);
     }
   }
@@ -88,28 +82,12 @@ export class Grid {
     return getDeepFromObject(this.settings(), name, defaultValue);
   }
 
-  getColumns(): Column[] {
-    return this.dataSet.getColumns();
-  }
-
-  getRows(): Row[] {
-    return this.dataSet.getRows();
-  }
-
   selectRow(row: Row, state: boolean) {
     this.dataSet.selectRow(row, state);
   }
 
   multipleSelectRow(row: Row) {
     this.dataSet.multipleSelectRow(row);
-  }
-
-  onSelectRow(): Observable<any> {
-    return this.onSelectRowSource.asObservable();
-  }
-
-  onDeselectRow(): Observable<any> {
-    return this.onDeselectRowSource.asObservable();
   }
 
   edit(row: Row) {
@@ -132,7 +110,7 @@ export class Grid {
         row.pending.set(false);
       });
 
-    if (this.getSetting("add.confirmCreate", false)) {
+    if (this.getSetting('add.confirmCreate', false)) {
       confirmEmitter.emit({
         newData: row.getNewData(),
         source: this.source,
@@ -160,7 +138,7 @@ export class Grid {
         row.isInEditing.set(false);
       });
 
-    if (this.getSetting("edit.confirmSave", false)) {
+    if (this.getSetting('edit.confirmSave', false)) {
       confirmEmitter.emit({
         data: row.getData(),
         newData: row.getNewData(),
@@ -185,7 +163,7 @@ export class Grid {
         row.pending.set(false);
         // doing nothing
       });
-    if (this.getSetting("delete.confirmDelete")) {
+    if (this.getSetting('delete.confirmDelete', true)) {
       confirmEmitter.emit({
         data: row.getData(),
         source: this.source,
@@ -200,45 +178,55 @@ export class Grid {
     }
   }
 
-  private processDataChange({action, elements}: SmartTableOnChangedEvent) {
-    if (action === "load") {
+  private processDataChange(event: SmartTableOnChangedEvent) {
+    if (event.action === 'load') {
       this.dataSet.deselectAll();
     }
-    if (action !== "update") {
-      this.dataSet.setData(elements);
+    if (event.action !== 'update') {
+      this.dataSet.setData(event.elements);
+    } else {
+      const changedRow = this.dataSet.findRowByData(event.oldItem);
+      if (changedRow) {
+        changedRow.setData(event.newItem || event.oldItem);
+      }
     }
   }
 
-  private prepareSource(source: LocalDataSource | undefined): LocalDataSource {
+  private prepareSource(
+    source: DataSource | undefined,
+    initialSort: SmartTableSortItem | false,
+    initialPaging: Partial<SmartTablePagerSettings> | false,
+  ): DataSource {
     const preparedSource = source || new LocalDataSource();
-    const initialSort: SmartTableSortItem | false = this.getInitialSort();
     if (initialSort) {
-      preparedSource.setSort([initialSort], false);
+      preparedSource.setSort(initialSort, false);
     }
-    if (this.getSetting("pager.display", false) === true) {
-      preparedSource.setPaging(1, this.getSetting("pager.perPage"), false);
+    if (initialPaging && initialPaging?.display) {
+      preparedSource.pagingConf.update((old) => ({
+        ...old,
+        ...initialPaging,
+      }));
     }
-
-    preparedSource.refresh();
     return preparedSource;
   }
 
-  private getInitialSort(): SmartTableSortItem | false {
-    const defaultSortColumn = this.getColumns().find(
-      (column: Column) => column.isSortable && column.defaultSortDirection
-    );
+  private getInitialSort(columns?: SmartTableColumnSettings[]): SmartTableSortItem | false {
+    if (!columns || !columns.length) {
+      return false;
+    }
+    const defaultSortColumn = columns?.find((column) => column.sortDirection);
     if (!defaultSortColumn) {
       return false;
     }
     return {
-      field: defaultSortColumn.id,
-      direction: defaultSortColumn.defaultSortDirection || "asc",
-      compare: defaultSortColumn.getCompareFunction(),
+      field: defaultSortColumn.key as string,
+      direction: defaultSortColumn.sortDirection || 'asc',
+      compare: defaultSortColumn.compareFunction,
     };
   }
 
   getSelectedRowsData(): any[] {
-    return this.dataSet.getRows();
+    return this.dataSet.getSelectedRowsData();
   }
 
   selectAllRows(status: boolean) {
@@ -253,47 +241,48 @@ export class Grid {
     return this.dataSet.getLastRow();
   }
 
-  private updateSettingsAndDataSet(settings: SmartTableSettings) {
+  private updateSettingsAndDataSet(
+    settings: SmartTableSettings,
+    emittedEvent:
+      | `${SmartTableOnChangedEventName.refresh}`
+      | `${SmartTableOnChangedEventName.columnRefresh}` = 'refresh',
+  ) {
     this.settings.set(settings);
-    this.dataSet = new DataSet(
-      [],
-      settings.columns
-    );
+    this.dataSet = new DataSet([], settings.columns);
 
     if (this.source) {
-      this.source.refresh();
+    console.log('updateSettingsAndDataSet', emittedEvent);
+
+      this.source.pagingConf.update((old) => ({
+        ...old,
+        display: this.getSetting('pager.display'),
+      }));
+
+      if (emittedEvent === 'columnRefresh') {
+        this.source.columnRefresh();
+      } else {
+        this.source.refresh();
+      }
     }
   }
 
-  private setSource(source: LocalDataSource | undefined) {
-    this.source = this.prepareSource(source);
+  private setSource(source: DataSource | undefined, settings?: SmartTableSettings) {
+    const initialSort = this.getInitialSort(settings?.columns);
+    this.source = this.prepareSource(source, initialSort, settings?.pager || false);
     this.detach();
 
-    this.sourceOnChangedSubscription = this.source
-      .onChanged()
-      .subscribe((changes) => this.processDataChange(changes));
-
-    this.sourceOnUpdatedSubscription = this.source
-      .onUpdated()
-      .subscribe((data: any) => {
-        const changedRow = this.dataSet.findRowByData(data);
-        if (changedRow) {
-          changedRow.setData(data);
-        }
-      });
+    this.sourceOnChangedSubscription = this.source.onChanged().subscribe((changes) => this.processDataChange(changes));
   }
 
   // ------------------------------- column sort
 
   private async getSortedTableColumns(
     newState: ColumnPositionState[],
-    columns: SmartTableColumnSettings[]
+    columns: SmartTableColumnSettings[],
   ): Promise<SmartTableColumnSettings[]> {
     const sortedArray: SmartTableColumnSettings[] = [];
     newState.forEach((item2) => {
-      const index = columns.findIndex(
-        (item1) => item1.key === item2.key && item1.title === item2.title
-      );
+      const index = columns.findIndex((item1) => item1.key === item2.key && item1.title === item2.title);
       if (index > -1) {
         sortedArray.push({ ...columns[index], hide: !!item2.hide });
       }
@@ -303,30 +292,31 @@ export class Grid {
 
   public async applyColumnsSortState(state: ColumnPositionState[], emitEvent = true) {
     this.currentColumnsSortState = this.getMergedColumnStates(state);
-    this.updateSettingsAndDataSet({
-      ...this.settings(),
-      columns: await this.getSortedTableColumns(this.currentColumnsSortState, this.settings()?.columns),
-    });
+    this.updateSettingsAndDataSet(
+      {
+        ...this.settings(),
+        columns: await this.getSortedTableColumns(this.currentColumnsSortState, this.settings()?.columns),
+      },
+      'columnRefresh',
+    );
     if (this.columnStateStorageKey) {
       setLocalStorage(this.columnStateStorageKey, this.currentColumnsSortState);
     }
     if (emitEvent) {
-      this.columnsSortedEmitter.emit(this.currentColumnsSortState)
+      this.columnsSortedEmitter.emit(this.currentColumnsSortState);
     }
   }
 
   private setColumnsSortState(columns?: SmartTableColumnSettings[]) {
     const columnsState = this.getColumnsStateFromSettings(columns);
     if (this.columnStateStorageKey) {
-      const storageState = getLocalStorage<ColumnPositionState[]>(
-        this.columnStateStorageKey
-      );
+      const storageState = getLocalStorage<ColumnPositionState[]>(this.columnStateStorageKey);
       if (!storageState) {
         this.currentColumnsSortState = columnsState;
         setLocalStorage(this.columnStateStorageKey, columnsState);
         return;
       }
-      const merged = this.getMergedColumnStates(storageState, columnsState)
+      const merged = this.getMergedColumnStates(storageState, columnsState);
       this.applyColumnsSortState(merged, false);
       return;
     }
@@ -342,26 +332,19 @@ export class Grid {
     }));
   }
 
-  private getMergedColumnStates(
-    newState: ColumnPositionState[],
-    columnsState?: ColumnPositionState[],
-  ) {
+  private getMergedColumnStates(newState: ColumnPositionState[], columnsState?: ColumnPositionState[]) {
     const columnsSettings = columnsState || this.getColumnsStateFromSettings();
     // merge new columns state with state from storage
     const filtered: ColumnPositionState[] = [];
     newState.forEach((state) => {
-      const fined = columnsSettings.find(
-        (column) => column.title === state.title && column.key === state.key
-      );
+      const fined = columnsSettings.find((column) => column.title === state.title && column.key === state.key);
       if (fined) {
         filtered.push({ ...fined, hide: fined.moveDisabled ? fined.hide : state.hide });
       }
     });
     // find new columns witch not exist in storage state
     const newColumns = columnsSettings.filter((state) => {
-      return !filtered.some(
-        (column) => column.title === state.title && column.key === state.key
-      );
+      return !filtered.some((column) => column.title === state.title && column.key === state.key);
     });
     return [...filtered, ...newColumns];
   }

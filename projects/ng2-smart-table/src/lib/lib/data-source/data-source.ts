@@ -1,119 +1,159 @@
+import { signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { SmartTableFilterConf, SmartTableOnChangedEvent, SmartTableOnChangedEventName, SmartTableOnChangedEventType, SmartTablePagingItem, SmartTableSortItem } from '../interfaces/smart-table.models';
+import {
+  SmartTableFilterItem,
+  SmartTableOnChangedEvent,
+  SmartTableOnChangedEventName,
+  SmartTableOnChangedEventToEmit,
+  SmartTablePagerSettings,
+  SmartTableSortItem,
+} from '../interfaces/smart-table.models';
 
-export abstract class DataSource<T=any> {
-
+export abstract class DataSource<T = any> {
   protected onChangedSource = new Subject<SmartTableOnChangedEvent>();
-  protected onAddedSource = new Subject<any>();
-  protected onUpdatedSource = new Subject<any>();
-  protected onRemovedSource = new Subject<any>();
+  protected sortConf: SmartTableSortItem = { field: '', direction: 'asc' };
+  protected filters: SmartTableFilterItem[] = [];
 
+  readonly pagingConf = signal<SmartTablePagerSettings>({
+    page: 1,
+    perPage: 100,
+    total: 0,
+    display: false,
+    perPageSelect: [],
+  });
+
+  protected data: T[] = [];
+  /**
+   * return all elements
+   */
   abstract getAll(): Promise<T[]>;
-  abstract getElements(): Promise<T[]>;
-  abstract getSort(): SmartTableSortItem[];
-  abstract getFilter(): SmartTableFilterConf;
-  abstract getPaging(): SmartTablePagingItem | false;
+  abstract getSort(): SmartTableSortItem;
+  abstract getFilters(): SmartTableFilterItem[];
   abstract count(): number;
 
   refresh(): void {
-    this.emitOnChanged(SmartTableOnChangedEventName.refresh);
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.refresh });
   }
 
-  loadEmit(): Promise<true> {
-    this.emitOnChanged(SmartTableOnChangedEventName.load);
-    return Promise.resolve(true);
+  columnRefresh(): void {
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.columnRefresh });
   }
 
   onChanged(): Observable<SmartTableOnChangedEvent> {
     return this.onChangedSource.asObservable();
   }
 
-  onAdded(): Observable<any> {
-    return this.onAddedSource.asObservable();
-  }
-
-  onUpdated(): Observable<any> {
-    return this.onUpdatedSource.asObservable();
-  }
-
-  onRemoved(): Observable<any> {
-    return this.onRemovedSource.asObservable();
-  }
-
-  prependEmit(element: T): Promise<true> {
-    this.emitOnAdded(element);
-    this.emitOnChanged(SmartTableOnChangedEventName.prepend);
+  prepend(element: T): Promise<true> {
+    this.data.unshift(element);
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.prepend, newItems: [element] });
     return Promise.resolve(true);
   }
 
-  appendEmit(element: T): Promise<true> {
-    this.emitOnAdded(element);
-    this.emitOnChanged(SmartTableOnChangedEventName.append);
+  appendMany(elements: T[]): Promise<true> {
+    this.data = [...this.data, ...elements];
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.appendMany, newItems: elements }, this.data);
     return Promise.resolve(true);
   }
 
-  addEmit(element: T): Promise<true> {
-    this.emitOnAdded(element);
-    this.emitOnChanged(SmartTableOnChangedEventName.add);
+  append(element: T): Promise<true> {
+    this.data.push(element);
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.append, newItems: [element] });
     return Promise.resolve(true);
   }
 
-  removeEmit(element: T): Promise<true> {
-    this.emitOnRemoved(element);
-    this.emitOnChanged(SmartTableOnChangedEventName.remove);
+  add(element: T): Promise<true> {
+    this.data.push(element);
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.add, newItems: [element] });
     return Promise.resolve(true);
   }
 
-  updateEmit(element: T): Promise<true> {
-    this.emitOnUpdated(element);
-    this.emitOnChanged(SmartTableOnChangedEventName.update);
+  remove(element: T): Promise<true> {
+    this.data = this.data.filter((el) => el !== element);
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.remove, item: element }, this.data);
     return Promise.resolve(true);
   }
 
-  emptyEmit(): Promise<true> {
-    this.emitOnChanged(SmartTableOnChangedEventName.empty);
+  update(oldItem: T, newItem: T): Promise<true> {
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.update, oldItem, newItem });
     return Promise.resolve(true);
   }
 
-  setSortEmit() {
-    this.emitOnChanged(SmartTableOnChangedEventName.sort);
+  empty(): Promise<true> {
+    this.data = [];
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.empty });
+    return Promise.resolve(true);
   }
 
-  setFilterEmit() {
-    this.emitOnChanged(SmartTableOnChangedEventName.filter);
+  setSort(conf: SmartTableSortItem, doEmit = true) {
+    this.sortConf = conf;
+    this.pagingConf.update((old) => ({ ...old, page: 1 }));
+    if (doEmit) {
+      this.emitOnChanged({ action: SmartTableOnChangedEventName.sort });
+    }
   }
 
-  addFilterEmit() {
-    this.emitOnChanged(SmartTableOnChangedEventName.filter);
+  addFilter(newFilter: SmartTableFilterItem, doEmit = true,) {
+    if (!newFilter.field) {
+      return;
+    }
+    const foundIndex = this.filters.findIndex((filter) => filter.field === newFilter.field);
+    if (foundIndex === -1) {
+      if (newFilter.search) {
+        this.filters.push(newFilter);
+      }
+    } else {
+      if (newFilter.search) {
+        this.filters[foundIndex].search = newFilter.search;
+      } else {
+        this.filters.splice(foundIndex, 1);
+      }
+    }
+    this.pagingConf.update((old) => ({ ...old, page: 1 }));
+    if (doEmit) {
+      this.emitOnChanged({ action: SmartTableOnChangedEventName.filter });
+    }
   }
 
-  setPagingEmit() {
-    this.emitOnChanged(SmartTableOnChangedEventName.paging);
+  setFilters(newFilters: SmartTableFilterItem[], doEmit = true) {
+    this.filters = [...newFilters];
+    this.pagingConf.update((old) => ({ ...old, page: 1 }));
+    if (doEmit) {
+      this.emitOnChanged({ action: SmartTableOnChangedEventName.filter });
+    }
   }
 
-  setPageEmit() {
-    this.emitOnChanged(SmartTableOnChangedEventName.page);
+  setPaging(page = 1, perPage: number, doEmit = true) {
+    this.pagingConf.update((old) => ({ ...old, page: page, perPage: perPage }));
+    if (doEmit) {
+      this.emitOnChanged({ action: SmartTableOnChangedEventName.paging });
+    }
   }
 
-  protected emitOnRemoved(element: T) {
-    this.onRemovedSource.next(element);
+  setPage(page: number, doEmit = true) {
+    this.pagingConf.update((old) => ({ ...old, page: page }));
+    if (doEmit) {
+      this.emitOnChanged({ action: SmartTableOnChangedEventName.page });
+    }
   }
 
-  protected emitOnUpdated(element: T) {
-    this.onUpdatedSource.next(element);
-  }
-
-  protected emitOnAdded(element: T) {
-    this.onAddedSource.next(element);
-  }
-
-  protected emitOnChanged(action: SmartTableOnChangedEventType) {
-    this.getElements().then((elements) => this.onChangedSource.next({
-      action: action,
-      elements: elements,
-      paging: this.getPaging(),
-      filter: this.getFilter(),
-      sort: this.getSort(),
-    }));
+  emitOnChanged(eventData: SmartTableOnChangedEventToEmit, newElements?: T[]) {
+    const actionData = (): SmartTableOnChangedEvent => {
+      const elements = newElements || this.data;
+      const emitData: SmartTableOnChangedEvent = {
+        ...eventData,
+        elements,
+        paging: this.pagingConf(),
+        filters: this.getFilters(),
+        sort: this.getSort(),
+      };
+      if (eventData.action === SmartTableOnChangedEventName.remove) {
+        return {
+          ...emitData,
+          elements: elements.filter((el) => el !== eventData.item),
+        };
+      }
+      return emitData;
+    };
+    this.onChangedSource.next(actionData());
   }
 }

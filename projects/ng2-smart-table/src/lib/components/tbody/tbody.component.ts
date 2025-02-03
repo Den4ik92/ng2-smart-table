@@ -9,8 +9,7 @@ import {
 
 import { NgTemplateOutlet } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { Cell } from "../../lib/data-set/cell";
-import { LocalDataSource } from "../../lib/data-source/local/local.data-source";
+import { DataSource } from "ng2-smart-table";
 import { Grid } from "../../lib/grid";
 import { CellComponent } from "../cell/cell.component";
 import { TbodyCreateCancelComponent } from "./cells/create-cancel.component";
@@ -33,7 +32,7 @@ import { TbodyEditDeleteComponent } from "./cells/edit-delete.component";
 })
 export class Ng2SmartTableTbodyComponent {
   readonly grid = input.required<Grid>();
-  readonly source = input.required<LocalDataSource>();
+  readonly source = input.required<DataSource>();
   readonly deleteConfirm = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
   readonly createConfirm = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
   readonly editConfirm  = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
@@ -59,10 +58,6 @@ export class Ng2SmartTableTbodyComponent {
   readonly noDataMessage = computed<string>(() => {
     return this.grid().settings().noDataMessage || "No data found"
   })
-
-  getVisibleCells(cells: Cell[]): Cell[] {
-    return (cells || []).filter((cell: Cell) => !cell.getColumn().hide);
-  }
 
   protected trackByIdOrIndex(index: number, item: any): string | number {
     return item?.id || index;

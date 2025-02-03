@@ -1,28 +1,94 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { SmartTableColumnEditorDirective } from "ng2-smart-table";
-import { Ng2SmartTableComponent } from "../../../ng2-smart-table/src/lib/ng2-smart-table.component";
-import { LocalDataSource } from "./../../../ng2-smart-table/src/lib/lib/data-source/local/local.data-source";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { SmartTableColumnEditorDirective } from 'ng2-smart-table';
+import {
+  ParamsPrepareFunction,
+  RequestFunction,
+  ServerDataSource
+} from 'projects/ng2-smart-table/src/lib/lib/data-source/server/server.data-source';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Ng2SmartTableComponent } from '../../../ng2-smart-table/src/lib/ng2-smart-table.component';
 import {
   SmartTableConfirmDeleteEvent,
   SmartTableConfirmEditEvent,
   SmartTableSettings,
-} from "./../../../ng2-smart-table/src/lib/lib/interfaces/smart-table.models";
-import { CustomEditorComponent } from "./custom-editor/custom-editor.component";
-import { CustomFilterComponent } from "./custom-filter/custom-filter.component";
+} from './../../../ng2-smart-table/src/lib/lib/interfaces/smart-table.models';
+import { CustomEditorComponent } from './custom-editor/custom-editor.component';
+
+export interface User {
+  id: number;
+  gender: string;
+  name: string;
+  email: string;
+  age: number;
+  phone: string;
+  occupation: string;
+  address: Address;
+}
+
+export interface Address {
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
+}
 
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
+  selector: 'app-root',
+  templateUrl: './app.component.html',
   standalone: true,
   imports: [Ng2SmartTableComponent, SmartTableColumnEditorDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  settings: SmartTableSettings = {
+
+  private readonly http = inject(HttpClient);
+
+  private requestFunction(): RequestFunction<User> {
+    return (params) =>
+      this.http
+        .get<{ users: User[]; totalCount: number }>('http://localhost:3000/api/users', {
+          params,
+        })
+        .pipe(map((data) => ({ data: data.users, total: data.totalCount })));
+  }
+
+  private paramPrepareFunction: ParamsPrepareFunction = (options) => {
+    return new Observable<HttpParams>((observer) => {
+      let paramsObject: Record<string, any> = {
+        page: options.page,
+        limit: options.limit,
+        sortBy: options.sort.field,
+        sortDirection: options.sort.direction,
+      };
+      options.filters?.forEach((filter) => {
+        paramsObject = { ...paramsObject, [filter.field]: filter.search };
+      });
+      observer.next(new HttpParams({ fromObject: paramsObject }));
+      observer.complete();
+    });
+  };
+
+  // ngOnInit(): void {
+    // this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 1000 } })).subscribe((res) => {
+    //   this.source.load(res.data);
+    // })
+  // }
+
+  readonly tableHide = signal(false);
+  readonly source = new ServerDataSource<User>(this.paramPrepareFunction, this.requestFunction());
+  // readonly source = new LocalDataSource<User>();
+
+  settings: SmartTableSettings<User> = {
     columnSortStorageKey: 'test1',
-    pager: false,
+    pager: {
+      display: true,
+      perPage: 50,
+      perPageSelect: [10, 20, 50, 100],
+    },
     columnSort: true,
-    selectMode: "multi",
+    selectMode: 'multi',
     actions: {
       add: true,
       delete: false,
@@ -36,129 +102,76 @@ export class AppComponent {
     },
     columns: [
       {
-        key: "email",
-        title: "Email Secondary",
-        type: "text",
-        valuePrepareFunction: (cell: string) => {
-          return cell + "-test"
-        }
-      },
-      {
-        key: "username",
-        title: "User Name",
-        type: "text",
+        key: 'name',
+        title: 'User Name',
+        type: 'text',
         editor: {
-          type: "custom",
+          type: 'custom',
           component: CustomEditorComponent,
         },
       },
       {
-        key: "name",
-        title: "Full Name",
-        type: "text",
+        key: 'email',
+        title: 'Email',
+        type: 'text',
+      },
+      {
+        key: 'gender',
+        title: 'Is man',
+        type: 'text',
         filter: {
-          type: "custom",
-          component: CustomFilterComponent,
+          type: 'checkbox',
+          config: {
+            true: 'male',
+            false: 'female',
+          },
+        },
+        valuePrepareFunction: (cell: 'male' | 'female') => {
+          return cell === 'male';
         },
       },
       {
-        key: "name",
-        title: "Test +",
-        type: "text",
-        hide: true,
-        valuePrepareFunction: (cell: string) => {
-          return cell + "-test"
-        }
+        key: 'gender',
+        title: 'gender',
+        type: 'text',
+        editor: {
+          type: 'custom',
+          component: CustomEditorComponent,
+        },
       },
       {
-        key: "id",
-        title: "ID",
-        hide: true,
-        moveDisabled: true,
-        type: "text",
+        key: 'age',
+        title: 'Age',
+        type: 'text',
+        sortDirection: 'asc',
+      },
+      {
+        key: 'occupation',
+        title: 'occupation',
+        type: 'text',
+        valuePrepareFunction: (cell: string) => {
+          return cell + '-O';
+        },
+      },
+      {
+        key: 'phone',
+        title: 'phone',
+        type: 'text',
       },
 
       {
-        key: "email",
-        title: "Email",
-        type: "text",
+        key: 'address',
+        title: 'address',
+        type: 'text',
+        valuePrepareFunction: (cell: Address) => {
+          return cell.city + '-' + cell.zip;
+        },
       },
     ],
   };
 
-  data = [
-    {
-      id: 1,
-      name: "Leanne Graham",
-      username: "Bret",
-      email: "Sincere@april.biz",
-    },
-    {
-      id: 2,
-      name: "Ervin Howell",
-      username: "Antonette",
-      email: "Shanna@melissa.tv",
-    },
-    {
-      id: 3,
-      name: "Clementine Bauch",
-      username: "Samantha",
-      email: "Nathan@yesenia.net",
-    },
-    {
-      id: 4,
-      name: "Patricia Lebsack",
-      username: "Karianne",
-      email: "Julianne.OConner@kory.org",
-    },
-    {
-      id: 5,
-      name: "Chelsey Dietrich",
-      username: "Kamren",
-      email: "Lucio_Hettinger@annie.ca",
-    },
-    {
-      id: 6,
-      name: "Mrs. Dennis Schulist",
-      username: "Leopoldo_Corkery",
-      email: "Karley_Dach@jasper.info",
-    },
-    {
-      id: 7,
-      name: "Kurtis Weissnat",
-      username: "Elwyn.Skiles",
-      email: "Telly.Hoeger@billy.biz",
-    },
-    {
-      id: 8,
-      name: "Nicholas Runolfsdottir V",
-      username: "Maxime_Nienow",
-      email: "Sherwood@rosamond.me",
-    },
-    {
-      id: 9,
-      name: "Glenna Reichert",
-      username: "Delphine",
-      email: "Chaim_McDermott@dana.io",
-    },
-    {
-      id: 10,
-      name: "Clementina DuBuque",
-      username: "Moriah.Stanton",
-      email: "Rey.Padberg@karina.biz",
-    },
-    {
-      id: 11,
-      name: "Nicholas DuBuque",
-      username: "Nicholas.Stanton",
-      email: "Rey.Padberg@rosamond.biz",
-    },
-  ];
-
-  source = new LocalDataSource(this.getGeneratedData(20));
-
   columnsSorted(event: any) {
-    console.log('columnsSorted',event);
+    console.log('columnsSorted', event);
   }
 
   setNewState(table: Ng2SmartTableComponent) {
@@ -167,25 +180,9 @@ export class AppComponent {
       if (column.key === 'email') {
         column.hide = true;
       }
-      return column
-    })
-    table.grid.applyColumnsSortState(columns)
-  }
-
-  getGeneratedData(count = 100, startId = 0): any {
-    const generatedData: any[] = [];
-    for (let i = 0; i <= count; i++) {
-      const userIndex = this.randomInteger(0, 10);
-      generatedData.push({ ...this.data[userIndex], id: i + startId });
-    }
-    return generatedData;
-  }
-
-  listScrollEnd(): void {
-    const count = this.source.count();
-    const data = this.getGeneratedData(100, count);
-
-    this.source.appendMany(data);
+      return column;
+    });
+    table.grid.applyColumnsSortState(columns);
   }
 
   deleteConfirm(event: SmartTableConfirmDeleteEvent): void {
@@ -203,30 +200,58 @@ export class AppComponent {
 
   disableMulti(table: Ng2SmartTableComponent): void {
     const settings = table.grid.settings();
-    settings.selectMode = 'single'
+    settings.selectMode = 'single';
     table.grid.setSettings(settings);
   }
 
   enableDelete(table: Ng2SmartTableComponent): void {
-
-    this.settings.actions =  {...this.settings.actions, delete: true,}
-
-    table.grid.setSettings(this.settings);
-  }
+    this.settings.actions = { ...this.settings.actions, delete: true };
+    this.settings = Object.assign({}, this.settings);
+      }
   updateEditButtons(table: Ng2SmartTableComponent): void {
-
-    this.settings.edit =  {saveButtonContent: 'NewSave',}
-    this.settings = Object.assign({}, this.settings)
+    this.settings.edit = { saveButtonContent: 'NewSave' };
+    this.settings = Object.assign({}, this.settings);
     // table.grid.setSettings(this.settings);
   }
   addNewRow(): void {
-
-    this.source.add({id: 100, name: 'new', username: 'new', email: 'new'})
+    this.source.add({
+      id: 100,
+      name: 'new',
+      gender: 'new',
+      email: 'new',
+      age: 100,
+      phone: 'new',
+      occupation: 'new',
+      address: {
+        street: 'new',
+        city: 'new',
+        state: 'new',
+        zip: 'new',
+      },
+    });
   }
 
-  prependNewRow(): void {
+  prepend(): void {
+    this.source.prepend({
+      id: 100,
+      name: 'new',
+      gender: 'new',
+      email: 'new',
+      age: 100,
+      phone: 'new',
+      occupation: 'new',
+      address: {
+        street: 'new',
+        city: 'new',
+        state: 'new',
+        zip: 'new',
+      },
+    });
+  }
 
-    this.source.prepend({id: 100, name: 'new', username: 'new', email: 'new'})
+  tableHideToggle(): void {
+    this.tableHide.set(!this.tableHide());
+    // this.source.prepend({id: 100, name: 'new', username: 'new', email: 'new'})
   }
 
   randomInteger(min: number, max: number) {
@@ -238,6 +263,6 @@ export class AppComponent {
   }
 
   multiRowSelect(event: any) {
-    console.log("multiRowSelect", event);
+    console.log('multiRowSelect', event);
   }
 }

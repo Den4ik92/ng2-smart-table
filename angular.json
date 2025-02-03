@@ -93,6 +93,14 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "development": {
+              "optimization": false,
+              "deleteOutputPath": false,
+              "preserveSymlinks": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           }
         },
@@ -102,10 +110,11 @@
             "buildTarget": "demo:build"
           },
           "configurations": {
-            "production": {
-              "buildTarget": "demo:build:production"
+            "development": {
+              "buildTarget": "demo:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

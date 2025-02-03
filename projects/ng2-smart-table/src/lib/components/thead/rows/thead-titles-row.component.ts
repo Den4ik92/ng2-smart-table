@@ -1,7 +1,6 @@
 import { Component, input, output } from "@angular/core";
 
-import { Column } from "../../../lib/data-set/column";
-import { LocalDataSource } from "../../../lib/data-source/local/local.data-source";
+import { DataSource } from "ng2-smart-table";
 import { Grid } from "../../../lib/grid";
 import { ActionsTitleComponent } from "../cells/actions-title.component";
 import { CheckboxSelectAllComponent } from "../cells/checkbox-select-all.component";
@@ -14,12 +13,12 @@ import { ColumnTitleComponent } from "../cells/column-title.component";
     <th
       ng2-st-checkbox-select-all
       [grid]="grid()"
-      (click)="selectAllRows.emit($event)"
+      (click)="selectAllRows.emit()"
     ></th>
     } @if (grid().actionIsOnLeft() && grid().isActionsVisible()) {
 
     <th ng2-st-actions-title [grid]="grid()"></th>
-    } @for (column of getVisibleColumns(); track column.id + $index) {
+    } @for (column of grid().dataSet.getVisibleColumns(); track column.id + $index) {
     <th
       class="ng2-smart-th {{ column.id }}"
       [class]="column.class"
@@ -28,7 +27,6 @@ import { ColumnTitleComponent } from "../cells/column-title.component";
       <ng2-st-column-title
         [source]="source()"
         [column]="column"
-        (sort)="sort.emit($event)"
       ></ng2-st-column-title>
     </th>
     } @if (grid().actionIsOnRight() && grid().isActionsVisible()) {
@@ -44,14 +42,7 @@ import { ColumnTitleComponent } from "../cells/column-title.component";
 })
 export class TheadTitlesRowComponent {
   readonly grid = input.required<Grid>();
-  readonly source = input.required<LocalDataSource>();
+  readonly source = input.required<DataSource>();
 
-  readonly sort = output<any>();
-  readonly selectAllRows = output<any>();
-
-  getVisibleColumns(): Column[] {
-    return (this.grid().getColumns() || []).filter(
-      (column: Column) => !column.hide
-    );
-  }
+  readonly selectAllRows = output<void>();
 }

@@ -1,7 +1,6 @@
 import { Component, computed, input, output } from "@angular/core";
 
-import { Column } from "../../../lib/data-set/column";
-import { LocalDataSource } from "../../../lib/data-source/local/local.data-source";
+import { DataSource } from "ng2-smart-table";
 import { Grid } from "../../../lib/grid";
 import { FilterComponent } from "../../filter/filter.component";
 import { AddButtonComponent } from "../cells/add-button.component";
@@ -18,13 +17,12 @@ import { AddButtonComponent } from "../cells/add-button.component";
       [grid]="grid()"
       (create)="create.emit($event)"
     ></th>
-    } @for (column of getVisibleColumns(); track column.id + $index) {
+    } @for (column of grid().dataSet.getVisibleColumns(); track column.id + $index) {
     <th class="ng2-smart-th {{ column.id }}">
       <ng2-smart-table-filter
         [source]="source()"
         [column]="column"
         [inputClass]="filterInputClass()"
-        (filter)="filter.emit($event)"
       >
       </ng2-smart-table-filter>
     </th>
@@ -42,22 +40,15 @@ import { AddButtonComponent } from "../cells/add-button.component";
 })
 export class TheadFiltersRowComponent {
   readonly grid = input.required<Grid>();
-  readonly source = input.required<LocalDataSource>();
+  readonly source = input.required<DataSource>();
 
   readonly create = output<any>();
-  readonly filter = output<any>();
 
-  filterInputClass = computed<string>(() => {
+  readonly filterInputClass = computed<string>(() => {
     const filterOptions = this.grid().settings()?.filter;
     if (!filterOptions) {
       return "";
     }
     return filterOptions.inputClass || "";
   });
-
-  getVisibleColumns(): Column[] {
-    return (this.grid().getColumns() || []).filter(
-      (column: Column) => !column.hide
-    );
-  }
 }

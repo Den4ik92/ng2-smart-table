@@ -1,27 +1,16 @@
-import {
-  Component,
-  OnChanges,
-  OnDestroy,
-  SimpleChanges,
-  input,
-  output
-} from "@angular/core";
-import { Subscription } from "rxjs";
-import { Column } from "../../../../lib/data-set/column";
-import { LocalDataSource } from "./../../../../lib/data-source/local/local.data-source";
-import { SmartTableSortDirection } from "./../../../../lib/interfaces/smart-table.models";
+import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DataSource } from 'ng2-smart-table';
+import { map } from 'rxjs/operators';
+import { Column } from '../../../../lib/data-set/column';
+import { SmartTableSortDirection } from './../../../../lib/interfaces/smart-table.models';
 
 @Component({
-  selector: "ng2-smart-table-title",
-  styleUrls: ["./title.component.scss"],
+  selector: 'ng2-smart-table-title',
+  styleUrls: ['./title.component.scss'],
   template: `
     @if (column().isSortable) {
-    <a
-      href="#"
-      (click)="_sort($event)"
-      class="ng2-smart-sort-link sort"
-      [class]="currentDirection"
-    >
+    <a href="#" (click)="_sort($event)" class="ng2-smart-sort-link sort" [class]="currentSortDirection()">
       {{ column().title }}
     </a>
     } @else {
@@ -30,59 +19,36 @@ import { SmartTableSortDirection } from "./../../../../lib/interfaces/smart-tabl
   `,
   standalone: true,
 })
-export class TitleComponent implements OnChanges, OnDestroy {
-
-  currentDirection: SmartTableSortDirection | "" = "";
-  readonly source = input.required<LocalDataSource>();
+export class TitleComponent implements OnInit {
+  readonly source = input.required<DataSource>();
   readonly column = input.required<Column>();
+  private readonly destroyRef = inject(DestroyRef);
 
-  readonly sort = output<any>();
 
-  protected dataChangedSub: Subscription | false = false;
+  protected readonly currentSortDirection = signal<'' | SmartTableSortDirection>('');
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes["source"]) {
-      if (!changes["source"].firstChange && this.dataChangedSub) {
-        this.dataChangedSub.unsubscribe();
-      }
-      this.dataChangedSub = this.source().onChanged().subscribe((dataChanges) => {
-        const sortConf = this.source().getSort();
-
-        if (sortConf.length > 0 && sortConf[0]["field"] === this.column().id) {
-          this.currentDirection = sortConf[0]["direction"];
-        } else {
-          this.currentDirection = "";
-        }
-      });
-    }
+  ngOnInit(): void {
+    this.source()
+      .onChanged()
+      .pipe(
+        map(({ sort }) => {
+          if (sort.field === this.column().id) {
+            return sort.direction;
+          } else {
+            return '';
+          }
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(this.currentSortDirection.set);
   }
 
-  ngOnDestroy(): void {
-    if (this.dataChangedSub) {
-      this.dataChangedSub?.unsubscribe();
-    }
-  }
-
-  _sort(event: any) {
+  _sort(event: Event) {
     event.preventDefault();
-    this.changeSortDirection();
-    this.source().setSort([
-      {
-        field: this.column().id,
-        direction: this.currentDirection === "desc" ? "desc" : "asc",
-        compare: this.column().getCompareFunction(),
-      },
-    ]);
-    this.sort.emit(null);
-  }
-
-  changeSortDirection(): string {
-    if (this.currentDirection) {
-      const newDirection = this.currentDirection === "asc" ? "desc" : "asc";
-      this.currentDirection = newDirection;
-    } else {
-      this.currentDirection = this.column().sortDirection;
-    }
-    return this.currentDirection;
+    this.source().setSort({
+      field: this.column().id,
+      direction: this.currentSortDirection() === 'desc' ? 'asc' : 'desc',
+      compare: this.column().compareFunction,
+    });
   }
 }

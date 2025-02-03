@@ -1,31 +1,24 @@
-@for (row of grid().getRows(); track trackByIdOrIndex($index, row)) {
+@for (row of grid().dataSet.getRows(); track trackByIdOrIndex($index, row)) {
 <tr
   (click)="userClickedRow.emit(row)"
   class="ng2-smart-row"
   [class]="rowClassFunction()(row)"
-  [class.selected]="row.isSelected()"
->
+  [class.selected]="row.isSelected()">
   @if (grid().isMultiSelectVisible()) {
   <td
     class="ng2-smart-actions ng2-smart-action-multiple-select"
-    (click)="$event.stopPropagation(); multipleSelectRow.emit(row)"
-  >
+    (click)="$event.stopPropagation(); multipleSelectRow.emit(row)">
     <input
       type="checkbox"
       [id]="'row-' + row.index + '_select-checkbox'"
       class="form-control"
-      [ngModel]="row.isSelected()"
-    />
+      [ngModel]="row.isSelected()" />
   </td>
   } @if (grid().actionIsOnLeft()) {
   <ng-container [ngTemplateOutlet]="actions"></ng-container>
-  } @for (cell of getVisibleCells(row.cells); track cell.getId() + $index) {
+  } @for (cell of row.visibleCells(); track cell.getId() + $index) {
   <td [class]="cell.getColumnClass()">
-    <ng2-smart-table-cell
-      [cell]="cell"
-      [inputClass]="editInputClass()"
-      [isInEditing]="row.isInEditing()"
-    >
+    <ng2-smart-table-cell [cell]="cell" [inputClass]="editInputClass()" [isInEditing]="row.isInEditing()">
     </ng2-smart-table-cell>
   </td>
   } @if (grid().actionIsOnRight()) {
@@ -40,8 +33,7 @@
       [grid]="grid()"
       [row]="row"
       [editConfirm]="editConfirm()"
-      [editCancel]="editCancel"
-    ></ng2-st-tbody-create-cancel>
+      [editCancel]="editCancel"></ng2-st-tbody-create-cancel>
   </td>
   } @if (!row.isInEditing() && grid().isActionsVisible() ) {
   <td class="ng2-smart-actions" (click)="$event.stopPropagation()">
@@ -49,16 +41,14 @@
       [grid]="grid()"
       (custom)="custom.emit($event)"
       [row]="row"
-      [source]="source()"
-    ></ng2-st-tbody-custom>
+      [source]="source()"></ng2-st-tbody-custom>
     <ng2-st-tbody-edit-delete
       [grid]="grid()"
       [deleteConfirm]="deleteConfirm()"
       (edit)="edit.emit(row)"
       (delete)="delete.emit(row)"
       [row]="row"
-      [source]="source()"
-    >
+      [source]="source()">
     </ng2-st-tbody-edit-delete>
   </td>
   }
