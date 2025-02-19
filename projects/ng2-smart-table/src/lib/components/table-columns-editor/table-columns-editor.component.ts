@@ -12,11 +12,11 @@ import { ColumnPositionState } from '../../lib/interfaces/smart-table.models';
 })
 export class TableColumnsEditorComponent {
   protected infoText = 'You can drag and drop columns as you wish and also disable unnecessary ones.';
-  public grid = input<Grid>();
-  public close = input.required<() => void>();
+  public readonly grid = input<Grid>();
+  public readonly close = input.required<() => void>();
 
   protected currentState: ColumnPositionState[] = [];
-  stateHasChanged = signal(false);
+  readonly stateHasChanged = signal(false);
 
   constructor() {
     effect(() => {

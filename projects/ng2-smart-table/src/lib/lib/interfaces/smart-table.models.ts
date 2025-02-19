@@ -28,7 +28,7 @@ export interface SmartTableSettings<T extends Record<string, any> = any> {
   columnSort?: boolean; // if you want to add column sort need to set true;
   hideHeader?: boolean;
   hideSubHeader?: boolean;
-  actions?: SmartTableAction | false;
+  actions?: SmartTableAction<T> | false;
   actionsPosition?: ActionPosition;
   filter?: {
     inputClass: string;
@@ -40,6 +40,7 @@ export interface SmartTableSettings<T extends Record<string, any> = any> {
         saveButtonContent?: string;
         cancelButtonContent?: string;
         confirmSave?: boolean;
+        hasPermissionFunction?: (row: T) => boolean;
       }
     | false;
   add?:
@@ -55,6 +56,7 @@ export interface SmartTableSettings<T extends Record<string, any> = any> {
     | {
         deleteButtonContent?: string;
         confirmDelete?: boolean;
+        hasPermissionFunction?: (row: T) => boolean;
       }
     | false;
   attr?: {
@@ -67,17 +69,18 @@ export interface SmartTableSettings<T extends Record<string, any> = any> {
   rowClassFunction?: (row: { data: T }) => string;
 }
 
-export interface SmartTableAction {
+export interface SmartTableAction<T=any> {
   columnTitle?: string;
   add?: boolean;
   edit?: boolean;
   delete?: boolean;
-  custom?: SmartTableCustomAction[];
+  custom?: SmartTableCustomAction<T>[];
 }
 
-export interface SmartTableCustomAction {
+export interface SmartTableCustomAction<T=any> {
   name: string;
   title: string; // insert html content to action button
+  hasPermissionFunction?: (row: T) => boolean;
 }
 
 export type SmartTableColumnSettingsTypes = 'text' | 'html' | 'custom';

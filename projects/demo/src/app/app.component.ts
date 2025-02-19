@@ -52,6 +52,15 @@ export class AppComponent implements OnInit {
         .pipe(map((data) => ({ data: data.users, total: data.totalCount })));
   }
 
+  deleteGender = "male"
+
+  canDeleteFunction() {
+    return (user: User) => user.gender === this.deleteGender
+  }
+  canEditFunction() {
+    return (user: User) => user.gender === this.deleteGender
+  }
+
   private paramPrepareFunction: ParamsPrepareFunction = (options) => {
     return new Observable<HttpParams>((observer) => {
       let paramsObject: Record<string, any> = {
@@ -91,9 +100,17 @@ export class AppComponent implements OnInit {
       add: true,
       delete: false,
       edit: true,
+      custom: [
+        {
+          name: 'custom',
+          title: 'Custom',
+          hasPermissionFunction: (user: User) => user.gender !== this.deleteGender
+        },
+      ]
     },
     delete: {
       confirmDelete: true,
+      hasPermissionFunction: this.canDeleteFunction()
     },
     edit: {
       confirmSave: true,
