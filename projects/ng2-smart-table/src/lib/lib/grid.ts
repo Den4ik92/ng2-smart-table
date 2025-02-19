@@ -182,14 +182,16 @@ export class Grid {
     if (event.action === 'load') {
       this.dataSet.deselectAll();
     }
-    if (event.action !== 'update') {
-      this.dataSet.setData(event.elements);
-    } else {
+    if (event.action === 'update') {
       const changedRow = this.dataSet.findRowByData(event.oldItem);
       if (changedRow) {
         changedRow.setData(event.newItem || event.oldItem);
       }
+      return;
     }
+    console.log(event);
+
+    this.dataSet.setData(event.elements);
   }
 
   private prepareSource(

@@ -227,7 +227,6 @@ export enum SmartTableOnChangedEventName {
   'sort' = 'sort',
   'add' = 'add',
   'remove' = 'remove',
-  'append' = 'append',
   'appendMany' = 'appendMany',
   'prepend' = 'prepend',
   'refresh' = 'refresh',
@@ -251,7 +250,6 @@ interface SmartTableAddEvent<T extends Record<string, any> = any> {
   action:
     | SmartTableOnChangedEventName.add
     | SmartTableOnChangedEventName.prepend
-    | SmartTableOnChangedEventName.append
     | SmartTableOnChangedEventName.appendMany;
   newItems: T[];
 }

@@ -40,7 +40,7 @@ export class ServerDataSource<T extends Record<string, any> = any> extends DataS
   }
 
   getAll(): Promise<T[]> {
-    return Promise.resolve(this.data);
+    return Promise.resolve(this.data());
   }
 
   getSort(): SmartTableSortItem {
@@ -69,7 +69,7 @@ export class ServerDataSource<T extends Record<string, any> = any> extends DataS
       })
         .pipe(switchMap((params) => this.requestFunction(params)))
         .subscribe((res) => {
-          this.data = res.data;
+          this.data.set(res.data);
           this.pagingConf.update((old) => ({ ...old, total: res.total }));
           super.emitOnChanged(eventData, res.data);
         });

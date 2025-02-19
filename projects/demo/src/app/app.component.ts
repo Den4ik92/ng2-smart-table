@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 1000 } })).subscribe((res) => {
+    this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 5 } })).subscribe((res) => {
       this.source.load(res.data);
     });
   }
@@ -91,7 +91,7 @@ export class AppComponent implements OnInit {
     columnSortStorageKey: 'test1',
     pager: {
       display: true,
-      perPage: 50,
+      perPage: 5,
       perPageSelect: [10, 20, 50, 100],
     },
     columnSort: true,

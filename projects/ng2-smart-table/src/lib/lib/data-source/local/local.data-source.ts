@@ -16,11 +16,11 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
 
   constructor(data: T[] = []) {
     super();
-    this.data = data;
+    this.data.set(data);
   }
 
   load(data: T[]): Promise<true> {
-    this.data = data;
+    this.data.set(data);
     this.emitOnChanged({ action: SmartTableOnChangedEventName.load });
     return Promise.resolve(true);
   }
@@ -35,13 +35,13 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
     return super.appendMany(elements);
   }
 
-  override append(element: T): Promise<true> {
+  override add(element: T): Promise<true> {
     this.reset(true);
-    return super.append(element);
+    return super.add(element);
   }
 
   getAll(): Promise<T[]> {
-    const data = this.data.slice(0);
+    const data = this.data().slice(0);
     return Promise.resolve(data);
   }
 
@@ -72,8 +72,8 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
   override emitOnChanged(event: SmartTableOnChangedEventToEmit) {
     let renderData: T[] = this.filteredAndSorted();
     const action = event.action as any;
-    if ((['filter', 'refresh', 'load'] satisfies SmartTableOnChangedEventType[]).includes(action)) {
-      renderData = this.filter(this.data.slice(0));
+    if ((['filter', 'refresh', 'load', 'add', 'prepend', 'appendMany'] satisfies SmartTableOnChangedEventType[]).includes(action)) {
+      renderData = this.filter(this.data().slice(0));
       this.filteredAndSorted.set(this.sort(renderData));
       renderData = this.filteredAndSorted();
     }
