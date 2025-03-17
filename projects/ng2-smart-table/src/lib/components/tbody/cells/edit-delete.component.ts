@@ -68,7 +68,7 @@ export class TbodyEditDeleteComponent {
       data: this.row().getData(),
       source: this.source,
     });
-    if (!this.isExternalMode) {
+    if (!this.isExternalMode()) {
       this.grid().edit(this.row());
     }
   }

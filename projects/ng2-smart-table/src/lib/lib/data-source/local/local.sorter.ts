@@ -11,12 +11,12 @@ export function compareValues(direction: number, a: any, b: any) {
 }
 
 export class LocalSorter {
-  static sort<T extends Record<string, any>>(
+  static async sort<T extends Record<string, any>>(
     data: T[],
     field: string,
     direction: string,
     customCompare?: SmartTableCompareFunction
-  ): T[] {
+  ): Promise<T[]> {
     const dir: number = direction === "asc" ? 1 : -1;
     const compare = customCompare ? customCompare : compareValues;
 

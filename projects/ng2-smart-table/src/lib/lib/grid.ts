@@ -189,8 +189,6 @@ export class Grid {
       }
       return;
     }
-    console.log(event);
-
     this.dataSet.setData(event.elements);
   }
 
@@ -250,8 +248,11 @@ export class Grid {
       | `${SmartTableOnChangedEventName.columnRefresh}` = 'refresh',
   ) {
     this.settings.set(settings);
-    this.dataSet = new DataSet([], settings.columns);
-
+    if (this.dataSet) {
+      this.dataSet.setColumnsConfig(settings.columns);
+    } else {
+      this.dataSet = new DataSet([], settings.columns);
+    }
     if (this.source) {
       this.source.pagingConf.update((old) => ({
         ...old,

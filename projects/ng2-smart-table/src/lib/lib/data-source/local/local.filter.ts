@@ -4,7 +4,7 @@ function filterValues(value: any, search: string): boolean {
   return value.toString().toLowerCase().includes(search.toString().toLowerCase());
 }
 
-export function isElementSatisfied<T extends Record<string, unknown>>(element: T, filters: SmartTableFilterItem[]): boolean {
+export async function isElementSatisfied<T extends Record<string, unknown>>(element: T, filters: SmartTableFilterItem[]) {
   return filters.every((filter: SmartTableFilterItem) => {
     if (!filter.search?.length) {
       return true;

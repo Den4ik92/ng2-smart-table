@@ -43,36 +43,36 @@ export abstract class DataSource<T = any> {
     return this.onChangedSource.asObservable();
   }
 
-  prepend(element: T): Promise<true> {
+  async prepend(element: T): Promise<true> {
     this.data.update((old) => [element, ...old]);
     this.emitOnChanged({ action: SmartTableOnChangedEventName.prepend, newItems: [element] });
     return Promise.resolve(true);
   }
 
-  appendMany(elements: T[]): Promise<true> {
+  async appendMany(elements: T[]): Promise<true> {
     this.data.update((old) => [ ...old, ...elements,]);
     this.emitOnChanged({ action: SmartTableOnChangedEventName.appendMany, newItems: elements });
     return Promise.resolve(true);
   }
 
-  add(element: T): Promise<true> {
+  async add(element: T): Promise<true> {
     this.data.update((old) => [ ...old, element,]);
     this.emitOnChanged({ action: SmartTableOnChangedEventName.add, newItems: [element] });
     return Promise.resolve(true);
   }
 
-  remove(element: T): Promise<true> {
+  async remove(element: T): Promise<true> {
     this.data.update((old) => old.filter((el) => el !== element));
     this.emitOnChanged({ action: SmartTableOnChangedEventName.remove, item: element });
     return Promise.resolve(true);
   }
 
-  update(oldItem: T, newItem: T): Promise<true> {
+  async update(oldItem: T, newItem: T): Promise<true> {
     this.emitOnChanged({ action: SmartTableOnChangedEventName.update, oldItem, newItem });
     return Promise.resolve(true);
   }
 
-  empty(): Promise<true> {
+  async empty(): Promise<true> {
     this.data.set([]);
     this.emitOnChanged({ action: SmartTableOnChangedEventName.empty });
     return Promise.resolve(true);
@@ -86,7 +86,7 @@ export abstract class DataSource<T = any> {
     }
   }
 
-  addFilter(newFilter: SmartTableFilterItem, doEmit = true) {
+  async addFilter(newFilter: SmartTableFilterItem, doEmit = true) {
     if (!newFilter.field) {
       return;
     }

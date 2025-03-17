@@ -37,6 +37,12 @@ export class DataSet {
     this.createRows();
   }
 
+  setColumnsConfig(columnSettings: SmartTableColumnSettings[]) {
+    this.columnSettings = columnSettings;
+    this.createColumns(columnSettings);
+    this.createRows();
+  }
+
   getFirstRow(): Row {
     return this.rows()[0];
   }

@@ -1,9 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { LocalDataSource, SmartTableColumnEditorDirective } from 'ng2-smart-table';
+import { SmartTableColumnEditorDirective } from 'ng2-smart-table';
 import {
   ParamsPrepareFunction,
-  RequestFunction
+  RequestFunction,
+  ServerDataSource
 } from 'projects/ng2-smart-table/src/lib/lib/data-source/server/server.data-source';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -78,20 +79,20 @@ export class AppComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 5 } })).subscribe((res) => {
-      this.source.load(res.data);
-    });
+    // this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 500 } })).subscribe((res) => {
+    //   this.source.load(res.data);
+    // });
   }
 
   readonly tableHide = signal(false);
-  // readonly source = new ServerDataSource<User>(this.paramPrepareFunction, this.requestFunction());
-  readonly source = new LocalDataSource<User>();
+  readonly source = new ServerDataSource<User>(this.paramPrepareFunction, this.requestFunction());
+  // readonly source = new LocalDataSource<User>();
 
   settings: SmartTableSettings<User> = {
     columnSortStorageKey: 'test1',
     pager: {
       display: true,
-      perPage: 5,
+      perPage: 500,
       perPageSelect: [10, 20, 50, 100],
     },
     columnSort: true,
@@ -124,6 +125,8 @@ export class AppComponent implements OnInit {
           type: 'custom',
           component: CustomEditorComponent,
         },
+        filterFunction: () => true,
+        compareFunction: () => 0,
       },
       {
         key: 'email',
@@ -225,6 +228,11 @@ export class AppComponent implements OnInit {
   }
   changeSort(): void {
     this.source.setSort({ field: 'name', direction: 'asc' });
+  }
+  loadNew(): void {
+    // this.requestFunction()(new HttpParams({ fromObject: { page: 3, limit: 5 } })).subscribe((res) => {
+    //   this.source.load(res.data);
+    // });
   }
   updateEditButtons(table: Ng2SmartTableComponent): void {
     this.settings.edit = { saveButtonContent: 'NewSave' };

@@ -128,3 +128,11 @@ export function getLocalStorage<T = string>(key: string): T | null {
     return null;
   }
 }
+
+export function promiseDelay(time: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, time);
+  });
+}

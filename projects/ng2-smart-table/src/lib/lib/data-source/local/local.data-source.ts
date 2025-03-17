@@ -19,9 +19,9 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
     this.data.set(data);
   }
 
-  load(data: T[]): Promise<true> {
+  async load(data: T[]): Promise<true> {
     this.data.set(data);
-    this.emitOnChanged({ action: SmartTableOnChangedEventName.load });
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.load }, data);
     return Promise.resolve(true);
   }
 
@@ -69,17 +69,21 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
     return this.filters;
   }
 
-  override emitOnChanged(event: SmartTableOnChangedEventToEmit) {
-    let renderData: T[] = this.filteredAndSorted();
+  override async emitOnChanged(event: SmartTableOnChangedEventToEmit, newElements?: T[]) {
+    let renderData: T[] = this.filteredAndSorted().slice(0);
     const action = event.action as any;
-    if ((['filter', 'refresh', 'load', 'add', 'prepend', 'appendMany'] satisfies SmartTableOnChangedEventType[]).includes(action)) {
-      renderData = this.filter(this.data().slice(0));
-      this.filteredAndSorted.set(this.sort(renderData));
-      renderData = this.filteredAndSorted();
+    if (
+      (['filter', 'refresh', 'load', 'add', 'prepend', 'appendMany'] satisfies SmartTableOnChangedEventType[]).includes(
+        action,
+      )
+    ) {
+      renderData = await this.filter(newElements || this.data().slice(0));
+      renderData = await this.sort(renderData)
+      this.filteredAndSorted.set(renderData);
     }
-    if ((['sort', 'filter', 'refresh', 'load'] satisfies SmartTableOnChangedEventType[]).includes(action)) {
-      this.filteredAndSorted.update((list) => this.sort(list));
-      renderData = this.filteredAndSorted();
+    if (action === SmartTableOnChangedEventName.sort) {
+      renderData = await this.sort(renderData)
+      this.filteredAndSorted.set(renderData);
     }
     if (
       this.pagingConf().display &&
@@ -96,20 +100,28 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
     }
   }
 
-  protected sort(data: T[]): T[] {
+  protected async sort(data: T[]): Promise<T[]> {
     if (this.sortConf) {
-      data = LocalSorter.sort<T>(data, this.sortConf.field, this.sortConf.direction, this.sortConf.compare);
+      return LocalSorter.sort<T>(data, this.sortConf.field, this.sortConf.direction, this.sortConf.compare);
     }
     return data;
   }
 
-  protected filter(data: T[]): T[] {
-    if (this.filters.length > 0) {
-      return data.filter((item: T) => {
-        return isElementSatisfied(item, this.filters);
-      });
+  protected async filter(data: T[]): Promise<T[]> {
+    if (!this.filters.length) {
+      return data;
     }
-    return data;
+    const filtered: T[] = [];
+
+    await Promise.all(
+      data.map(async (element) => {
+        if (await isElementSatisfied(element, this.filters)) {
+          filtered.push(element);
+        }
+      }),
+    );
+
+    return filtered;
   }
 
   protected paginate(data: T[]): T[] {
