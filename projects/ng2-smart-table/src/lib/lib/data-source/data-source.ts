@@ -68,6 +68,7 @@ export abstract class DataSource<T = any> {
   }
 
   async update(oldItem: T, newItem: T): Promise<true> {
+    this.data.update((old) => old.map((el) => (el === oldItem ? newItem : el)));
     this.emitOnChanged({ action: SmartTableOnChangedEventName.update, oldItem, newItem });
     return Promise.resolve(true);
   }
