@@ -1,4 +1,4 @@
-import { SmartTableCompareFunction } from "../../interfaces/smart-table.models";
+import { SmartTableCompareFunction } from '../../interfaces/smart-table.models';
 
 export function compareValues(direction: number, a: any, b: any) {
   if (a < b) {
@@ -15,9 +15,9 @@ export class LocalSorter {
     data: T[],
     field: string,
     direction: string,
-    customCompare?: SmartTableCompareFunction
+    customCompare?: SmartTableCompareFunction,
   ): Promise<T[]> {
-    const dir: number = direction === "asc" ? 1 : -1;
+    const dir: number = direction === 'asc' ? 1 : -1;
     const compare = customCompare ? customCompare : compareValues;
 
     return data.sort((a, b) => {

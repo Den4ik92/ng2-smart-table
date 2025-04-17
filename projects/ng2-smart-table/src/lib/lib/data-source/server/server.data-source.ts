@@ -1,7 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { computed } from '@angular/core';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import {
   SmartTableFilterItem,
   SmartTableOnChangedEventName,
@@ -43,14 +43,6 @@ export class ServerDataSource<T extends Record<string, any> = any> extends DataS
     return Promise.resolve(this.data());
   }
 
-  getSort(): SmartTableSortItem {
-    return this.sortConf;
-  }
-
-  getFilters(): SmartTableFilterItem[] {
-    return this.filters;
-  }
-
   override emitOnChanged(eventData: SmartTableOnChangedEventToEmit, newElements?: T[] | undefined): void {
     if (
       [
@@ -62,12 +54,15 @@ export class ServerDataSource<T extends Record<string, any> = any> extends DataS
       ].includes(eventData.action as SmartTableOnChangedEventName)
     ) {
       this.paramPrepareFunction({
-        sort: this.sortConf,
-        filters: this.filters,
+        sort: this.sortConf(),
+        filters: this.filters(),
         page: this.pagingConf().page,
         limit: this.pagingConf().perPage,
       })
-        .pipe(switchMap((params) => this.requestFunction(params)))
+        .pipe(
+          switchMap((params) => this.requestFunction(params)),
+          take(1),
+        )
         .subscribe((res) => {
           this.data.set(res.data);
           this.pagingConf.update((old) => ({ ...old, total: res.total }));

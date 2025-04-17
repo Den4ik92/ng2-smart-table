@@ -1,7 +1,8 @@
-import { computed, signal } from "@angular/core";
-import { SmartTableColumnSettings } from "../interfaces/smart-table.models";
-import { Column } from "./column";
-import { Row } from "./row";
+import { computed, signal } from '@angular/core';
+import { isObjectsIdentical } from '../helpers';
+import { SmartTableColumnSettings } from '../interfaces/smart-table.models';
+import { Column } from './column';
+import { Row } from './row';
 
 export class DataSet {
   newRow!: Row;
@@ -9,23 +10,20 @@ export class DataSet {
   protected readonly data = signal<any[]>([]);
   protected readonly columns = signal<Column[]>([]);
   protected readonly rows = signal<Row[]>([]);
-  protected readonly selectedRows = new Set<Row>();
+  protected selectedRowsData: any[] = [];
 
   readonly getColumns = computed(() => this.columns());
-  readonly getVisibleColumns = computed(() =>
-    this.columns().filter((column: Column) => !column.hide)
-  );
+  readonly getVisibleColumns = computed(() => this.columns().filter((column: Column) => !column.hide));
   readonly getRows = computed(() => {
     return this.rows();
   });
 
-  readonly isAllSelected = computed<boolean>(() =>
-    this.rows().every((row) => row.isSelected())
-  );
+  readonly isAllSelected = computed<boolean>(() => this.rows().every((row) => row.isSelected()));
 
   constructor(
     data: any[] = [],
-    protected columnSettings: SmartTableColumnSettings[]
+    protected columnSettings: SmartTableColumnSettings[],
+    public readonly editorInputClass: string,
   ) {
     this.createColumns(columnSettings);
     this.setData(data);
@@ -43,16 +41,8 @@ export class DataSet {
     this.createRows();
   }
 
-  getFirstRow(): Row {
-    return this.rows()[0];
-  }
-
-  getLastRow(): Row {
-    return this.rows()[this.rows().length - 1];
-  }
-
   findRowByData(data: any): Row | undefined {
-    return this.rows().find((row: Row) => row.getData() === data);
+    return this.rows().find((row: Row) => isObjectsIdentical(row.rowData, data));
   }
 
   setSelectAll(state: boolean): void {
@@ -62,12 +52,12 @@ export class DataSet {
     });
   }
 
-  deselectAll() {
+  resetAllSelection() {
     this.rows().forEach((row) => {
       row.isSelected.set(false);
     });
     // we need to clear selectedRow field because no one row selected
-    this.selectedRows.clear();
+    this.selectedRowsData = [];
   }
 
   selectRow(row: Row, state: boolean): void {
@@ -78,16 +68,15 @@ export class DataSet {
   multipleSelectRow(row: Row): Row {
     row.isSelected.set(!row.isSelected());
     this.storeSelectedRow(row);
-
     return row;
   }
 
-  getSelectedRowsData(): any[] {
-    return [...this.selectedRows];
+  getSelectedRowsData() {
+    return this.selectedRowsData;
   }
 
   createNewRow() {
-    this.newRow = new Row(-1, {}, this);
+    this.newRow = new Row(-1, {}, this.getColumns());
     this.newRow.isInEditing.set(true);
   }
 
@@ -97,9 +86,7 @@ export class DataSet {
    * @private
    */
   createColumns(columnsParams: SmartTableColumnSettings[]) {
-    const columns = columnsParams.map(
-      (params) => new Column(params.key as string, params, this)
-    );
+    const columns = columnsParams.map((params) => new Column(params.key as string, params, this));
     this.columns.set(columns);
   }
 
@@ -109,18 +96,27 @@ export class DataSet {
    */
   createRows() {
     const rows = this.data().map((el, index) => {
-      const row = new Row(index, el, this);
-      row.isSelected.set(this.selectedRows.has(row.getData()));
+      const row = new Row(index, el, this.getColumns());
+      row.isSelected.set(this.isSelectedHasRow(el));
       return row;
     });
     this.rows.set(rows);
   }
 
+  private isSelectedHasRow(data: any) {
+    return this.selectedRowsData.some((rowData) => isObjectsIdentical(rowData, data));
+  }
+
   private storeSelectedRow(row: Row): void {
     if (row.isSelected()) {
-      this.selectedRows.add(row.getData());
+      if (this.isSelectedHasRow(row.rowData)) {
+        //check if row already in selected array to prevent duplicate
+        return;
+      }
+      this.selectedRowsData.push(row.rowData);
     } else {
-      this.selectedRows.delete(row.getData());
+      const index = this.selectedRowsData.findIndex((rowData) => isObjectsIdentical(rowData, row));
+      this.selectedRowsData.splice(index, 1);
     }
   }
 }

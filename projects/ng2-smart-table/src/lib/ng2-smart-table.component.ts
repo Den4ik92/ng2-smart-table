@@ -1,12 +1,16 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
+  NgZone,
   OnChanges,
   OnDestroy,
   SimpleChange,
   computed,
   input,
   output,
+  signal,
 } from '@angular/core';
 
 import { PagerComponent } from './components/pager/pager.component';
@@ -17,7 +21,9 @@ import { DataSource } from './lib/data-source/data-source';
 import { Grid } from './lib/grid';
 import { getRandomId } from './lib/helpers';
 import {
+  BaseDataType,
   ColumnPositionState,
+  SmartTableBaseEvent,
   SmartTableConfirmDeleteEvent,
   SmartTableConfirmEditEvent,
   SmartTableCreateConfirm,
@@ -31,25 +37,28 @@ import {
   selector: 'ng2-smart-table',
   styleUrls: ['./ng2-smart-table.component.scss'],
   templateUrl: './ng2-smart-table.component.html',
-  standalone: true,
   imports: [Ng2SmartTableTheadComponent, Ng2SmartTableTbodyComponent, PagerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
-  readonly source = input.required<DataSource>();
-  readonly settings = input.required<SmartTableSettings>();
+export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnChanges, OnDestroy, AfterViewInit {
+  readonly source = input.required<DataSource<T>>();
+  readonly settings = input.required<SmartTableSettings<T>>();
 
-  readonly multiRowSelect = output<SmartTableRowSelectEvent>();
-  readonly rowClicked = output<SmartTableRowClickedEvent>();
+  readonly multiRowSelect = output<SmartTableRowSelectEvent<T>>();
+  readonly rowClicked = output<SmartTableRowClickedEvent<T>>();
   readonly columnsSorted = output<ColumnPositionState[]>();
-  readonly delete = output<any>();
-  readonly edit = output<any>();
-  readonly editCancel = output<any>();
-  readonly create = output<any>();
-  readonly custom = output<SmartTableCustomEvent>();
-  readonly deleteConfirm = output<SmartTableConfirmDeleteEvent>();
-  readonly editConfirm = output<SmartTableConfirmEditEvent>();
-  readonly createConfirm = output<SmartTableCreateConfirm>();
+
+  readonly deleteEmitter = output<SmartTableBaseEvent<T>>();
+  readonly deleteConfirm = output<SmartTableConfirmDeleteEvent<T>>();
+
+  readonly edit = output<SmartTableBaseEvent<T>>();
+  readonly editConfirm = output<SmartTableConfirmEditEvent<T>>();
+  readonly editCancel = output<SmartTableBaseEvent<T>>();
+
+  readonly create = output<SmartTableBaseEvent<T>>();
+  readonly createConfirm = output<SmartTableCreateConfirm<T>>();
+
+  readonly custom = output<SmartTableCustomEvent<T>>();
 
   protected readonly tableClass = computed<string>(() => {
     return this.settings().attr?.class || '';
@@ -61,11 +70,28 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
     const { pager } = this.settings();
     return pager ? pager.display : false;
   });
-  protected readonly rowClassFunction = computed<(row: any) => string>(() => {
-    return this.settings().rowClassFunction || (() => '');
+  protected readonly rowClassFunction = computed<(rowData: T) => string>(() => {
+    const settings = this.settings();
+    return settings.rowClassFunction ? (rowData: T) => settings.rowClassFunction!(rowData) : () => '';
+  });
+
+  protected readonly isMobileView = signal<boolean>(false);
+  protected readonly tableWidthMobileBreakpoint = computed<number | undefined>(() => {
+    return this.settings().tableWidthMobileBreakpoint;
   });
 
   grid!: Grid;
+
+  private readonly isExternalMode = computed<boolean>(() => {
+    return this.grid.settings().mode === 'external';
+  });
+  private resizeObserver: ResizeObserver | null = null;
+  private resizeDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+  constructor(
+    private elementRef: ElementRef,
+    private ngZone: NgZone,
+  ) {}
 
   ngOnChanges({ settings }: Record<string, SimpleChange>) {
     if (this.grid) {
@@ -77,8 +103,13 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
     }
   }
 
+  ngAfterViewInit(): void {
+    this.setupResizeObserver();
+  }
+
   ngOnDestroy(): void {
     this.grid.detach();
+    this.destroyResizeObserver();
   }
 
   protected multipleSelectRow(row: Row): void {
@@ -97,9 +128,55 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
 
   protected emitUserRowClicked(row: Row): void {
     this.rowClicked.emit({
-      data: row ? row.getData() : null,
+      data: row ? row.rowData : null,
       source: this.source(),
     });
+  }
+
+  protected customActionEmitted(event: SmartTableCustomEvent<T>) {
+    this.custom.emit(event);
+  }
+
+  protected editEmitted(row: Row) {
+    if (this.isExternalMode()) {
+      this.edit.emit({
+        data: row.rowData,
+        source: this.source(),
+      });
+      return;
+    }
+    row.isInEditing.set(true);
+  }
+
+  protected editConfirmed(row: Row) {
+    this.grid.save(row, this.editConfirm);
+  }
+
+  protected editCanceled(row: Row) {
+    this.editCancel.emit({ data: row.rowData, source: this.source() });
+  }
+
+  protected createEmitted() {
+    if (this.isExternalMode()) {
+      this.create.emit({ data: this.grid.getNewRow().getNewData(), source: this.source() });
+    } else {
+      this.grid.createFormShown.set(true);
+    }
+  }
+
+  protected createConfirmed() {
+    this.grid.create(this.grid.getNewRow(), this.createConfirm);
+  }
+
+  protected deleEmitted(row: Row) {
+    if (this.isExternalMode()) {
+      this.deleteEmitter.emit({
+        data: row.rowData,
+        source: this.source(),
+      });
+    } else {
+      this.grid.delete(row, this.deleteConfirm);
+    }
   }
 
   private initGrid(): void {
@@ -109,10 +186,51 @@ export class Ng2SmartTableComponent implements OnChanges, OnDestroy {
 
   private emitUserSelectRow(row: Row | null): void {
     this.multiRowSelect.emit({
-      data: row ? row.getData() : null,
+      data: row ? row.rowData : null,
       isSelected: row ? row.isSelected() : false,
       source: this.source(),
       selected: this.grid.dataSet.getSelectedRowsData(),
     });
+  }
+
+  private setupResizeObserver(): void {
+    if (typeof ResizeObserver === 'undefined' || !this.tableWidthMobileBreakpoint()) {
+      return;
+    }
+
+    this.resizeObserver = new ResizeObserver((entries) => {
+      if (this.resizeDebounceTimer) {
+        clearTimeout(this.resizeDebounceTimer);
+      }
+
+      this.resizeDebounceTimer = setTimeout(() => {
+        this.ngZone.run(() => {
+          for (const entry of entries) {
+            const breakpoint = this.tableWidthMobileBreakpoint();
+            if (breakpoint) {
+              const containerWidth = entry.contentRect.width;
+              this.isMobileView.set(containerWidth < breakpoint);
+            }
+          }
+        });
+      }, 20);
+    });
+
+    const hostElement = this.elementRef.nativeElement;
+    if (hostElement) {
+      this.resizeObserver.observe(hostElement);
+    }
+  }
+
+  private destroyResizeObserver(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+
+    if (this.resizeDebounceTimer) {
+      clearTimeout(this.resizeDebounceTimer);
+      this.resizeDebounceTimer = null;
+    }
   }
 }

@@ -1,58 +1,40 @@
-import { computed, signal } from "@angular/core";
-import { Cell } from "./cell";
-import { Column } from "./column";
-import { DataSet } from "./data-set";
+import { computed, signal } from '@angular/core';
+import { Cell } from './cell';
+import { Column } from './column';
 
 export class Row {
   readonly pending = signal(false);
   readonly isSelected = signal(false);
   readonly isInEditing = signal(false);
   readonly cells = signal<Cell[]>([]);
-  public readonly visibleCells = computed<Cell[]>(() =>
-    this.cells().filter((cell: Cell) => !cell.getColumn().hide)
-  );
+  public readonly visibleCells = computed<Cell[]>(() => this.cells().filter((cell: Cell) => !cell.column.hide));
 
   constructor(
     public index: number,
-    private data: any,
-    protected _dataSet: DataSet
+    public rowData: any,
+    protected columns: Column[],
   ) {
     this.process();
   }
 
-  getCell(column: Column): Cell | undefined {
-    return this.cells().find((el) => el.getColumn() === column);
-  }
-
-  getData(): any {
-    return this.data;
-  }
-
   getNewData() {
-    const values = Object.assign({}, this.data);
-    this.cells().forEach(
-      (cell) => (values[cell.getColumn().id] = cell.newValue)
-    );
+    const values = Object.assign({}, this.rowData);
+    this.cells().forEach((cell) => (values[cell.column.id] = cell.newValue));
     return values;
   }
 
-  setData<T = any>(data: T): void {
-    this.data = data;
+  setData<T = any>(rowData: T): void {
+    this.rowData = rowData;
     this.process();
   }
 
   process(): void {
-    const cells = this._dataSet
-      .getColumns()
-      .map((column: Column) => this.createCell(column));
+    const cells = this.columns.map((column: Column) => this.createCell(column));
     this.cells.set(cells);
   }
 
   createCell(column: Column): Cell {
-    const value =
-      typeof this.data[column.id] === "undefined"
-        ? ""
-        : this.data[column.id];
-    return new Cell(value, this, column, this._dataSet);
+    const value = typeof this.rowData[column.id] === 'undefined' ? '' : this.rowData[column.id];
+    return new Cell(value, this, column);
   }
 }

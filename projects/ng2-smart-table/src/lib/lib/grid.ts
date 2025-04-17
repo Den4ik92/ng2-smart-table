@@ -7,8 +7,10 @@ import { Row } from './data-set/row';
 import { DataSource } from './data-source/data-source';
 import { Deferred, getDeepFromObject, getLocalStorage, setLocalStorage } from './helpers';
 import {
+  BaseDataType,
   ColumnPositionState,
   SmartTableColumnSettings,
+  SmartTableConfirmDeleteEvent,
   SmartTableOnChangedEvent,
   SmartTableOnChangedEventName,
   SmartTablePagerSettings,
@@ -17,8 +19,6 @@ import {
 } from './interfaces/smart-table.models';
 
 export class Grid {
-  createFormShown = false;
-
   source!: DataSource;
   dataSet!: DataSet;
 
@@ -29,6 +29,7 @@ export class Grid {
   private sourceOnUpdatedSubscription: Subscription | undefined;
 
   readonly settings = signal<SmartTableSettings>({} as SmartTableSettings);
+  readonly createFormShown = signal<boolean>(false);
 
   readonly isMultiSelectVisible = computed(() => {
     return this.settings().selectMode === 'multi';
@@ -36,7 +37,7 @@ export class Grid {
   readonly isActionsVisible = computed<boolean>(() => {
     const actions = this.settings().actions;
     if (!actions) return false;
-    return actions.add || actions.edit || actions.delete || !!actions?.custom?.length;
+    return actions.edit || actions.delete || !!actions?.custom?.length;
   });
   readonly actionIsOnLeft = computed<boolean>(() => {
     return (this.settings().actionsPosition || 'left') === 'left';
@@ -96,17 +97,17 @@ export class Grid {
 
   create(row: Row, confirmEmitter: EventEmitter<any> | OutputEmitterRef<any>) {
     row.pending.set(true);
-    const deferred = new Deferred();
+    const deferred = new Deferred<BaseDataType>();
     deferred.promise
       .then((newData) => {
         row.pending.set(false);
         newData = newData || row.getNewData();
         this.source.prepend(newData).then(() => {
-          this.createFormShown = false;
+          this.createFormShown.set(false);
           this.dataSet.createNewRow();
         });
       })
-      .catch((err) => {
+      .catch(() => {
         row.pending.set(false);
       });
 
@@ -117,19 +118,19 @@ export class Grid {
         confirm: deferred,
       });
     } else {
-      deferred.resolve(false);
+      deferred.resolve();
       row.pending.set(false);
     }
   }
 
   save(row: Row, confirmEmitter: EventEmitter<any> | OutputEmitterRef<any>) {
     row.pending.set(true);
-    const deferred = new Deferred();
+    const deferred = new Deferred<BaseDataType>();
     deferred.promise
       .then((newData) => {
         row.pending.set(false);
         newData = newData || row.getNewData();
-        this.source.update(row.getData(), newData).then(() => {
+        this.source.update(row.rowData, newData).then(() => {
           row.isInEditing.set(false);
         });
       })
@@ -140,24 +141,27 @@ export class Grid {
 
     if (this.getSetting('edit.confirmSave', false)) {
       confirmEmitter.emit({
-        data: row.getData(),
+        data: row.rowData,
         newData: row.getNewData(),
         source: this.source,
         confirm: deferred,
       });
     } else {
-      deferred.resolve(false);
+      deferred.resolve();
       row.pending.set(false);
     }
   }
 
-  delete(row: Row, confirmEmitter: EventEmitter<any> | OutputEmitterRef<any>) {
+  delete<T extends BaseDataType = BaseDataType>(
+    row: Row,
+    confirmEmitter: EventEmitter<SmartTableConfirmDeleteEvent<T>> | OutputEmitterRef<SmartTableConfirmDeleteEvent<T>>,
+  ) {
     row.pending.set(true);
-    const deferred = new Deferred();
+    const deferred = new Deferred<T>();
     deferred.promise
       .then(() => {
         row.pending.set(false);
-        this.source.remove(row.getData());
+        this.source.remove(row.rowData);
       })
       .catch(() => {
         row.pending.set(false);
@@ -165,12 +169,12 @@ export class Grid {
       });
     if (this.getSetting('delete.confirmDelete', true)) {
       confirmEmitter.emit({
-        data: row.getData(),
+        data: row.rowData,
         source: this.source,
         confirm: deferred,
       });
     } else {
-      deferred.resolve(false);
+      deferred.resolve(null as unknown as T);
       row.pending.set(false);
     }
     if (row.isSelected()) {
@@ -180,7 +184,7 @@ export class Grid {
 
   private processDataChange(event: SmartTableOnChangedEvent) {
     if (event.action === 'load') {
-      this.dataSet.deselectAll();
+      this.dataSet.resetAllSelection();
     }
     if (event.action === 'update') {
       const changedRow = this.dataSet.findRowByData(event.oldItem);
@@ -220,25 +224,18 @@ export class Grid {
     }
     return {
       field: defaultSortColumn.key as string,
+      title: defaultSortColumn.title,
       direction: defaultSortColumn.sortDirection || 'asc',
       compare: defaultSortColumn.compareFunction,
     };
   }
 
-  getSelectedRowsData(): any[] {
+  getSelectedRowsData() {
     return this.dataSet.getSelectedRowsData();
   }
 
   selectAllRows(status: boolean) {
     this.dataSet.setSelectAll(status);
-  }
-
-  getFirstRow(): Row {
-    return this.dataSet.getFirstRow();
-  }
-
-  getLastRow(): Row {
-    return this.dataSet.getLastRow();
   }
 
   private updateSettingsAndDataSet(
@@ -251,7 +248,8 @@ export class Grid {
     if (this.dataSet) {
       this.dataSet.setColumnsConfig(settings.columns);
     } else {
-      this.dataSet = new DataSet([], settings.columns);
+      const editorInputClass = settings.edit ? settings.edit.inputClass || '' : '';
+      this.dataSet = new DataSet([], settings.columns, editorInputClass);
     }
     if (this.source) {
       this.source.pagingConf.update((old) => ({

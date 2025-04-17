@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ComponentRef,
   OnChanges,
@@ -14,7 +15,7 @@ import { BaseEditorComponent } from '../cell-editors/base-editor.component';
 @Component({
   selector: 'ng2-table-cell-custom-editor',
   template: ` <ng-template #dynamicTarget></ng-template> `,
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomEditComponent extends BaseEditorComponent implements OnChanges, OnDestroy {
   @ViewChild('dynamicTarget', { read: ViewContainerRef, static: true })
@@ -23,7 +24,7 @@ export class CustomEditComponent extends BaseEditorComponent implements OnChange
   private customComponent?: ComponentRef<BaseEditorComponent>;
 
   ngOnChanges(changes: SimpleChanges) {
-    const editor: SmartTableEditorAndFilter | false = this.cell().getColumn().editor;
+    const editor: SmartTableEditorAndFilter | false = this.cell().column.editor;
     if (this.customComponent) {
       if (this.customComponent?.instance && 'ngOnChanges' in this.customComponent.instance) {
         try {
@@ -38,7 +39,6 @@ export class CustomEditComponent extends BaseEditorComponent implements OnChange
     if (this.cell() && !this.customComponent && editor && editor.type == 'custom') {
       this.customComponent = this.dynamicTarget?.createComponent(editor.component);
       this.customComponent?.setInput('cell', this.cell());
-      this.customComponent?.setInput('inputClass', this.inputClass());
     }
   }
 

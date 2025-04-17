@@ -1,5 +1,5 @@
 import { CdkDrag, CdkDragDrop, CdkDragPlaceholder, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, effect, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, signal } from '@angular/core';
 import { Grid } from '../../lib/grid';
 import { cloneArrayOfObject } from '../../lib/helpers';
 import { ColumnPositionState } from '../../lib/interfaces/smart-table.models';
@@ -9,6 +9,7 @@ import { ColumnPositionState } from '../../lib/interfaces/smart-table.models';
   templateUrl: './table-columns-editor.component.html',
   styleUrls: ['./table-columns-editor.component.scss'],
   imports: [CdkDropList, CdkDrag, CdkDragPlaceholder],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableColumnsEditorComponent {
   protected infoText = 'You can drag and drop columns as you wish and also disable unnecessary ones.';

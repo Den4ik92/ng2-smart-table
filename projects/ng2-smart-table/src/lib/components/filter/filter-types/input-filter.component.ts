@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BaseFilterComponent } from './base-filter.component';
@@ -13,7 +13,7 @@ import { BaseFilterComponent } from './base-filter.component';
       type="text"
       placeholder="{{ column().title }}" />
   `,
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, ReactiveFormsModule],
 })
 export class InputFilterComponent extends BaseFilterComponent {}

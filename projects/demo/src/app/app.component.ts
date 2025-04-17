@@ -1,9 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { LocalDataSource, SmartTableColumnEditorDirective } from 'ng2-smart-table';
+import { SmartTableColumnEditorDirective } from 'ng2-smart-table';
 import {
   ParamsPrepareFunction,
-  RequestFunction
+  RequestFunction,
+  ServerDataSource,
 } from 'projects/ng2-smart-table/src/lib/lib/data-source/server/server.data-source';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,6 +15,7 @@ import {
   SmartTableSettings,
 } from './../../../ng2-smart-table/src/lib/lib/interfaces/smart-table.models';
 import { CustomEditorComponent } from './custom-editor/custom-editor.component';
+import { CustomViewerComponent } from './custom-viewer/custom-viewer.component';
 
 export interface User {
   id: number;
@@ -36,7 +38,6 @@ export interface Address {
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  standalone: true,
   imports: [Ng2SmartTableComponent, SmartTableColumnEditorDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -52,13 +53,13 @@ export class AppComponent implements OnInit {
         .pipe(map((data) => ({ data: data.users, total: data.totalCount })));
   }
 
-  deleteGender = "male"
+  deleteGender = 'male';
 
   canDeleteFunction() {
-    return (user: User) => user.gender === this.deleteGender
+    return (user: User) => user.gender === this.deleteGender;
   }
   canEditFunction() {
-    return (user: User) => user.gender === this.deleteGender
+    return (user: User) => user.gender === this.deleteGender;
   }
 
   private paramPrepareFunction: ParamsPrepareFunction = (options) => {
@@ -78,22 +79,24 @@ export class AppComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 500 } })).subscribe((res) => {
-      this.source.load(res.data);
-    });
+    // this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 500 } })).subscribe((res) => {
+    //   this.source.load(res.data);
+    // });
+    // this.source.emitOnChanged({action: 'refresh'})
   }
 
   readonly tableHide = signal(false);
-  // readonly source = new ServerDataSource<User>(this.paramPrepareFunction, this.requestFunction());
-  readonly source = new LocalDataSource<User>();
+  readonly source = new ServerDataSource<User>(this.paramPrepareFunction, this.requestFunction());
+  // readonly source = new LocalDataSource<User>();
 
   settings: SmartTableSettings<User> = {
     columnSortStorageKey: 'test1',
     pager: {
       display: true,
-      perPage: 500,
+      perPage: 1000,
       perPageSelect: [10, 20, 50, 100],
     },
+    tableWidthMobileBreakpoint: 768,
     columnSort: true,
     selectMode: 'multi',
     actions: {
@@ -104,13 +107,16 @@ export class AppComponent implements OnInit {
         {
           name: 'custom',
           title: 'Custom',
-          hasPermissionFunction: (user: User) => user.gender !== this.deleteGender
+          // hasPermissionFunction: (user: User) => user.gender !== this.deleteGender,
         },
-      ]
+      ],
     },
+    // add: {
+    //   confirmCreate: true,
+    // },
     delete: {
       confirmDelete: true,
-      hasPermissionFunction: this.canDeleteFunction()
+      hasPermissionFunction: this.canDeleteFunction(),
     },
     edit: {
       confirmSave: true,
@@ -165,10 +171,8 @@ export class AppComponent implements OnInit {
       {
         key: 'occupation',
         title: 'occupation',
-        type: 'text',
-        valuePrepareFunction: (cell: string) => {
-          return cell + '-O';
-        },
+        type: 'custom',
+        renderComponent: CustomViewerComponent,
       },
       {
         key: 'phone',
@@ -214,19 +218,22 @@ export class AppComponent implements OnInit {
       event.confirm.resolve(event.newData);
     }, 1500);
   }
+  customEvent(event: any): void {
+    console.log(event);
+  }
 
-  disableMulti(table: Ng2SmartTableComponent): void {
+  disableMulti(table: Ng2SmartTableComponent<User>): void {
     const settings = table.grid.settings();
     settings.selectMode = 'single';
     table.grid.setSettings(settings);
   }
 
-  enableDelete(table: Ng2SmartTableComponent): void {
+  enableDelete(table: Ng2SmartTableComponent<User>): void {
     this.settings.actions = { ...this.settings.actions, delete: true };
     this.settings = Object.assign({}, this.settings);
   }
   changeSort(): void {
-    this.source.setSort({ field: 'name', direction: 'asc' });
+    this.source.setSort({ field: 'name', title: 'name', direction: 'asc' });
   }
   loadNew(): void {
     // this.requestFunction()(new HttpParams({ fromObject: { page: 3, limit: 5 } })).subscribe((res) => {

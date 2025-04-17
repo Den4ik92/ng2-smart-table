@@ -1,58 +1,68 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { BaseFilterComponent } from './base-filter.component';
 
 @Component({
   selector: 'ng2-checkbox-filter',
   template: `
-    <input type="checkbox" [formControl]="inputControl" [class]="inputClass()" class="form-control" />
-    @if (filterActive) {
-    <a href="#" (click)="resetFilter($event)">{{ column().getFilterConfig()?.resetText || 'reset' }}</a>
+    <div class="checkbox-filter-wrapper">
+      <input
+        [id]="column().id"
+        type="checkbox"
+        [ngModel]="currentState()"
+        (ngModelChange)="setCheckFilter($event)"
+        [class]="inputClass()"
+        class="form-control" />
+      <label [for]="column().id">{{ column().title }}</label>
+      @if (filterIsActive()) {
+        <a href="#" (click)="resetFilter($event)">{{ column().getFilterConfig()?.resetText || 'reset' }}</a>
+      }
+    </div>
+  `,
+  styles: `
+    .checkbox-filter-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.5rem;
+
+      input {
+        width: auto;
+      }
     }
   `,
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, ReactiveFormsModule],
 })
 export class CheckboxFilterComponent extends BaseFilterComponent implements OnInit, OnChanges, OnDestroy {
-  filterActive = false;
-  private trueVal: any = true;
-  private falseVal: any = false;
+  readonly filterIsActive = computed(() => this.query() !== null);
+  readonly currentState = computed<boolean>(() => {
+    const valuesConfig = this.getValuesConfig(this.column().getFilterConfig());
+    return this.query() === valuesConfig.trueVal ? true : this.query() === valuesConfig.falseVal ? false : false;
+  });
 
   constructor() {
     super();
   }
 
-  override ngOnInit() {
-    const filterConfig = this.column().getFilterConfig();
+  private getValuesConfig(filterConfig: any): { trueVal: string | true; falseVal: string | false } {
     try {
       const { true: trueVal, false: falseVal } = filterConfig;
-      this.trueVal = trueVal ?? true;
-      this.falseVal = falseVal ?? false;
+      return { trueVal: trueVal || true, falseVal: falseVal ?? false };
     } catch {
-      // do nothing
+      return { trueVal: true, falseVal: false };
     }
-    this.changesSubscription = this.inputControl.valueChanges
-      .pipe(distinctUntilChanged(), debounceTime(this.delay))
-      .subscribe((checked: boolean) => {
-        this.filterActive = true;
-        const value = checked ? this.trueVal : this.falseVal;
-        this.setFilter(value);
-      });
   }
-
-  override ngOnChanges({ query }: SimpleChanges) {
-    if (query) {
-      this.inputControl?.setValue(query.currentValue === this.trueVal, { emitEvent: false });
-    }
+  setCheckFilter(state: boolean) {
+    const { trueVal, falseVal } = this.getValuesConfig(this.column().getFilterConfig());
+    const value = state ? trueVal : falseVal;
+    this.setFilter(value);
   }
 
   resetFilter(event: Event) {
     event.preventDefault();
     event.stopPropagation();
-    this.inputControl.setValue(false, { emitEvent: false });
-    this.filterActive = false;
     this.setFilter(null);
   }
 }

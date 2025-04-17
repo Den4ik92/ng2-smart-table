@@ -1,18 +1,17 @@
-import { Component, input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { NgComponentOutlet } from "@angular/common";
-import { Cell } from "../../../lib/data-set/cell";
+import { NgComponentOutlet } from '@angular/common';
+import { Cell } from '../../../lib/data-set/cell';
 
 @Component({
-  selector: "ng2-custom-view-component",
+  selector: 'ng2-custom-view-component',
   template: `<ng-template
     *ngComponentOutlet="
-      cell().getColumn().renderComponent;
-      inputs: { rowData: cell().getRow().getData(), value: cell().getValue() }
-    "
-  ></ng-template>`,
+      cell().column.renderComponent;
+      inputs: { rowData: cell().row.rowData, value: cell().getValue() }
+    "></ng-template>`,
   imports: [NgComponentOutlet],
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomViewComponent {
   readonly cell = input.required<Cell>();

@@ -7,9 +7,10 @@ export { Row } from './lib/lib/data-set/row';
 export { DataSource } from './lib/lib/data-source/data-source';
 export { LocalDataSource } from './lib/lib/data-source/local/local.data-source';
 export {
-  ParamsPrepareFunction, RequestFunction, ServerDataSource
+  ParamsPrepareFunction,
+  RequestFunction,
+  ServerDataSource,
 } from './lib/lib/data-source/server/server.data-source';
 export { Deferred } from './lib/lib/helpers';
 export * from './lib/lib/interfaces/smart-table.models';
 export * from './lib/ng2-smart-table.component';
-

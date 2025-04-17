@@ -7,7 +7,7 @@
  * object as first argument, like this:
  *   deepExtend({}, yourObj_1, [yourObj_N]);
  */
-export const deepExtend = function(...objects: any[]): any {
+export const deepExtend = function (...objects: any[]): any {
   if (objects.length < 1 || typeof objects[0] !== 'object') {
     return false;
   }
@@ -82,7 +82,7 @@ export class Deferred<T> {
 // getDeepFromObject({result: {data: 1}}, 'result.data', 2); // returns 1
 export function getDeepFromObject(object = {}, name: string, defaultValue: any = null) {
   try {
-    let level = deepExtend({}, object)
+    let level = deepExtend({}, object);
     const keys = name.split('.');
     if (keys.length === 1) {
       return level[keys[0]] ?? defaultValue;
@@ -90,13 +90,13 @@ export function getDeepFromObject(object = {}, name: string, defaultValue: any =
     keys.forEach((k) => {
       if (level && typeof level[k] !== 'undefined') {
         level = level[k];
-      } else  {
-        level = defaultValue
+      } else {
+        level = defaultValue;
       }
     });
-    return level ?? defaultValue
+    return level ?? defaultValue;
   } catch {
-    return defaultValue
+    return defaultValue;
   }
 }
 
@@ -126,6 +126,27 @@ export function getLocalStorage<T = string>(key: string): T | null {
     return JSON.parse(valueString);
   } catch {
     return null;
+  }
+}
+
+export function compareObjectsAsJSON<T extends Record<string, unknown>>(a: T, b: T): boolean {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+export function isObjectsIdentical<T extends Record<string, unknown>>(a: T, b: T): boolean {
+  let compareIdKey: keyof T | null = null;
+  if ('uuid' in a) {
+    compareIdKey = 'uuid';
+  } else if ('id' in a) {
+    compareIdKey = 'id';
+  }
+  if (!compareIdKey) {
+    return compareObjectsAsJSON(a, b);
+  }
+  try {
+    return a[compareIdKey] === b[compareIdKey];
+  } catch {
+    return compareObjectsAsJSON(a, b);
   }
 }
 

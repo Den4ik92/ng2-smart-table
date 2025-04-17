@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { Cell } from '../../../lib/data-set/cell';
 import { SmartTableEditorAndFilterTypes } from '../../../lib/interfaces/smart-table.models';
@@ -9,22 +9,25 @@ import { CustomEditComponent } from './custom-edit.component';
   selector: 'ng2-table-cell-edit-mode',
   template: `
     <div>
-      @switch (getEditorType()) { @case ('custom') {
-      <ng2-table-cell-custom-editor [cell]="cell()" [inputClass]="inputClass()"> </ng2-table-cell-custom-editor>
-      } @default {
-      <ng2-table-cell-build-in-editor [cell]="cell()" [inputClass]="inputClass()"> </ng2-table-cell-build-in-editor>
-      } }
+      @switch (getEditorType()) {
+        @case ('custom') {
+          <ng2-table-cell-custom-editor [cell]="cell()"> </ng2-table-cell-custom-editor>
+        }
+        @default {
+          <ng2-table-cell-build-in-editor [cell]="cell()"> </ng2-table-cell-build-in-editor>
+        }
+      }
     </div>
   `,
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CustomEditComponent, BuildInEditorComponent],
 })
 export class EditCellComponent {
   readonly cell = input.required<Cell>();
-  readonly inputClass = input('');
+  // readonly inputClass = input('');
 
   getEditorType(): SmartTableEditorAndFilterTypes {
-    const editor = this.cell().getColumn().editor;
+    const editor = this.cell().column.editor;
     if (editor) {
       return editor.type;
     }

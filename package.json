@@ -4,14 +4,14 @@
   "scripts": {
     "ng": "ng",
     "server": "node --watch ./projects/server/server.js",
-    "serve": "ng serve",
+    "serve": "ng serve --port 4205",
     "start": "npm run server & npm run serve",
     "build:demo": "ng build demo --aot --prod",
     "build:lib": "ng build ng2-smart-table --configuration production",
     "build:ci": "npm run build:demo && npm run build:lib",
     "release": "npm run build:lib && npm run publish",
     "publish": "cd dist/ng2-smart-table && npm publish --access=public",
-    "lint": "ng lint"
+    "lint": "ng lint ng2-smart-table"
   },
   "dependencies": {
     "@angular/animations": "^19.0.3",
@@ -39,8 +39,10 @@
     "@types/node": "^12.11.1",
     "angular-eslint": "19.0.1",
     "cors": "^2.8.5",
-    "express": "^4.21.2",
     "eslint": "^8.57.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "express": "^4.21.2",
     "jasmine-core": "~5.1.0",
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "~6.4.2",
@@ -48,6 +50,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.3",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
+    "prettier": "^3.5.3",
     "ts-node": "~10.9.1",
     "typescript": "~5.6.3",
     "typescript-eslint": "8.16.0"

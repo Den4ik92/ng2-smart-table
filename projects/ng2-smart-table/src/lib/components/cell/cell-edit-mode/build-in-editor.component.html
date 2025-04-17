@@ -1,28 +1,16 @@
 <div role="none" (click)="$event.stopPropagation()">
   @switch (editorType()) {
     @case ('list') {
-      <ng2-select-editor
-        [cell]="cell()"
-        [inputClass]="inputClass()">
-      </ng2-select-editor>
+      <ng2-select-editor [cell]="cell()"> </ng2-select-editor>
     }
     @case ('textarea') {
-      <ng2-textarea-editor
-        [cell]="cell()"
-        [inputClass]="inputClass()">
-      </ng2-textarea-editor>
+      <ng2-textarea-editor [cell]="cell()"> </ng2-textarea-editor>
     }
     @case ('checkbox') {
-      <ng2-checkbox-editor
-        [cell]="cell()"
-        [inputClass]="inputClass()">
-      </ng2-checkbox-editor>
+      <ng2-checkbox-editor [cell]="cell()"> </ng2-checkbox-editor>
     }
     @default {
-      <ng2-input-editor
-        [cell]="cell()"
-        [inputClass]="inputClass()">
-    </ng2-input-editor>
+      <ng2-input-editor [cell]="cell()"> </ng2-input-editor>
+    }
   }
-}
 </div>

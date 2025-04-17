@@ -1,56 +1,53 @@
-import { Component, computed, EventEmitter, input, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
-import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Row } from '../../lib/data-set/row';
 import { DataSource } from '../../lib/data-source/data-source';
 import { Grid } from '../../lib/grid';
-import { CellComponent } from '../cell/cell.component';
-import { TbodyCreateCancelComponent } from './cells/create-cancel.component';
-import { TbodyCustomComponent } from './cells/custom.component';
-import { TbodyEditDeleteComponent } from './cells/edit-delete.component';
+import { BaseDataType, SmartTableCustomEvent } from '../../lib/interfaces/smart-table.models';
+import { TrowComponent } from './trow/trow.component';
 
 @Component({
   selector: '[ng2-st-tbody]',
   styleUrls: ['./tbody.component.scss'],
   templateUrl: './tbody.component.html',
-  standalone: true,
-  imports: [
-    FormsModule,
-    TbodyCustomComponent,
-    TbodyEditDeleteComponent,
-    TbodyCreateCancelComponent,
-    NgTemplateOutlet,
-    CellComponent,
-  ],
+  imports: [FormsModule, TrowComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Ng2SmartTableTbodyComponent {
+export class Ng2SmartTableTbodyComponent<T extends BaseDataType = any> {
   readonly grid = input.required<Grid>();
   readonly source = input.required<DataSource>();
-  readonly deleteConfirm = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
-  readonly createConfirm = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
-  readonly editConfirm = input.required<EventEmitter<any> | OutputEmitterRef<any>>();
-  readonly rowClassFunction = input<(row: any) => string>(() => '');
 
-  readonly save = output<any>();
-  readonly edit = output<any>();
-  readonly editCancel = output<any>();
-  readonly delete = output<any>();
-  readonly custom = output<any>();
-  readonly edited = output<any>();
-  readonly userSelectRow = output<any>();
-  readonly userClickedRow = output<any>();
-  readonly multipleSelectRow = output<any>();
+  readonly rowClassFunction = input<(rowData: T) => string>(() => '');
+  readonly isMobileView = input<boolean>(false);
 
-  readonly editInputClass = computed<string>(() => {
-    const editOptions = this.grid().settings().edit;
-    if (!editOptions) {
-      return '';
-    }
-    return editOptions.inputClass || '';
-  });
+  readonly edit = output<Row>();
+  readonly editConfirmed = output<Row>();
+  readonly editCancel = output<Row>();
+  readonly createConfirmed = output<void>();
+  readonly deleteEmitter = output<Row>();
+  readonly customActionEmitter = output<SmartTableCustomEvent<T>>();
+  readonly userClickedRow = output<Row>();
+  readonly multipleSelectRow = output<Row>();
+
+  // readonly editInputClass = computed<string>(() => {
+  //   const editOptions = this.grid().settings().edit;
+  //   if (!editOptions) {
+  //     return '';
+  //   }
+  //   return editOptions.inputClass || '';
+  // });
   readonly noDataMessage = computed<string>(() => {
     return this.grid().settings().noDataMessage || 'No data found';
   });
+
+  protected customActionEmitted(actionName: string, row: Row) {
+    this.customActionEmitter.emit({
+      source: this.source(),
+      data: row.rowData,
+      action: actionName,
+    });
+  }
 
   protected trackByIdOrIndex(index: number, item: any): string | number {
     return item?.id || index;

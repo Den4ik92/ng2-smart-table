@@ -1,55 +1,43 @@
 import { Column } from './column';
-import { DataSet } from './data-set';
 import { Row } from './row';
 
 export class Cell {
-  private prepareValue = (value: any) => value
   newValue: any = '';
+  readonly columnClass: string = '';
+  readonly styles: Partial<CSSStyleDeclaration> = '';
+  readonly title: string = '';
+  readonly id: string = '';
 
-  constructor(protected value: any, protected row: Row, protected column: Column, protected dataSet: DataSet) {
+  constructor(
+    protected value: any,
+    public row: Row,
+    public column: Column,
+  ) {
+    this.columnClass = column.class;
     this.newValue = value;
-  }
-
-  getColumn(): Column {
-    return this.column;
-  }
-
-  getColumnClass(): string | undefined {
-    return this.column.class;
-  }
-
-  getRow(): Row {
-    return this.row;
+    this.styles = column.styles;
+    this.title = column.title;
+    this.id = column.id;
   }
 
   getValue() {
-    const prepare = this.column.valuePrepareFunction || this.prepareValue;
-    return prepare.call(null, this.value, this.row.getData(), this);
+    const prepare = this.column.valuePrepareFunction;
+    return !prepare ? this.value : prepare.call(null, this.value, this.row.rowData, this);
   }
 
   getNotPrepareValue() {
-    return this.value
+    return this.value;
   }
 
   setValue(value: any) {
     this.newValue = value;
   }
 
-  getId(): string {
-    return this.getColumn().id;
-  }
-
-  getTitle(): string {
-    return this.getColumn().title;
-  }
-
   isEditable(): boolean {
-    if (this.getRow().index === -1) {
-      return this.getColumn().isAddable;
-    }
-    else {
-      return this.getColumn().isEditable;
+    if (this.row.index === -1) {
+      return this.column.isAddable;
+    } else {
+      return this.column.isEditable;
     }
   }
-
 }

@@ -1,6 +1,7 @@
-import { signal } from '@angular/core';
+import { computed, signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import {
+  BaseDataType,
   SmartTableFilterItem,
   SmartTableOnChangedEvent,
   SmartTableOnChangedEventName,
@@ -9,10 +10,10 @@ import {
   SmartTableSortItem,
 } from '../interfaces/smart-table.models';
 
-export abstract class DataSource<T = any> {
+export abstract class DataSource<T extends BaseDataType = any> {
   protected readonly onChangedSource = new Subject<SmartTableOnChangedEvent>();
-  protected sortConf: SmartTableSortItem = { field: '', direction: 'asc' };
-  protected filters: SmartTableFilterItem[] = [];
+  protected readonly sortConf = signal<SmartTableSortItem>({ field: '', title: '', direction: 'desc' });
+  protected readonly filters = signal<SmartTableFilterItem[]>([]);
 
   readonly pagingConf = signal<SmartTablePagerSettings>({
     page: 1,
@@ -27,9 +28,11 @@ export abstract class DataSource<T = any> {
    * return all elements
    */
   abstract getAll(): Promise<T[]>;
-  abstract getSort(): SmartTableSortItem;
-  abstract getFilters(): SmartTableFilterItem[];
+
   abstract count(): number;
+
+  readonly getSort = computed<SmartTableSortItem>(() => this.sortConf());
+  readonly getFilters = computed<SmartTableFilterItem[]>(() => this.filters());
 
   refresh(): void {
     this.emitOnChanged({ action: SmartTableOnChangedEventName.refresh });
@@ -50,13 +53,13 @@ export abstract class DataSource<T = any> {
   }
 
   async appendMany(elements: T[]): Promise<true> {
-    this.data.update((old) => [ ...old, ...elements,]);
+    this.data.update((old) => [...old, ...elements]);
     this.emitOnChanged({ action: SmartTableOnChangedEventName.appendMany, newItems: elements });
     return Promise.resolve(true);
   }
 
   async add(element: T): Promise<true> {
-    this.data.update((old) => [ ...old, element,]);
+    this.data.update((old) => [...old, element]);
     this.emitOnChanged({ action: SmartTableOnChangedEventName.add, newItems: [element] });
     return Promise.resolve(true);
   }
@@ -80,7 +83,7 @@ export abstract class DataSource<T = any> {
   }
 
   setSort(conf: SmartTableSortItem, doEmit = true) {
-    this.sortConf = conf;
+    this.sortConf.set(conf);
     this.pagingConf.update((old) => ({ ...old, page: 1 }));
     if (doEmit) {
       this.emitOnChanged({ action: SmartTableOnChangedEventName.sort });
@@ -91,17 +94,19 @@ export abstract class DataSource<T = any> {
     if (!newFilter.field) {
       return;
     }
-    const foundIndex = this.filters.findIndex((filter) => filter.field === newFilter.field);
+    const foundIndex = this.filters().findIndex((filter) => filter.field === newFilter.field);
     if (foundIndex === -1) {
       if (newFilter.search) {
-        this.filters.push(newFilter);
+        this.filters.set([...this.filters(), newFilter]);
       }
     } else {
+      const filtersTemp = this.filters();
       if (newFilter.search) {
-        this.filters[foundIndex].search = newFilter.search;
+        filtersTemp[foundIndex].search = newFilter.search;
       } else {
-        this.filters.splice(foundIndex, 1);
+        filtersTemp.splice(foundIndex, 1);
       }
+      this.filters.set([...filtersTemp]);
     }
     this.pagingConf.update((old) => ({ ...old, page: 1 }));
     if (doEmit) {
@@ -110,7 +115,7 @@ export abstract class DataSource<T = any> {
   }
 
   setFilters(newFilters: SmartTableFilterItem[], doEmit = true) {
-    this.filters = [...newFilters];
+    this.filters.set([...newFilters]);
     this.pagingConf.update((old) => ({ ...old, page: 1 }));
     if (doEmit) {
       this.emitOnChanged({ action: SmartTableOnChangedEventName.filter });

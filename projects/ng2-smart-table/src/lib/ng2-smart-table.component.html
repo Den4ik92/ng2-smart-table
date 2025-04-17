@@ -1,31 +1,28 @@
-<table [id]="tableId()" [class]="tableClass()">
+<table [id]="tableId()" [class]="tableClass()" [class.mobile-view]="isMobileView()">
   <thead
     ng2-st-thead
     [grid]="grid"
     [source]="source()"
-    [createConfirm]="createConfirm"
-    (create)="create.emit($event)"
-    (selectAllRows)="onSelectAllRows()"
-  ></thead>
+    [isMobileView]="isMobileView()"
+    (create)="createEmitted()"
+    (selectAllRows)="onSelectAllRows()"></thead>
 
   <tbody
     ng2-st-tbody
     [grid]="grid"
     [source]="source()"
-    [deleteConfirm]="deleteConfirm"
-    [editConfirm]="editConfirm"
-    [createConfirm]="createConfirm"
     [rowClassFunction]="rowClassFunction()"
-    (edit)="edit.emit($event)"
-    (editCancel)="editCancel.emit($event)"
-    (delete)="delete.emit($event)"
-    (custom)="custom.emit($event)"
+    [isMobileView]="isMobileView()"
+    (deleteEmitter)="deleEmitted($event)"
+    (edit)="editEmitted($event)"
+    (editConfirmed)="editConfirmed($event)"
+    (editCancel)="editCanceled($event)"
+    (createConfirmed)="createConfirmed()"
+    (customActionEmitter)="customActionEmitted($event)"
     (userClickedRow)="emitUserRowClicked($event)"
-    (multipleSelectRow)="multipleSelectRow($event)"
-  ></tbody>
+    (multipleSelectRow)="multipleSelectRow($event)"></tbody>
 </table>
 
 @if (isPagerDisplay()) {
-<ng2-smart-table-pager [source]="source()">
-</ng2-smart-table-pager>
+  <ng2-smart-table-pager [source]="source()"> </ng2-smart-table-pager>
 }

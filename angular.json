@@ -5,6 +5,14 @@
   "projects": {
     "ng2-smart-table": {
       "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "changeDetection": "OnPush",
+          "style": "scss",
+          "skipTests": true,
+          "prefix": "ng2"
+        }
+      },
       "root": "projects/ng2-smart-table",
       "sourceRoot": "projects/ng2-smart-table/src",
       "prefix": "lib",
@@ -33,9 +41,10 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+              "projects/ng2-smart-table/**/*.ts",
+              "projects/ng2-smart-table/**/*.html"
+            ],
+            "eslintConfig": "projects/ng2-smart-table/eslint.config.js"
           }
         }
       }

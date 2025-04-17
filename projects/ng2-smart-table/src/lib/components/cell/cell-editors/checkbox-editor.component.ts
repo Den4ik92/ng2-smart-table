@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 
 import { BaseEditorComponent } from './base-editor.component';
 
@@ -10,19 +10,19 @@ import { BaseEditorComponent } from './base-editor.component';
       [class]="inputClass()"
       type="checkbox"
       class="form-control"
-      [name]="cell().getId()"
+      [name]="cell().id"
       [disabled]="!cell().isEditable()"
       (change)="onChange($event)"
       [checked]="cell().getValue() === trueVal()" />
   `,
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxEditorComponent extends BaseEditorComponent {
   readonly trueVal = computed(() => {
-    return this.cell().getColumn().getEditorConfig()?.true || true;
+    return this.cell().column.getEditorConfig()?.true || true;
   });
   readonly falseVal = computed(() => {
-    return this.cell().getColumn().getEditorConfig()?.false || false;
+    return this.cell().column.getEditorConfig()?.false || false;
   });
 
   constructor() {

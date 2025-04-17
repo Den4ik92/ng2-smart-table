@@ -1,0 +1,138 @@
+tr.mobile-header-top-row {
+  .mobile-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .current-column-title {
+      font-weight: bold;
+      flex: 1;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    button {
+      &.sort-dropdown-toggle-button {
+        transition: transform 0.2s ease;
+        &.active {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .filter-toggle svg {
+      height: 1rem;
+      width: 1rem;
+    }
+  }
+}
+
+tr.mobile-header-bottom-row {
+  position: relative;
+
+  .dropdown {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    top: 1rem;
+    left: 50%;
+    translate: -50%;
+    padding: 0.8rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    background: var(--table-header-dropdown-background, #fff);
+    box-shadow: var(--table-card-shadow, 0 0 8px 5px #d7d7d791);
+    z-index: 10;
+    max-height: var(--table-header-dropdown-max-height, 60dvh);
+    width: var(--table-header-dropdown-width, 80dvw);
+    max-width: 30rem;
+    overflow: auto;
+    transition: opacity 0.3s ease;
+  }
+
+  .dialog-active .dropdown {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .dropdown-content {
+    display: flex;
+    flex-direction: column;
+    ::ng-deep {
+      tr {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+      th.titles {
+        a {
+          display: block;
+          width: 100%;
+          padding: 0.3rem;
+          color: inherit;
+          border-bottom: 1px solid var(--table-border-primary, #d5d5d5);
+        }
+      }
+    }
+  }
+  .close-dialog-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    width: 2rem;
+    height: 2rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+
+    &:hover {
+      box-shadow: 0 0 5px 4px #dadada91;
+    }
+
+    &::after,
+    &::before {
+      content: '';
+      display: block;
+      background-color: var(--table-header-dropdown-close-button-color, #000);
+      height: 2px;
+      width: 1rem;
+      border-radius: 2px;
+    }
+
+    &::before {
+      rotate: 45deg;
+    }
+
+    &::after {
+      position: absolute;
+      rotate: -45deg;
+    }
+  }
+}
+
+.overlay {
+  position: fixed;
+  background: var(--table-header-dropdown-overlay-background, #cbcbcb53);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -20;
+}
+
+.dialog-active .overlay {
+  z-index: 2;
+}
+
+.dropdown {
+  z-index: 1;
+}

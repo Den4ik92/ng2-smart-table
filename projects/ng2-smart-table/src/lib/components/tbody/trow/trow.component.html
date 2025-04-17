@@ -1,0 +1,75 @@
+@if (isMobileView()) {
+  <td colspan="50">
+    <div class="ng2-smart-card-header">
+      <ng-container [ngTemplateOutlet]="multiselectCheckbox"></ng-container>
+      <div class="ng2-smart-card-actions">
+        <ng-container [ngTemplateOutlet]="actions"></ng-container>
+      </div>
+    </div>
+    <div class="ng2-smart-card-content">
+      @for (cell of row().visibleCells(); track cell.id + $index) {
+        <div class="ng2-smart-card-field">
+          <div class="ng2-smart-card-field-label">{{ cell.title }}</div>
+          <div class="ng2-smart-card-field-value">
+            <ng2-smart-table-cell [cell]="cell" [isInEditing]="!!row().isInEditing()"> </ng2-smart-table-cell>
+          </div>
+        </div>
+      }
+    </div>
+  </td>
+} @else {
+  <ng-container [ngTemplateOutlet]="multiselectCheckbox"></ng-container>
+  @if (grid().actionIsOnLeft()) {
+    <ng-container [ngTemplateOutlet]="actions"></ng-container>
+  }
+  @for (cell of row().visibleCells(); track cell.id + $index) {
+    <td
+      [class]="cell.columnClass"
+      [style]="cell.styles">
+      <ng2-smart-table-cell [cell]="cell" [isInEditing]="!!row().isInEditing()"> </ng2-smart-table-cell>
+    </td>
+  }
+  @if (grid().actionIsOnRight()) {
+    <ng-container [ngTemplateOutlet]="actions"></ng-container>
+  }
+}
+
+<ng-template #actions>
+  @if (isCreateRow() || row().isInEditing()) {
+    <td class="ng2-smart-actions">
+      <ng2-st-tbody-create-cancel
+        [grid]="grid()"
+        [rowIndex]="row().index || 0"
+        (cancelEdit)="onCancelEdit()"
+        (save)="onSave()"
+        [rowPending]="!!row().pending()"></ng2-st-tbody-create-cancel>
+    </td>
+  } @else {
+    @if (grid().isActionsVisible()) {
+      <td class="ng2-smart-actions" (click)="$event.stopPropagation()">
+        <ng2-row-actions
+          [grid]="grid()"
+          [row]="row()"
+          (customActionEmitter)="customActionEmitter.emit($event)"
+          (editEmitter)="edit.emit()"
+          (deleteEmitter)="deleteEmitter.emit()"></ng2-row-actions>
+      </td>
+    }
+  }
+</ng-template>
+
+<ng-template #multiselectCheckbox>
+  @if (grid().isMultiSelectVisible() && !isCreateRow()) {
+    <td
+      class="ng2-smart-actions ng2-smart-action-multiple-select"
+      (click)="$event.stopPropagation(); multipleSelectRow.emit(row())">
+      <input
+        type="checkbox"
+        [id]="'row-' + row().index + '_select-checkbox'"
+        class="form-control"
+        [ngModel]="row().isSelected()" />
+    </td>
+  } @else {
+    <p></p>
+  }
+</ng-template>

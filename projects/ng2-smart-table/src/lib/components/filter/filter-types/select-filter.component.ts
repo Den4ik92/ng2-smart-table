@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BaseFilterComponent } from './base-filter.component';
@@ -9,13 +9,13 @@ import { BaseFilterComponent } from './base-filter.component';
     <select [class]="inputClass()" class="form-control" [formControl]="inputControl">
       <option value="">{{ column().getFilterConfig().selectText }}</option>
       @for (option of column().getFilterConfig().list; track $index) {
-      <option [value]="option.value">
-        {{ option.title }}
-      </option>
+        <option [value]="option.value">
+          {{ option.title }}
+        </option>
       }
     </select>
   `,
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, ReactiveFormsModule],
 })
 export class SelectFilterComponent extends BaseFilterComponent {}

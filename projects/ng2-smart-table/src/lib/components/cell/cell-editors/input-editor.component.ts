@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { BaseEditorComponent } from './base-editor.component';
@@ -11,11 +11,11 @@ import { BaseEditorComponent } from './base-editor.component';
       [class]="inputClass()"
       class="form-control"
       [(ngModel)]="cell().newValue"
-      [name]="cell().getId()"
-      [placeholder]="cell().getTitle()"
+      [name]="cell().id"
+      [placeholder]="cell().title"
       [disabled]="!cell().isEditable()" />
   `,
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule],
 })
 export class InputEditorComponent extends BaseEditorComponent {}

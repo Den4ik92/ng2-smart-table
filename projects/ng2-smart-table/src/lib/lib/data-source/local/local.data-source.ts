@@ -1,10 +1,8 @@
 import { computed, signal } from '@angular/core';
 import {
-  SmartTableFilterItem,
   SmartTableOnChangedEventName,
   SmartTableOnChangedEventToEmit,
   SmartTableOnChangedEventType,
-  SmartTableSortItem,
 } from '../../interfaces/smart-table.models';
 import { DataSource } from '../data-source';
 import { isElementSatisfied } from './local.filter';
@@ -47,12 +45,12 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
 
   reset(silent = false) {
     if (silent) {
-      this.filters = [];
-      this.sortConf = { field: '', direction: 'asc' };
+      this.filters.set([]);
+      this.sortConf.set({ field: '', title: '', direction: 'asc' });
       this.pagingConf.update((old) => ({ ...old, page: 1 }));
     } else {
       this.setFilters([], false);
-      this.setSort({ field: '', direction: 'asc' }, false);
+      this.setSort({ field: '', title: '', direction: 'asc' }, false);
       if (this.pagingConf().display) {
         this.setPage(1);
       }
@@ -60,14 +58,6 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
   }
 
   readonly count = computed(() => this.filteredAndSorted().length);
-
-  getSort(): SmartTableSortItem {
-    return this.sortConf;
-  }
-
-  getFilters(): SmartTableFilterItem[] {
-    return this.filters;
-  }
 
   override async emitOnChanged(event: SmartTableOnChangedEventToEmit, newElements?: T[]) {
     let renderData: T[] = this.filteredAndSorted().slice(0);
@@ -78,11 +68,11 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
       )
     ) {
       renderData = await this.filter(newElements || this.data().slice(0));
-      renderData = await this.sort(renderData)
+      renderData = await this.sort(renderData);
       this.filteredAndSorted.set(renderData);
     }
     if (action === SmartTableOnChangedEventName.sort) {
-      renderData = await this.sort(renderData)
+      renderData = await this.sort(renderData);
       this.filteredAndSorted.set(renderData);
     }
     if (
@@ -101,8 +91,8 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
   }
 
   protected async sort(data: T[]): Promise<T[]> {
-    if (this.sortConf) {
-      return LocalSorter.sort<T>(data, this.sortConf.field, this.sortConf.direction, this.sortConf.compare);
+    if (this.sortConf()) {
+      return LocalSorter.sort<T>(data, this.sortConf().field, this.sortConf().direction, this.sortConf().compare);
     }
     return data;
   }
@@ -115,7 +105,7 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
 
     await Promise.all(
       data.map(async (element) => {
-        if (await isElementSatisfied(element, this.filters)) {
+        if (await isElementSatisfied(element, this.filters())) {
           filtered.push(element);
         }
       }),

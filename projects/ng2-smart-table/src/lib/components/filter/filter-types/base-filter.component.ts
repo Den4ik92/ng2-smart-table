@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   input,
@@ -17,7 +18,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Column } from '../../../lib/data-set/column';
 import { DataSource } from '../../../lib/data-source/data-source';
 
-@Component({ template: '', selector: 'ng2-base-filter-component' })
+@Component({ template: '', selector: 'ng2-base-filter-component', changeDetection: ChangeDetectionStrategy.OnPush })
 export class BaseFilterComponent implements FilterComponent, OnDestroy, OnChanges, OnInit {
   delay = 300;
   changesSubscription?: Subscription;

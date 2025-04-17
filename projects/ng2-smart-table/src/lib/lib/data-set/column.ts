@@ -1,12 +1,22 @@
-import { SmartTableCompareFunction, SmartTableEditorAndFilter, SmartTableFilterFunction, SmartTableValuePrepareFunction } from '../interfaces/smart-table.models';
-import { SmartTableColumnSettings, SmartTableColumnSettingsTypes, SmartTableSortDirection } from './../interfaces/smart-table.models';
+import {
+  SmartTableCompareFunction,
+  SmartTableEditorAndFilter,
+  SmartTableFilterFunction,
+  SmartTableValuePrepareFunction,
+} from '../interfaces/smart-table.models';
+import {
+  SmartTableColumnSettings,
+  SmartTableColumnSettingsTypes,
+  SmartTableSortDirection,
+} from './../interfaces/smart-table.models';
 import { DataSet } from './data-set';
 
 export class Column {
   readonly title: string = '';
   readonly type: SmartTableColumnSettingsTypes = 'text';
   readonly class: string = '';
-  readonly width: string = '';
+  readonly styles: Partial<CSSStyleDeclaration>;
+  public readonly editorInputClass: string = '';
 
   hide = false;
   isSortable = false;
@@ -22,10 +32,15 @@ export class Column {
   valuePrepareFunction?: SmartTableValuePrepareFunction;
   filterFunction?: SmartTableFilterFunction;
 
-  constructor(public id: string, private settings: SmartTableColumnSettings, protected dataSet: DataSet) {
+  constructor(
+    public id: string,
+    private settings: SmartTableColumnSettings,
+    protected dataSet: DataSet,
+  ) {
+    this.editorInputClass = dataSet.editorInputClass;
     this.title = settings.title;
     this.class = settings.class || '';
-    this.width = settings.width || '';
+    this.styles = settings.style || '';
     this.hide = !!settings.hide;
     this.type = settings.type;
     if (settings?.editor) {
@@ -40,7 +55,7 @@ export class Column {
     this.isFilterable = typeof settings.filter === 'undefined' ? true : !!settings['filter'];
     this.isSortable = settings.sort ?? true;
     this.isEditable = settings.editable ?? true;
-    this.isAddable= settings.addable ?? false;
+    this.isAddable = settings.addable ?? true;
     this.sortDirection = settings.sortDirection || 'asc';
 
     this.compareFunction = settings.compareFunction;
@@ -50,9 +65,9 @@ export class Column {
 
   getEditorConfig(): SmartTableEditorAndFilter['config'] | false {
     if (this.editor) {
-      return this.editor?.config
+      return this.editor?.config;
     }
-    return false
+    return false;
   }
 
   getFilterType() {
@@ -61,7 +76,7 @@ export class Column {
 
   getFilterConfig(): SmartTableEditorAndFilter['config'] | false {
     if (this.filter) {
-      return this.filter?.config
+      return this.filter?.config;
     }
     return false;
   }

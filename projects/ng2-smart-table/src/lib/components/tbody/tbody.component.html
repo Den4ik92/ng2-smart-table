@@ -1,62 +1,36 @@
+@if (grid().createFormShown()) {
+  <tr
+    ng2-st-trow
+    class="ng2-smart-row"
+    [grid]="grid()"
+    [row]="grid().getNewRow()"
+    [isCreateRow]="true"
+    [source]="source()"
+    [isMobileView]="isMobileView()"
+    (createConfirmed)="createConfirmed.emit()"
+    ></tr>
+}
 @for (row of grid().dataSet.getRows(); track trackByIdOrIndex($index, row)) {
-<tr
-  (click)="userClickedRow.emit(row)"
-  class="ng2-smart-row"
-  [class]="rowClassFunction()(row)"
-  [class.selected]="row.isSelected()">
-  @if (grid().isMultiSelectVisible()) {
-  <td
-    class="ng2-smart-actions ng2-smart-action-multiple-select"
-    (click)="$event.stopPropagation(); multipleSelectRow.emit(row)">
-    <input
-      type="checkbox"
-      [id]="'row-' + row.index + '_select-checkbox'"
-      class="form-control"
-      [ngModel]="row.isSelected()" />
-  </td>
-  } @if (grid().actionIsOnLeft()) {
-  <ng-container [ngTemplateOutlet]="actions"></ng-container>
-  } @for (cell of row.visibleCells(); track cell.getId() + $index) {
-  <td [class]="cell.getColumnClass()">
-    <ng2-smart-table-cell [cell]="cell" [inputClass]="editInputClass()" [isInEditing]="row.isInEditing()">
-    </ng2-smart-table-cell>
-  </td>
-  } @if (grid().actionIsOnRight()) {
-  <ng-container [ngTemplateOutlet]="actions"></ng-container>
-  }
-</tr>
-
-<ng-template #actions>
-  @if (row.isInEditing()) {
-  <td class="ng2-smart-actions">
-    <ng2-st-tbody-create-cancel
-      [grid]="grid()"
-      [row]="row"
-      [editConfirm]="editConfirm()"
-      [editCancel]="editCancel"></ng2-st-tbody-create-cancel>
-  </td>
-  } @if (!row.isInEditing() && grid().isActionsVisible() ) {
-  <td class="ng2-smart-actions" (click)="$event.stopPropagation()">
-    <ng2-st-tbody-custom
-      [grid]="grid()"
-      (custom)="custom.emit($event)"
-      [row]="row"
-      [source]="source()"></ng2-st-tbody-custom>
-    <ng2-st-tbody-edit-delete
-      [grid]="grid()"
-      [deleteConfirm]="deleteConfirm()"
-      (edit)="edit.emit(row)"
-      (delete)="delete.emit(row)"
-      [row]="row"
-      [source]="source()">
-    </ng2-st-tbody-edit-delete>
-  </td>
-  }
-</ng-template>
+  <tr
+    ng2-st-trow
+    class="ng2-smart-row"
+    [grid]="grid()"
+    [source]="source()"
+    [row]="row"
+    [class]="rowClassFunction()(row.rowData)"
+    [isMobileView]="isMobileView()"
+    [class.selected]="row.isSelected()"
+    (click)="userClickedRow.emit(row)"
+    (edit)="edit.emit(row)"
+    (editConfirmed)="editConfirmed.emit(row)"
+    (editCancel)="editCancel.emit(row)"
+    (deleteEmitter)="deleteEmitter.emit(row)"
+    (customActionEmitter)="customActionEmitted($event, row)"
+    (multipleSelectRow)="multipleSelectRow.emit($event)"></tr>
 } @empty {
-<tr>
-  <td colspan="50">
-    {{ noDataMessage() }}
-  </td>
-</tr>
+  <tr>
+    <td colspan="50">
+      {{ noDataMessage() }}
+    </td>
+  </tr>
 }

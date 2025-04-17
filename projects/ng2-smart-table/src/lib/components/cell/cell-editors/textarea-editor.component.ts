@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { BaseEditorComponent } from './base-editor.component';
@@ -11,12 +11,12 @@ import { BaseEditorComponent } from './base-editor.component';
       [class]="inputClass()"
       class="form-control"
       [(ngModel)]="cell().newValue"
-      [name]="cell().getId()"
+      [name]="cell().id"
       [disabled]="!cell().isEditable()"
-      [placeholder]="cell().getTitle()">
+      [placeholder]="cell().title">
     </textarea>
   `,
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule],
 })
 export class TextareaEditorComponent extends BaseEditorComponent {}

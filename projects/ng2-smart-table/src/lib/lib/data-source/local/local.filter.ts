@@ -1,10 +1,10 @@
-import { SmartTableFilterFunction, SmartTableFilterItem } from "../../interfaces/smart-table.models";
+import { BaseDataType, SmartTableFilterFunction, SmartTableFilterItem } from '../../interfaces/smart-table.models';
 
 function filterValues(value: any, search: string): boolean {
   return value.toString().toLowerCase().includes(search.toString().toLowerCase());
 }
 
-export async function isElementSatisfied<T extends Record<string, unknown>>(element: T, filters: SmartTableFilterItem[]) {
+export async function isElementSatisfied<T extends BaseDataType>(element: T, filters: SmartTableFilterItem[]) {
   return filters.every((filter: SmartTableFilterItem) => {
     if (!filter.search?.length) {
       return true;
@@ -14,7 +14,7 @@ export async function isElementSatisfied<T extends Record<string, unknown>>(elem
       const value = element[filter.field];
       return filterFunction(value, filter.search);
     } catch {
-      return false
+      return false;
     }
   });
 }
