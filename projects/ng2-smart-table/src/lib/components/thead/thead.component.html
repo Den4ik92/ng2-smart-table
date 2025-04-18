@@ -3,33 +3,41 @@
     <th colspan="50">
       <div class="mobile-header-content">
         <div ng2-st-add-button [grid]="grid()" (create)="create.emit($event)"></div>
-        <div class="current-column-title">
-          <a href="#" (click)="$event.preventDefault(); sortByColumn()" class="ng2-smart-sort-link sort">
-            {{ currentSortConfig().title }}
-            <span class="sort-direction">{{ currentSortConfig().direction === 'asc' ? '↑' : '↓' }}</span>
-          </a>
-          <button
-            class="sort-dropdown-toggle-button"
-            (click)="toggleDropdown('sort')"
-            [class.active]="dropdown() === 'sort'"
-            aria-label="Toggle sort options">
-            <span class="sort-icon">▼</span>
-          </button>
-        </div>
+        @if (columnsWithSortLength()) {
+          <div class="current-column-title">
+            <a href="#" (click)="$event.preventDefault(); sortByColumn()" class="ng2-smart-sort-link sort">
+              {{ currentSortConfig().title }}
+              <span class="sort-direction">{{ currentSortConfig().direction === 'asc' ? '↑' : '↓' }}</span>
+            </a>
+            @if (columnsWithSortLength() > 1) {
+              <button
+                class="sort-dropdown-toggle-button"
+                (click)="toggleDropdown('sort')"
+                [class.active]="dropdown() === 'sort'"
+                aria-label="Toggle sort options">
+                <span class="sort-icon">▼</span>
+              </button>
+            }
+          </div>
+        }
+
         <div class="header-actions">
-          <button class="filter-toggle" (click)="toggleDropdown('filters')" aria-label="Toggle filters">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-              <g id="SVGRepo_iconCarrier">
-                <path
-                  stroke="#000000"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M20 4H4v2l6 6v8.5l4-2.5v-6l6-6V4z"></path>
-              </g>
-            </svg>
-          </button>
+          @if (columnsWithFiltersLength()) {
+            <button class="filter-toggle" (click)="toggleDropdown('filters')" aria-label="Toggle filters">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    stroke="#000000"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M20 4H4v2l6 6v8.5l4-2.5v-6l6-6V4z"></path>
+                </g>
+              </svg>
+            </button>
+          }
+
         </div>
       </div>
     </th>
@@ -40,12 +48,10 @@
       <div class="dropdown">
         <div class="dropdown-header">
           @if (dropdown() === 'filters') {
-          <button type="button" (click)="clearAllFilters()" aria-label="Close filters">
-            reset all
-          </button>
-        } @else {
-          <p></p>
-        }
+            <button type="button" (click)="clearAllFilters()" aria-label="Close filters">reset all</button>
+          } @else {
+            <p></p>
+          }
           <button type="button" class="close-dialog-button" (click)="toggleDropdown(null)" aria-label="Close filters">
             <span></span>
           </button>

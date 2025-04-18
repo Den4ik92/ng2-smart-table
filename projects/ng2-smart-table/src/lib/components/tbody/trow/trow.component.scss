@@ -7,20 +7,22 @@
     margin-bottom: 1rem;
     border-radius: 0.5rem;
     overflow: hidden;
-    box-shadow: var(--table-card-shadow, 0 0 8px 5px #d7d7d791);
-    background-color: var(--table-card-background-color, #ffffff);
+    box-shadow: var(--table-card-shadow, 0 0 8px 5px color-mix(in oklab, var(--smart-table-bg, #d7d7d7) 30%, transparent 50%) );
+    background-color: var(--smart-table-bg, #ffffff);
 
     td {
       display: block;
       padding: 0;
       border: none;
 
+      .ng2-smart-actions {
+        margin: 0.5rem;
+      }
       .ng2-smart-card-header {
         display: flex;
         align-items: center;
         gap: 0.5rem;
         justify-content: space-between;
-        padding: 0.5rem;
       }
 
       .ng2-smart-card-content {

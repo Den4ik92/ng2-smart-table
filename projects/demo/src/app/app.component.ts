@@ -93,16 +93,16 @@ export class AppComponent implements OnInit {
     columnSortStorageKey: 'test1',
     pager: {
       display: true,
-      perPage: 1000,
+      perPage: 100,
       perPageSelect: [10, 20, 50, 100],
     },
     tableWidthMobileBreakpoint: 768,
     columnSort: true,
     selectMode: 'multi',
     actions: {
-      add: true,
-      delete: false,
-      edit: true,
+      add: false,
+      delete: true,
+      edit: false,
       custom: [
         {
           name: 'custom',
@@ -111,9 +111,6 @@ export class AppComponent implements OnInit {
         },
       ],
     },
-    // add: {
-    //   confirmCreate: true,
-    // },
     delete: {
       confirmDelete: true,
       hasPermissionFunction: this.canDeleteFunction(),
@@ -142,13 +139,13 @@ export class AppComponent implements OnInit {
         key: 'gender',
         title: 'Is man',
         type: 'text',
-        filter: {
-          type: 'checkbox',
-          config: {
-            true: 'male',
-            false: 'female',
-          },
-        },
+        // filter: {
+        //   type: 'checkbox',
+        //   config: {
+        //     true: 'male',
+        //     false: 'female',
+        //   },
+        // },
         valuePrepareFunction: (cell: 'male' | 'female') => {
           return cell === 'male';
         },
@@ -166,7 +163,7 @@ export class AppComponent implements OnInit {
         key: 'age',
         title: 'Age',
         type: 'text',
-        sortDirection: 'asc',
+        // sort: true,
       },
       {
         key: 'occupation',

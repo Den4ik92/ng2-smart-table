@@ -42,8 +42,8 @@ tr.mobile-header-bottom-row {
     padding: 0.8rem 1rem;
     border: none;
     border-radius: 0.5rem;
-    background: var(--table-header-dropdown-background, #fff);
-    box-shadow: var(--table-card-shadow, 0 0 8px 5px #d7d7d791);
+    background: var(--smart-table-bg, #fff);
+    box-shadow: var(--table-card-shadow, 0 0 8px 5px color-mix(in oklab, var(--smart-table-bg, #d7d7d7) 30%, transparent 50%) );
     z-index: 10;
     max-height: var(--table-header-dropdown-max-height, 60dvh);
     width: var(--table-header-dropdown-width, 80dvw);
@@ -78,7 +78,7 @@ tr.mobile-header-bottom-row {
           width: 100%;
           padding: 0.3rem;
           color: inherit;
-          border-bottom: 1px solid var(--table-border-primary, #d5d5d5);
+          border-bottom: 1px solid var(--smart-table-separator, #d5d5d5);
         }
       }
     }
@@ -102,7 +102,7 @@ tr.mobile-header-bottom-row {
     &::before {
       content: '';
       display: block;
-      background-color: var(--table-header-dropdown-close-button-color, #000);
+      background-color: var(--smart-table-fg, #000);
       height: 2px;
       width: 1rem;
       border-radius: 2px;
@@ -121,7 +121,7 @@ tr.mobile-header-bottom-row {
 
 .overlay {
   position: fixed;
-  background: var(--table-header-dropdown-overlay-background, #cbcbcb53);
+  background: var(--table-header-dropdown-overlay-background, color-mix(in oklab, var(--smart-table-bg, #d7d7d7) 30%, transparent 50%) );
   top: 0;
   bottom: 0;
   left: 0;

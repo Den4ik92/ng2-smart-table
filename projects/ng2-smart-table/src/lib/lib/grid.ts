@@ -218,15 +218,18 @@ export class Grid {
     if (!columns || !columns.length) {
       return false;
     }
-    const defaultSortColumn = columns?.find((column) => column.sortDirection);
-    if (!defaultSortColumn) {
+    let initialSortColumn = columns?.find((column) => column?.sortDirection);
+    if (!initialSortColumn) {
+      initialSortColumn = columns?.find((column) => column.sort);
+    }
+    if (!initialSortColumn) {
       return false;
     }
     return {
-      field: defaultSortColumn.key as string,
-      title: defaultSortColumn.title,
-      direction: defaultSortColumn.sortDirection || 'asc',
-      compare: defaultSortColumn.compareFunction,
+      field: initialSortColumn.key as string,
+      title: initialSortColumn.title,
+      direction: initialSortColumn.sortDirection || 'asc',
+      compare: initialSortColumn.compareFunction,
     };
   }
 

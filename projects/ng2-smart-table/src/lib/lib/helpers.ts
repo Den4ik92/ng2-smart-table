@@ -149,11 +149,3 @@ export function isObjectsIdentical<T extends Record<string, unknown>>(a: T, b: T
     return compareObjectsAsJSON(a, b);
   }
 }
-
-export function promiseDelay(time: number): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, time);
-  });
-}

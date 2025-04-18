@@ -4,11 +4,7 @@ import {
   SmartTableFilterFunction,
   SmartTableValuePrepareFunction,
 } from '../interfaces/smart-table.models';
-import {
-  SmartTableColumnSettings,
-  SmartTableColumnSettingsTypes,
-  SmartTableSortDirection,
-} from './../interfaces/smart-table.models';
+import { SmartTableColumnSettings, SmartTableColumnSettingsTypes } from './../interfaces/smart-table.models';
 import { DataSet } from './data-set';
 
 export class Column {
@@ -23,7 +19,6 @@ export class Column {
   isEditable = true;
   isAddable = true;
   isFilterable = false;
-  sortDirection: SmartTableSortDirection = 'asc';
   editor: SmartTableEditorAndFilter | false = false;
   filter: SmartTableEditorAndFilter | false = false;
   renderComponent: any;
@@ -52,11 +47,10 @@ export class Column {
     if (settings.type === 'custom' && settings.renderComponent) {
       this.renderComponent = settings.renderComponent;
     }
-    this.isFilterable = typeof settings.filter === 'undefined' ? true : !!settings['filter'];
-    this.isSortable = settings.sort ?? true;
+    this.isFilterable = !!settings['filter'];
+    this.isSortable = settings.sort ?? false;
     this.isEditable = settings.editable ?? true;
     this.isAddable = settings.addable ?? true;
-    this.sortDirection = settings.sortDirection || 'asc';
 
     this.compareFunction = settings.compareFunction;
     this.valuePrepareFunction = settings.valuePrepareFunction;

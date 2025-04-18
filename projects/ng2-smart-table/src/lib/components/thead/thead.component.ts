@@ -44,6 +44,14 @@ export class Ng2SmartTableTheadComponent {
       .dataSet.getColumns()
       .filter((column) => column.isSortable),
   );
+  readonly columnsWithSortLength = computed(() => this.columnsWithSort().length);
+  readonly columnsWithFiltersLength = computed(
+    () =>
+      this.grid()
+        .dataSet.getColumns()
+        .filter((column) => column.isFilterable).length,
+  );
+
   readonly currentSortConfig = computed(() => this.source().getSort());
 
   readonly dropdown = signal<DropdownTypes>(null);
