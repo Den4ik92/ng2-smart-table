@@ -12,5 +12,11 @@
     "source.organizeImports",
     "source.fixAll.eslint"
   ],
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  }
 }

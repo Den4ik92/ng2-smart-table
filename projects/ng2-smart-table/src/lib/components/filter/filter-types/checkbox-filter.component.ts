@@ -14,7 +14,6 @@ import { BaseFilterComponent } from './base-filter.component';
         (ngModelChange)="setCheckFilter($event)"
         [class]="inputClass()"
         class="form-control" />
-      <label [for]="column().id">{{ column().title }}</label>
       @if (filterIsActive()) {
         <a href="#" (click)="resetFilter($event)">{{ column().getFilterConfig()?.resetText || 'reset' }}</a>
       }

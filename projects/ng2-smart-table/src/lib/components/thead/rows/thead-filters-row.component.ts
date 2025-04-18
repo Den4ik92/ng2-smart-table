@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 import { DataSource } from '../../../lib/data-source/data-source';
 import { Grid } from '../../../lib/grid';
@@ -16,7 +16,7 @@ import { AddButtonComponent } from '../cells/add-button.component';
     }
     @for (column of grid().dataSet.getVisibleColumns(); track column.id + $index) {
       <th class="ng2-smart-th {{ column.id }}">
-        <ng2-smart-table-filter [source]="source()" [column]="column" [inputClass]="filterInputClass()">
+        <ng2-smart-table-filter [source]="source()" [column]="column" [inputClass]="inputClass()">
         </ng2-smart-table-filter>
       </th>
     }
@@ -31,14 +31,7 @@ export class TheadFiltersRowComponent {
   readonly grid = input.required<Grid>();
   readonly source = input.required<DataSource>();
   readonly withoutCreateButton = input<boolean>(false);
+  readonly inputClass = input<string>('');
 
   readonly create = output<void>();
-
-  readonly filterInputClass = computed<string>(() => {
-    const filterOptions = this.grid().settings()?.filter;
-    if (!filterOptions) {
-      return '';
-    }
-    return filterOptions.inputClass || '';
-  });
 }

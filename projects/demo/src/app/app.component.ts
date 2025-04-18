@@ -139,13 +139,9 @@ export class AppComponent implements OnInit {
         key: 'gender',
         title: 'Is man',
         type: 'text',
-        // filter: {
-        //   type: 'checkbox',
-        //   config: {
-        //     true: 'male',
-        //     false: 'female',
-        //   },
-        // },
+        filter: {
+          type: 'checkbox',
+        },
         valuePrepareFunction: (cell: 'male' | 'female') => {
           return cell === 'male';
         },
@@ -154,6 +150,15 @@ export class AppComponent implements OnInit {
         key: 'gender',
         title: 'gender',
         type: 'text',
+        filter: {
+          type: 'list',
+          config: {
+            list: [
+              { value: 'male', title: 'MALE' },
+              { value: 'female', title: 'female' },
+            ],
+          },
+        },
         editor: {
           type: 'custom',
           component: CustomEditorComponent,

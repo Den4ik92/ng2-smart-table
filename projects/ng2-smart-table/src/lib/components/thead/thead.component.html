@@ -37,7 +37,6 @@
               </svg>
             </button>
           }
-
         </div>
       </div>
     </th>
@@ -65,7 +64,7 @@
             }
           }
           @if (dropdown() === 'filters') {
-            <ng-container [ngTemplateOutlet]="filtersRow"></ng-container>
+            <ng-container [ngTemplateOutlet]="mobileFilters"></ng-container>
           }
         </div>
       </div>
@@ -87,13 +86,27 @@
   }
 }
 
-<!-- Template for filters row to be used in mobile dialog -->
 <ng-template #filtersRow>
   <tr
     ng2-st-thead-filters-row
     class="ng2-smart-filters"
     [grid]="grid()"
+    [inputClass]="filterInputClass()"
     [withoutCreateButton]="isMobileView()"
     [source]="source()"
     (create)="create.emit()"></tr>
+</ng-template>
+
+<ng-template #mobileFilters>
+  <div class="ng2-smart-mobil-filters">
+    @for (column of grid().dataSet.getVisibleColumns(); track column.id + $index) {
+      @if (column.isFilterable) {
+        <div class="ng2-smart-filter">
+          <label for="" class="ng2-smart-filter-label">{{ column.title }}</label>
+          <ng2-smart-table-filter [source]="source()" [column]="column" [inputClass]="filterInputClass()">
+          </ng2-smart-table-filter>
+        </div>
+      }
+    }
+  </div>
 </ng-template>

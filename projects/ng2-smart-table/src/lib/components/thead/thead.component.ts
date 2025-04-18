@@ -5,6 +5,7 @@ import { Column } from '../../lib/data-set/column';
 import { DataSource } from '../../lib/data-source/data-source';
 import { Grid } from '../../lib/grid';
 import { SmartTableSortDirection } from '../../lib/interfaces/smart-table.models';
+import { FilterComponent } from '../filter/filter.component';
 import { AddButtonComponent } from './cells/add-button.component';
 import { ColumnTitleComponent } from './cells/title/title.component';
 import { TheadFiltersRowComponent } from './rows/thead-filters-row.component';
@@ -19,6 +20,7 @@ type DropdownTypes = 'sort' | 'filters' | null;
   imports: [
     TheadTitlesRowComponent,
     AddButtonComponent,
+    FilterComponent,
     ColumnTitleComponent,
     TheadFiltersRowComponent,
     NgTemplateOutlet,
@@ -81,4 +83,12 @@ export class Ng2SmartTableTheadComponent {
     });
     this.dropdown.set(null);
   }
+
+  readonly filterInputClass = computed<string>(() => {
+    const filterOptions = this.grid().settings()?.filter;
+    if (!filterOptions) {
+      return '';
+    }
+    return filterOptions.inputClass || '';
+  });
 }
