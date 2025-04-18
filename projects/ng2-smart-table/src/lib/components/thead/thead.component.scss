@@ -121,7 +121,7 @@ tr.mobile-header-bottom-row {
 
 .overlay {
   position: fixed;
-  background: var(--table-header-dropdown-overlay-background, color-mix(in oklab, var(--smart-table-bg, #d7d7d7) 30%, transparent 50%) );
+  background: var(--table-header-dropdown-overlay-background, color-mix(in oklab, var(--smart-table-bg, #d7d7d7) 100%, transparent 20%) );
   top: 0;
   bottom: 0;
   left: 0;
@@ -130,7 +130,7 @@ tr.mobile-header-bottom-row {
 }
 
 .dialog-active .overlay {
-  z-index: 2;
+  z-index: 5;
 }
 
 .dropdown {

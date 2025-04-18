@@ -47,7 +47,7 @@
       <div class="dropdown">
         <div class="dropdown-header">
           @if (dropdown() === 'filters') {
-            <button type="button" (click)="clearAllFilters()" aria-label="Close filters">reset all</button>
+            <button type="button" class="clear-filters-button" (click)="clearAllFilters()" aria-label="Close filters">reset all</button>
           } @else {
             <p></p>
           }

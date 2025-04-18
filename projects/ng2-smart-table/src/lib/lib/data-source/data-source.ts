@@ -96,12 +96,12 @@ export abstract class DataSource<T extends BaseDataType = any> {
     }
     const foundIndex = this.filters().findIndex((filter) => filter.field === newFilter.field);
     if (foundIndex === -1) {
-      if (newFilter.search !== null) {
+      if (newFilter.search || typeof newFilter.search === 'boolean') {
         this.filters.set([...this.filters(), newFilter]);
       }
     } else {
       const filtersTemp = this.filters();
-      if (newFilter.search !== null) {
+      if (newFilter.search || typeof newFilter.search === 'boolean') {
         filtersTemp[foundIndex].search = newFilter.search;
       } else {
         filtersTemp.splice(foundIndex, 1);
