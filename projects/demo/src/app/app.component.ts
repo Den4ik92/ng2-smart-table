@@ -15,6 +15,7 @@ import {
   SmartTableSettings,
 } from './../../../ng2-smart-table/src/lib/lib/interfaces/smart-table.models';
 import { CustomEditorComponent } from './custom-editor/custom-editor.component';
+import { CustomFilterComponent } from './custom-filter/custom-filter.component';
 import { CustomViewerComponent } from './custom-viewer/custom-viewer.component';
 
 export interface User {
@@ -123,6 +124,7 @@ export class AppComponent implements OnInit {
         key: 'name',
         title: 'User Name',
         type: 'text',
+        sort: true,
         editor: {
           type: 'custom',
           component: CustomEditorComponent,
@@ -133,12 +135,14 @@ export class AppComponent implements OnInit {
       {
         key: 'email',
         title: 'Email',
+        sort: true,
         type: 'text',
       },
       {
         key: 'gender',
         title: 'Is man',
         type: 'text',
+        sort: true,
         filter: {
           type: 'checkbox',
         },
@@ -150,6 +154,7 @@ export class AppComponent implements OnInit {
         key: 'gender',
         title: 'gender',
         type: 'text',
+        sort: true,
         filter: {
           type: 'list',
           config: {
@@ -168,6 +173,11 @@ export class AppComponent implements OnInit {
         key: 'age',
         title: 'Age',
         type: 'text',
+        sort: true,
+        filter: {
+          type: 'custom',
+          component: CustomFilterComponent,
+        },
         // sort: true,
       },
       {

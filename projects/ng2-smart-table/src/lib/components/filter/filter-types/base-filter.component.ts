@@ -1,13 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   input,
   InputSignal,
   OnChanges,
   OnDestroy,
   OnInit,
-  output,
   OutputEmitterRef,
   SimpleChanges,
 } from '@angular/core';
@@ -27,7 +25,7 @@ export class BaseFilterComponent implements FilterComponent, OnDestroy, OnChange
   readonly source = input.required<DataSource>();
   readonly column = input.required<Column>();
 
-  readonly filter = output<any>();
+  readonly filterEmitter = input.required<OutputEmitterRef<any>>();
 
   readonly inputControl = new UntypedFormControl();
 
@@ -52,7 +50,7 @@ export class BaseFilterComponent implements FilterComponent, OnDestroy, OnChange
   }
 
   setFilter(query: any) {
-    this.filter.emit(query);
+    this.filterEmitter().emit(query);
   }
 }
 
@@ -63,5 +61,5 @@ export interface FilterComponent {
   readonly inputClass: InputSignal<string>;
   readonly source: InputSignal<DataSource>;
   readonly column: InputSignal<Column>;
-  readonly filter: EventEmitter<any> | OutputEmitterRef<any>;
+  readonly filterEmitter: InputSignal<OutputEmitterRef<any>>;
 }

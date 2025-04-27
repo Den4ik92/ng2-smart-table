@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 
+import { OverlayModule } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import { Column } from '../../lib/data-set/column';
 import { DataSource } from '../../lib/data-source/data-source';
@@ -24,6 +25,7 @@ type DropdownTypes = 'sort' | 'filters' | null;
     ColumnTitleComponent,
     TheadFiltersRowComponent,
     NgTemplateOutlet,
+    OverlayModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

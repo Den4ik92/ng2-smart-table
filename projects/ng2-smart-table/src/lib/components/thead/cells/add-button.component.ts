@@ -10,7 +10,7 @@ import { Grid } from '../../../lib/grid';
         href="#"
         class="ng2-smart-action ng2-smart-action-add-add"
         [innerHTML]="addNewButtonContent()"
-        (click)="onAdd($event)"></a>
+        (click)="$event.preventDefault(); onAdd($event)"></a>
     }
   `,
   host: {

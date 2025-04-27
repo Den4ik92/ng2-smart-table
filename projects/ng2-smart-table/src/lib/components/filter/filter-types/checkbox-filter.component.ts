@@ -15,7 +15,9 @@ import { BaseFilterComponent } from './base-filter.component';
         [class]="inputClass()"
         class="form-control" />
       @if (filterIsActive()) {
-        <a href="#" (click)="resetFilter($event)">{{ column().getFilterConfig()?.resetText || 'reset' }}</a>
+        <a href="#" (click)="$event.preventDefault(); resetFilter($event)">{{
+          column().getFilterConfig()?.resetText || 'reset'
+        }}</a>
       }
     </div>
   `,

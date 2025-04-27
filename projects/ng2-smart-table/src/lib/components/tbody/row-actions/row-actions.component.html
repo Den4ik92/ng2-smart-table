@@ -5,7 +5,7 @@
       [id]="'row-' + row().index + '_action-edit-button'"
       class="ng2-smart-action ng2-smart-action-edit-edit"
       [innerHTML]="editRowButtonContent()"
-      (click)="onEdit($event)"></a>
+      (click)="$event.stopPropagation(); $event.preventDefault();onEdit($event)"></a>
   }
   @if (isActionDeleteActive()) {
     <a
@@ -13,7 +13,7 @@
       [id]="'row-' + row().index + '_action-delete-button'"
       class="ng2-smart-action ng2-smart-action-delete-delete"
       [innerHTML]="deleteRowButtonContent()"
-      (click)="onDelete($event)"></a>
+      (click)="$event.stopPropagation(); $event.preventDefault();onDelete($event)"></a>
   }
   @for (action of customActions(); track action.name) {
     <a

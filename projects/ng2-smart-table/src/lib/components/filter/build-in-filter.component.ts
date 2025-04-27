@@ -16,7 +16,7 @@ import { SelectFilterComponent } from './filter-types/select-filter.component';
           [class]="inputClass()"
           [source]="source()"
           [column]="column()"
-          (filter)="filter.emit($event)">
+          [filterEmitter]="filter">
         </ng2-select-filter>
       }
       @case ('checkbox') {
@@ -25,7 +25,7 @@ import { SelectFilterComponent } from './filter-types/select-filter.component';
           [source]="source()"
           [class]="inputClass()"
           [column]="column()"
-          (filter)="filter.emit($event)">
+          [filterEmitter]="filter">
         </ng2-checkbox-filter>
       }
       @default {
@@ -34,7 +34,7 @@ import { SelectFilterComponent } from './filter-types/select-filter.component';
           [source]="source()"
           [class]="inputClass()"
           [column]="column()"
-          (filter)="filter.emit($event)">
+          [filterEmitter]="filter">
         </ng2-input-filter>
       }
     }

@@ -29,108 +29,81 @@ tr.mobile-header-top-row {
   }
 }
 
-tr.mobile-header-bottom-row {
-  position: relative;
+.dropdown {
+  padding: 0.8rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--smart-table-bg, #fff);
+  box-shadow: var(
+    --table-card-shadow,
+    0 0 8px 5px color-mix(in oklab, var(--smart-table-bg, #d7d7d7) 30%, transparent 50%)
+  );
+  max-height: var(--table-header-dropdown-max-height, 60dvh);
+  width: var(--table-header-dropdown-width, 80dvw);
+  max-width: 30rem;
+  overflow: auto;
+}
 
-  .dropdown {
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.dropdown-content {
+  display: flex;
+  flex-direction: column;
+  ::ng-deep {
+    tr {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    th.titles {
+      a {
+        display: block;
+        width: 100%;
+        padding: 0.3rem;
+        color: inherit;
+        border-bottom: 1px solid var(--smart-table-separator, #d5d5d5);
+      }
+    }
+  }
+}
+.close-dialog-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+
+  &:hover {
+    box-shadow: 0 0 5px 4px #dadada91;
+  }
+
+  &::after,
+  &::before {
+    content: '';
+    display: block;
+    background-color: var(--smart-table-fg, #000);
+    height: 2px;
+    width: 1rem;
+    border-radius: 2px;
+  }
+
+  &::before {
+    rotate: 45deg;
+  }
+
+  &::after {
     position: absolute;
-    opacity: 0;
-    pointer-events: none;
-    top: 1rem;
-    left: 50%;
-    translate: -50%;
-    padding: 0.8rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    background: var(--smart-table-bg, #fff);
-    box-shadow: var(--table-card-shadow, 0 0 8px 5px color-mix(in oklab, var(--smart-table-bg, #d7d7d7) 30%, transparent 50%) );
-    z-index: 10;
-    max-height: var(--table-header-dropdown-max-height, 60dvh);
-    width: var(--table-header-dropdown-width, 80dvw);
-    max-width: 30rem;
-    overflow: auto;
-    transition: opacity 0.3s ease;
+    rotate: -45deg;
   }
-
-  .dialog-active .dropdown {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .dropdown-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-  }
-
-  .dropdown-content {
-    display: flex;
-    flex-direction: column;
-    ::ng-deep {
-      tr {
-        display: flex;
-        flex-direction: column;
-        gap: 0.3rem;
-      }
-      th.titles {
-        a {
-          display: block;
-          width: 100%;
-          padding: 0.3rem;
-          color: inherit;
-          border-bottom: 1px solid var(--smart-table-separator, #d5d5d5);
-        }
-      }
-    }
-  }
-  .close-dialog-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background: none;
-    width: 2rem;
-    height: 2rem;
-    padding: 0.5rem;
-    border-radius: 50%;
-
-    &:hover {
-      box-shadow: 0 0 5px 4px #dadada91;
-    }
-
-    &::after,
-    &::before {
-      content: '';
-      display: block;
-      background-color: var(--smart-table-fg, #000);
-      height: 2px;
-      width: 1rem;
-      border-radius: 2px;
-    }
-
-    &::before {
-      rotate: 45deg;
-    }
-
-    &::after {
-      position: absolute;
-      rotate: -45deg;
-    }
-  }
-}
-
-.overlay {
-  position: fixed;
-  background: var(--table-header-dropdown-overlay-background, color-mix(in oklab, var(--smart-table-bg, #d7d7d7) 100%, transparent 20%) );
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: -20;
-}
-
-.dialog-active .overlay {
-  z-index: 5;
 }
 
 .dropdown {
