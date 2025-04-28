@@ -5,4 +5,39 @@
   table {
     width: 100%;
   }
+
+  .close-dialog-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    width: 2rem;
+    height: 2rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+
+    &:hover {
+      box-shadow: 0 0 5px 4px #dadada91;
+    }
+
+    &::after,
+    &::before {
+      content: '';
+      display: block;
+      background-color: var(--smart-table-fg, #000);
+      height: 2px;
+      width: 1rem;
+      border-radius: 2px;
+    }
+
+    &::before {
+      rotate: 45deg;
+    }
+
+    &::after {
+      position: absolute;
+      rotate: -45deg;
+    }
+  }
 }

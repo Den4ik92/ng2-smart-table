@@ -1,0 +1,30 @@
+@forward '@nebular/theme/styles/theming';
+@use '@nebular/theme/styles/theming' as *;
+@use '@nebular/theme/styles/themes/default';
+@use '@nebular/theme/styles/themes/dark';
+
+$nb-enable-css-custom-properties: true;
+$nb-themes: nb-register-theme(
+  (
+    header-height: 3.5rem,
+    header-padding: 0.5rem,
+    table-card-shadow: shadow,
+    link-text-decoration: none,
+    smart-table-padding:  0.5rem 1rem
+  ),
+  default,
+  default
+);
+$nb-themes: nb-register-theme(
+  (
+    header-height: 3.5rem,
+    header-padding: 0.5rem,
+    table-card-shadow: shadow,
+    link-text-decoration: none,
+    toggle-danger-checked-switcher-background-color: border-primary-color-3,
+    toggle-success-checked-switcher-background-color: border-primary-color-3,
+    smart-table-padding:  0.5rem 1rem
+  ),
+  dark,
+  dark
+);

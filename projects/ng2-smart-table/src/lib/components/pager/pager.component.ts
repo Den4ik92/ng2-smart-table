@@ -15,7 +15,6 @@ export class PagerComponent {
   protected readonly currentPerPage = computed(() => this.pagingConf().perPage);
   protected readonly currentPage = computed(() => this.pagingConf().page);
   protected readonly count = computed(() => this.source().count());
-  protected readonly shouldShow = computed(() => this.pagingConf().display && this.count() > this.currentPerPage());
   protected readonly lastPage = computed(() => Math.ceil(this.count() / this.currentPerPage()));
   protected readonly pages = computed(() => this.getPages(this.currentPage(), this.lastPage()));
 

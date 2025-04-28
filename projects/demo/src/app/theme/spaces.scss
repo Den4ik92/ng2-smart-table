@@ -1,0 +1,79 @@
+@use 'sass:list';
+
+$sizes: [0, 0.25, 0.5, 1, 1.25, 1.5, 1.875];
+$spacing: 1rem;
+
+@mixin generate-simple-spacing($prefix, $property) {
+  // Loop through all of the sizes(we use @for rather than @each, as we want access to the index)
+  @for $i from 1 through list.length($sizes) {
+    // Get the size for the current index
+    $size: list.nth($sizes, $i);
+
+    // Create the rule
+    .#{$prefix}-#{$i - 1} {
+      #{$property}: $spacing * $size !important;
+    }
+  }
+}
+
+@mixin generate() {
+  // Loop through all of the sizes(we use @for rather than @each, as we want access to the index)
+  @for $i from 1 through list.length($sizes) {
+    // Get the size for the current index
+    $size: list.nth($sizes, $i);
+
+    // Create the rule
+    .mx-#{$i - 1} {
+      margin-left: $spacing * $size !important;
+      margin-right: $spacing * $size !important;
+    }
+
+    .my-#{$i - 1} {
+      margin-top: $spacing * $size !important;
+      margin-bottom: $spacing * $size !important;
+    }
+
+    .px-#{$i - 1} {
+      padding-left: $spacing * $size !important;
+      padding-right: $spacing * $size !important;
+    }
+
+    .py-#{$i - 1} {
+      padding-top: $spacing * $size !important;
+      padding-bottom: $spacing * $size !important;
+    }
+
+    .gap-#{$i - 1} {
+      gap: $spacing * $size;
+    }
+  }
+}
+
+$simple-rules:
+  [ [ml,
+  margin-left],
+  [mt,
+  margin-top],
+  [mb,
+  margin-bottom],
+  [mr,
+  margin-right],
+  [m,
+  margin],
+  [pl,
+  padding-left],
+  [pt,
+  padding-top],
+  [pb,
+  padding-bottom],
+  [pr,
+  padding-right],
+  [p,
+  padding],
+  ];
+
+@each $item in $simple-rules {
+  @include generate-simple-spacing(list.nth($item, 1), list.nth($item, 2));
+}
+
+@include generate;

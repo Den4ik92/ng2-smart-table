@@ -14,24 +14,24 @@
                 #sortTrigger="cdkOverlayOrigin"
                 cdkOverlayOrigin
                 class="sort-dropdown-toggle-button"
-                (click)="toggleDropdown('sort')"
-                [class.active]="dropdown() === 'sort'"
+                (click)="toggleDropdown(true)"
+                [class.active]="filterDropdownIsOpen()"
                 aria-label="Toggle sort options">
                 <span class="sort-icon">▼</span>
               </button>
               <ng-template
                 cdkConnectedOverlay
                 [cdkConnectedOverlayOrigin]="sortTrigger"
-                [cdkConnectedOverlayOpen]="dropdown() === 'sort'"
+                [cdkConnectedOverlayOpen]="filterDropdownIsOpen()"
                 [cdkConnectedOverlayWidth]="300"
-                (overlayOutsideClick)="toggleDropdown(null)">
+                (overlayOutsideClick)="toggleDropdown(false)">
                 <div class="dropdown">
                   <div class="dropdown-header">
                     <p></p>
                     <button
                       type="button"
                       class="close-dialog-button"
-                      (click)="toggleDropdown(null)"
+                      (click)="toggleDropdown(false)"
                       aria-label="Close filters">
                       <span></span>
                     </button>
@@ -54,91 +54,13 @@
 
         <div class="header-actions">
           @if (columnsWithFiltersLength()) {
-            <button
-              #filterTrigger="cdkOverlayOrigin"
-              cdkOverlayOrigin
-              class="filter-toggle"
-              (click)="toggleDropdown('filters')"
-              aria-label="Toggle filters">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    stroke="#000000"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M20 4H4v2l6 6v8.5l4-2.5v-6l6-6V4z"></path>
-                </g>
-              </svg>
-            </button>
-
-            <ng-template
-              cdkConnectedOverlay
-              [cdkConnectedOverlayOrigin]="filterTrigger"
-              [cdkConnectedOverlayOpen]="dropdown() === 'filters'"
-              [cdkConnectedOverlayWidth]="300"
-              (overlayOutsideClick)="toggleDropdown(null)">
-              <div class="dropdown">
-                <div class="dropdown-header">
-                  <button
-                    type="button"
-                    class="clear-filters-button"
-                    (click)="clearAllFilters()"
-                    aria-label="Close filters">
-                    reset all
-                  </button>
-                  <button
-                    type="button"
-                    class="close-dialog-button"
-                    (click)="toggleDropdown(null)"
-                    aria-label="Close dropdown">
-                    <span></span>
-                  </button>
-                </div>
-                <div class="dropdown-content">
-                  <div class="ng2-smart-mobil-filters">
-                    @for (column of grid().dataSet.getVisibleColumns(); track column.id + $index) {
-                      @if (column.isFilterable) {
-                        <div class="ng2-smart-filter">
-                          <label for="" class="ng2-smart-filter-label">{{ column.title }}</label>
-                          <ng2-smart-table-filter
-                            [source]="source()"
-                            [column]="column"
-                            [inputClass]="filterInputClass()">
-                          </ng2-smart-table-filter>
-                        </div>
-                      }
-                    }
-                  </div>
-                </div>
-              </div>
-            </ng-template>
+            <ng2-mobile-filters [grid]="grid()" [source]="source()" [filterInputClass]="filterInputClass()">
+            </ng2-mobile-filters>
           }
         </div>
       </div>
     </th>
   </tr>
-  <!-- <tr class="mobile-header-bottom-row">
-    <th colspan="50" [class.dialog-active]="dropdown()">
-      <div class="overlay" (click)="toggleDropdown(null)"></div>
-      <div class="dropdown">
-        <div class="dropdown-header">
-          <p></p>
-          <button type="button" class="close-dialog-button" (click)="toggleDropdown(null)" aria-label="Close filters">
-            <span></span>
-          </button>
-        </div>
-        <div class="dropdown-content">
-          @for (column of columnsWithSort(); track $index) {
-            <th class="titles">
-              <ng2-st-column-title class="sort-option" [column]="column" [source]="source()"></ng2-st-column-title>
-            </th>
-          }
-        </div>
-      </div>
-    </th>
-  </tr> -->
 } @else {
   <!-- Desktop view header -->
   @if (!isHideHeader()) {

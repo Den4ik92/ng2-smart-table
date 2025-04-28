@@ -1,0 +1,10 @@
+@use 'spaces' as *;
+@use './global-custom' as *;
+@use './grid-flex' as *;
+@use 'themes' as *;
+@use 'nebular-icons/scss/nebular-icons' as *;
+@use '@nebular/theme/styles/globals' as *;
+
+@include nb-install {
+  @include nb-theme-global;
+}

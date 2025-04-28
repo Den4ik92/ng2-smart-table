@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { NbCardModule, NbLayoutModule } from '@nebular/theme';
 import { SmartTableColumnEditorDirective } from 'ng2-smart-table';
 import {
   ParamsPrepareFunction,
@@ -39,7 +40,7 @@ export interface Address {
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  imports: [Ng2SmartTableComponent, SmartTableColumnEditorDirective],
+  imports: [Ng2SmartTableComponent, SmartTableColumnEditorDirective, NbLayoutModule, NbCardModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {

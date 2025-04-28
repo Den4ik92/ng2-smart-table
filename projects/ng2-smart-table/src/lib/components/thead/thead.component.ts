@@ -6,13 +6,11 @@ import { Column } from '../../lib/data-set/column';
 import { DataSource } from '../../lib/data-source/data-source';
 import { Grid } from '../../lib/grid';
 import { SmartTableSortDirection } from '../../lib/interfaces/smart-table.models';
-import { FilterComponent } from '../filter/filter.component';
 import { AddButtonComponent } from './cells/add-button.component';
 import { ColumnTitleComponent } from './cells/title/title.component';
+import { MobileFiltersComponent } from './mobile-filters/mobile-filters.component';
 import { TheadFiltersRowComponent } from './rows/thead-filters-row.component';
 import { TheadTitlesRowComponent } from './rows/thead-titles-row.component';
-
-type DropdownTypes = 'sort' | 'filters' | null;
 
 @Component({
   selector: '[ng2-st-thead]',
@@ -21,7 +19,7 @@ type DropdownTypes = 'sort' | 'filters' | null;
   imports: [
     TheadTitlesRowComponent,
     AddButtonComponent,
-    FilterComponent,
+    MobileFiltersComponent,
     ColumnTitleComponent,
     TheadFiltersRowComponent,
     NgTemplateOutlet,
@@ -58,19 +56,10 @@ export class Ng2SmartTableTheadComponent {
 
   readonly currentSortConfig = computed(() => this.source().getSort());
 
-  readonly dropdown = signal<DropdownTypes>(null);
+  readonly filterDropdownIsOpen = signal(false);
 
-  protected toggleDropdown(type: DropdownTypes) {
-    this.dropdown.update((value) => {
-      if (value === type) {
-        return null;
-      }
-      return type;
-    });
-  }
-
-  protected clearAllFilters() {
-    this.source().setFilters([]);
+  protected toggleDropdown(state?: boolean) {
+    this.filterDropdownIsOpen.update((value) => state ?? !value);
   }
 
   protected sortByColumn(column?: Column): void {
@@ -83,7 +72,7 @@ export class Ng2SmartTableTheadComponent {
       title,
       direction: direction,
     });
-    this.dropdown.set(null);
+    this.filterDropdownIsOpen.set(false);
   }
 
   readonly filterInputClass = computed<string>(() => {

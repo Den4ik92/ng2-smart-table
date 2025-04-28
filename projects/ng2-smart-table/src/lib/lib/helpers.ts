@@ -149,3 +149,13 @@ export function isObjectsIdentical<T extends Record<string, unknown>>(a: T, b: T
     return compareObjectsAsJSON(a, b);
   }
 }
+
+export function CheckParentElementClassRecursive(element: HTMLElement | null, className: string): boolean {
+  if (!element) return false;
+  console.log(element, element.classList.contains(className));
+
+  if (element.classList.contains(className)) {
+    return true;
+  }
+  return CheckParentElementClassRecursive(element.parentElement, className);
+}
