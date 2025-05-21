@@ -16,7 +16,7 @@ const users = times(20000, (index) => ({
   gender: faker.person.sex(),
   name: faker.person.fullName(),
   email: faker.internet.email(),
-  age: randomInteger(10, 80),
+  age: randomInteger(18, 80),
   phone: faker.phone.number({ style: 'international' }),
   occupation: faker.person.jobTitle(),
   address: {

@@ -1,11 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { NbCardModule, NbLayoutModule } from '@nebular/theme';
-import { SmartTableColumnEditorDirective } from 'ng2-smart-table';
+import { LocalDataSource, SmartTableColumnEditorDirective } from 'ng2-smart-table';
 import {
   ParamsPrepareFunction,
   RequestFunction,
-  ServerDataSource,
 } from 'projects/ng2-smart-table/src/lib/lib/data-source/server/server.data-source';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -40,6 +39,7 @@ export interface Address {
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
   imports: [Ng2SmartTableComponent, SmartTableColumnEditorDirective, NbLayoutModule, NbCardModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -81,15 +81,15 @@ export class AppComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    // this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 500 } })).subscribe((res) => {
-    //   this.source.load(res.data);
-    // });
+    this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 2500 } })).subscribe((res) => {
+      this.source.load(res.data);
+    });
     // this.source.emitOnChanged({action: 'refresh'})
   }
 
   readonly tableHide = signal(false);
-  readonly source = new ServerDataSource<User>(this.paramPrepareFunction, this.requestFunction());
-  // readonly source = new LocalDataSource<User>();
+  // readonly source = new ServerDataSource<User>(this.paramPrepareFunction, this.requestFunction());
+  readonly source = new LocalDataSource<User>();
 
   settings: SmartTableSettings<User> = {
     columnSortStorageKey: 'test1',
@@ -104,7 +104,7 @@ export class AppComponent implements OnInit {
     actions: {
       add: false,
       delete: true,
-      edit: false,
+      edit: true,
       custom: [
         {
           name: 'custom',
@@ -130,8 +130,6 @@ export class AppComponent implements OnInit {
           type: 'custom',
           component: CustomEditorComponent,
         },
-        filterFunction: () => true,
-        compareFunction: () => 0,
       },
       {
         key: 'email',
@@ -147,9 +145,7 @@ export class AppComponent implements OnInit {
         filter: {
           type: 'checkbox',
         },
-        valuePrepareFunction: (cell: 'male' | 'female') => {
-          return cell === 'male';
-        },
+        valuePrepareFunction: (cell: 'male' | 'female') => cell === 'male',
       },
       {
         key: 'gender',
@@ -160,7 +156,7 @@ export class AppComponent implements OnInit {
           type: 'list',
           config: {
             list: [
-              { value: 'male', title: 'MALE' },
+              { value: 'male', title: 'male' },
               { value: 'female', title: 'female' },
             ],
           },
@@ -226,12 +222,11 @@ export class AppComponent implements OnInit {
   }
   editConfirm(event: SmartTableConfirmEditEvent): void {
     setTimeout(() => {
-      console.log(event);
-
       event.confirm.resolve(event.newData);
-    }, 1500);
+    }, 31500);
   }
   customEvent(event: any): void {
+    this.source.remove(event.data);
     console.log(event);
   }
 
@@ -304,7 +299,7 @@ export class AppComponent implements OnInit {
   }
 
   clickEvent(event: any) {
-    console.log(event);
+    console.log(event, 'clickEvent');
   }
 
   multiRowSelect(event: any) {

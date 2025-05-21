@@ -30,6 +30,12 @@ export class Ng2SmartTableTbodyComponent<T extends BaseDataType = any> {
   readonly userClickedRow = output<Row>();
   readonly multipleSelectRow = output<Row>();
 
+  rowClicked(row: Row) {
+    if (row.isInEditing()) {
+      return;
+    }
+    this.userClickedRow.emit(row);
+  }
   // readonly editInputClass = computed<string>(() => {
   //   const editOptions = this.grid().settings().edit;
   //   if (!editOptions) {

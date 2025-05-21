@@ -21,12 +21,12 @@ export class DataSet {
   readonly isAllSelected = computed<boolean>(() => this.rows().every((row) => row.isSelected()));
 
   constructor(
-    data: any[] = [],
+    dataList: any[] = [],
     protected columnSettings: SmartTableColumnSettings[],
     public readonly editorInputClass: string,
   ) {
     this.createColumns(columnSettings);
-    this.setData(data);
+    this.setData(dataList);
     this.createNewRow();
   }
 

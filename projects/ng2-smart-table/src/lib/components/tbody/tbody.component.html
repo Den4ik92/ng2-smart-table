@@ -7,8 +7,7 @@
     [isCreateRow]="true"
     [source]="source()"
     [isMobileView]="isMobileView()"
-    (createConfirmed)="createConfirmed.emit()"
-    ></tr>
+    (createConfirmed)="createConfirmed.emit()"></tr>
 }
 @for (row of grid().dataSet.getRows(); track trackByIdOrIndex($index, row)) {
   <tr
@@ -20,7 +19,7 @@
     [class]="rowClassFunction()(row.rowData)"
     [isMobileView]="isMobileView()"
     [class.selected]="row.isSelected()"
-    (click)="userClickedRow.emit(row)"
+    (click)="rowClicked(row)"
     (edit)="edit.emit(row)"
     (editConfirmed)="editConfirmed.emit(row)"
     (editCancel)="editCancel.emit(row)"

@@ -1,0 +1,7 @@
+.buttons-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+::ng-deep ng2-smart-table .ng2-smart-actions a.ng2-smart-action {
+  font-size: 1rem !important;
+}

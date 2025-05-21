@@ -48,7 +48,9 @@ export class FilterComponent {
   readonly inputClass = input<string>('');
 
   onFilter(query: any) {
+    const columnFilter = this.column().filter;
     this.source().addFilter({
+      type: columnFilter ? columnFilter.type : 'text',
       field: this.column().id,
       search: query,
       filter: this.column().filterFunction,

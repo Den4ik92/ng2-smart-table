@@ -12,4 +12,8 @@ export class CustomFilterComponent extends BaseFilterComponent {
   options = Array.from({ length: 100 }).map(
     (_, index) => ({ value: index, title: index }) as unknown as NbxSelectOption,
   );
+
+  filterChanged(value: string | string[]) {
+    this.setFilter(value);
+  }
 }

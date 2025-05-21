@@ -13,13 +13,14 @@
       [innerHTML]="cancelButtonContent()"
       (click)="$event.preventDefault(); cancelEdit.emit($event)"></a>
   } @else {
-    <div style="display: flex; gap:0.5rem">
+    <a class="ng2-smart-action ng2-smart-action-edit-save">
       <ng-container [ngTemplateOutlet]="spinner"></ng-container>
+    </a>
+    <a class="ng2-smart-action ng2-smart-action-edit-save">
       <ng-container [ngTemplateOutlet]="spinner"></ng-container>
-    </div>
+    </a>
   }
 </div>
-
 
 <ng-template #spinner>
   <svg

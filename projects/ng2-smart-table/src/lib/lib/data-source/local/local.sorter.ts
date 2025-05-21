@@ -10,18 +10,20 @@ export function compareValues(direction: number, a: any, b: any) {
   return 0;
 }
 
-export class LocalSorter {
-  static async sort<T extends Record<string, any>>(
-    data: T[],
-    field: string,
-    direction: string,
-    customCompare?: SmartTableCompareFunction,
-  ): Promise<T[]> {
-    const dir: number = direction === 'asc' ? 1 : -1;
-    const compare = customCompare ? customCompare : compareValues;
+export function localSort<T extends Record<string, any>>(
+  data: T[],
+  field: string,
+  direction: string,
+  customCompare?: SmartTableCompareFunction,
+): T[] {
+  const dir: number = direction === 'asc' ? 1 : -1;
+  const compare = customCompare ? customCompare : compareValues;
 
-    return data.sort((a, b) => {
-      return compare.call(null, dir, a[field], b[field]);
-    });
-  }
+  return data.sort((a, b) => {
+    try {
+      return compare(dir, a[field], b[field]);
+    } catch {
+      return 0;
+    }
+  });
 }

@@ -23,9 +23,7 @@
     <ng-container [ngTemplateOutlet]="actions"></ng-container>
   }
   @for (cell of row().visibleCells(); track cell.id + $index) {
-    <td
-      [class]="cell.columnClass"
-      [style]="cell.styles">
+    <td [class]="cell.columnClass" [style]="cell.styles">
       <ng2-smart-table-cell [cell]="cell" [isInEditing]="!!row().isInEditing()"> </ng2-smart-table-cell>
     </td>
   }

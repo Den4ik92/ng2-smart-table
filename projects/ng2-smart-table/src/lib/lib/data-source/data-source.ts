@@ -1,5 +1,6 @@
 import { computed, signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { isObjectsIdentical } from '../helpers';
 import {
   BaseDataType,
   SmartTableFilterItem,
@@ -65,13 +66,20 @@ export abstract class DataSource<T extends BaseDataType = any> {
   }
 
   async remove(element: T): Promise<true> {
-    this.data.update((old) => old.filter((el) => el !== element));
-    this.emitOnChanged({ action: SmartTableOnChangedEventName.remove, item: element });
+    this.data.update((old) => old.filter((el) => !isObjectsIdentical(el, element)));
+    this.emitOnChanged({ action: SmartTableOnChangedEventName.remove, item: element }, this.data());
     return Promise.resolve(true);
   }
 
   async update(oldItem: T, newItem: T): Promise<true> {
-    this.data.update((old) => old.map((el) => (el === oldItem ? newItem : el)));
+    this.data.update((old) =>
+      old.map((el) => {
+        if (isObjectsIdentical(el, oldItem)) {
+          return newItem;
+        }
+        return el;
+      }),
+    );
     this.emitOnChanged({ action: SmartTableOnChangedEventName.update, oldItem, newItem });
     return Promise.resolve(true);
   }
@@ -95,13 +103,15 @@ export abstract class DataSource<T extends BaseDataType = any> {
       return;
     }
     const foundIndex = this.filters().findIndex((filter) => filter.field === newFilter.field);
+    const newSearchString =
+      typeof newFilter.search === 'undefined' || newFilter.search === null ? '' : `${newFilter.search}`;
     if (foundIndex === -1) {
-      if (newFilter.search || typeof newFilter.search === 'boolean') {
+      if (newSearchString?.length) {
         this.filters.set([...this.filters(), newFilter]);
       }
     } else {
       const filtersTemp = this.filters();
-      if (newFilter.search || typeof newFilter.search === 'boolean') {
+      if (newSearchString?.length) {
         filtersTemp[foundIndex].search = newFilter.search;
       } else {
         filtersTemp.splice(foundIndex, 1);
@@ -144,9 +154,6 @@ export abstract class DataSource<T extends BaseDataType = any> {
       filters: this.getFilters(),
       sort: this.getSort(),
     };
-    if (eventData.action === SmartTableOnChangedEventName.remove) {
-      actionData.elements = (newElements || this.data()).filter((el) => el !== eventData.item);
-    }
     this.onChangedSource.next(actionData);
   }
 }

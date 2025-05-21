@@ -26,7 +26,6 @@ export class Grid {
 
   private columnsSortedEmitter!: OutputEmitterRef<ColumnPositionState[]>;
   private sourceOnChangedSubscription: Subscription | undefined;
-  private sourceOnUpdatedSubscription: Subscription | undefined;
 
   readonly settings = signal<SmartTableSettings>({} as SmartTableSettings);
   readonly createFormShown = signal<boolean>(false);
@@ -58,9 +57,6 @@ export class Grid {
   detach(): void {
     if (this.sourceOnChangedSubscription) {
       this.sourceOnChangedSubscription.unsubscribe();
-    }
-    if (this.sourceOnUpdatedSubscription) {
-      this.sourceOnUpdatedSubscription.unsubscribe();
     }
   }
 
@@ -183,7 +179,7 @@ export class Grid {
   }
 
   private processDataChange(event: SmartTableOnChangedEvent) {
-    if (event.action === 'load') {
+    if (['load', 'empty', 'refresh'].includes(event.action)) {
       this.dataSet.resetAllSelection();
     }
     if (event.action === 'update') {

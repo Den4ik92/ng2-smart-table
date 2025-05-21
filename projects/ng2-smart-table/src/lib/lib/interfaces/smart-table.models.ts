@@ -184,6 +184,7 @@ export interface SmartTableFilterItem {
   /**
    * key of column to filter
    */
+  type: SmartTableEditorAndFilterTypes;
   field: string;
   search: string;
   filter?: SmartTableFilterFunction;
