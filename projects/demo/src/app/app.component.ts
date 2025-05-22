@@ -126,6 +126,9 @@ export class AppComponent implements OnInit {
         title: 'User Name',
         type: 'text',
         sort: true,
+        filter: {
+          type: 'text',
+        },
         editor: {
           type: 'custom',
           component: CustomEditorComponent,
@@ -181,6 +184,9 @@ export class AppComponent implements OnInit {
         key: 'occupation',
         title: 'occupation',
         type: 'custom',
+        filter: {
+          type: 'text',
+        },
         renderComponent: CustomViewerComponent,
       },
       {

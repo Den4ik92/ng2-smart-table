@@ -15,7 +15,7 @@ export function isElementSatisfied<T extends BaseDataType>(element: T, filters: 
       return true;
     }
     const filterFunction: SmartTableFilterFunction =
-      filter.filter || filter.type === 'list' ? exactMatch : includeMatch;
+      filter.filter || (filter.type === 'list' ? exactMatch : includeMatch);
     try {
       const value = element[filter.field];
       return filterFunction(value, search);

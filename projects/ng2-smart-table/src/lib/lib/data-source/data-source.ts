@@ -110,7 +110,7 @@ export abstract class DataSource<T extends BaseDataType = any> {
         this.filters.set([...this.filters(), newFilter]);
       }
     } else {
-      const filtersTemp = this.filters();
+      const filtersTemp = this.filters().slice(0);
       if (newSearchString?.length) {
         filtersTemp[foundIndex].search = newFilter.search;
       } else {

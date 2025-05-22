@@ -146,7 +146,7 @@ export type SmartTableEditorAndFilter =
 
 interface SmartTableTextEditor {
   type: 'text' | 'textarea';
-  config: any;
+  config?: any;
 }
 
 interface SmartTableEditorList {
