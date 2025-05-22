@@ -20,7 +20,7 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
     return list;
   });
 
-  private readonly paginatedList = computed<T[]>(() => {
+  readonly paginatedList = computed<T[]>(() => {
     return this.paginate(this.filteredAndSorted());
   });
 

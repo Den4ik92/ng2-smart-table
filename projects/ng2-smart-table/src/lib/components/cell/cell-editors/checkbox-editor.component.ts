@@ -30,6 +30,6 @@ export class CheckboxEditorComponent extends BaseEditorComponent {
   }
 
   onChange(event: any) {
-    this.cell().newValue = event.target.checked ? this.trueVal() : this.falseVal();
+    this.cell().setNewValue(event.target.checked ? this.trueVal() : this.falseVal());
   }
 }

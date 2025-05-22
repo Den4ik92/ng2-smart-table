@@ -1,8 +1,9 @@
+import { signal } from '@angular/core';
 import { Column } from './column';
 import { Row } from './row';
 
 export class Cell {
-  newValue: any = '';
+  readonly newValue = signal<any>(null);
   readonly columnClass: string = '';
   readonly styles: Partial<CSSStyleDeclaration> = '';
   readonly title: string = '';
@@ -14,7 +15,7 @@ export class Cell {
     public column: Column,
   ) {
     this.columnClass = column.class;
-    this.newValue = value;
+    this.newValue.set(value);
     this.styles = column.styles;
     this.title = column.title;
     this.id = column.id;
@@ -29,8 +30,8 @@ export class Cell {
     return this.value;
   }
 
-  setValue(value: any) {
-    this.newValue = value;
+  setNewValue(value: any) {
+    this.newValue.set(value);
   }
 
   isEditable(): boolean {

@@ -19,7 +19,7 @@ export class Row {
 
   getNewData() {
     const values = Object.assign({}, this.rowData);
-    this.cells().forEach((cell) => (values[cell.column.id] = cell.newValue));
+    this.cells().forEach((cell) => (values[cell.column.id] = cell.newValue()));
     return values;
   }
 

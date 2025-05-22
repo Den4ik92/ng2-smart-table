@@ -11,6 +11,12 @@ import { BaseEditorComponent } from 'ng2-smart-table';
 export class CustomEditorComponent extends BaseEditorComponent {
   onInput(event: Event) {
     const target = event.target as HTMLInputElement;
-    this.cell().newValue = target.value;
+    this.cell().setNewValue(target.value);
+  }
+
+  fillall() {
+    this.cell()
+      .row.cells()
+      .forEach((cell) => cell.setNewValue(4444));
   }
 }
