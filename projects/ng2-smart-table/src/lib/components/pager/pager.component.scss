@@ -1,25 +1,37 @@
-.ng2-smart-pagination {
-  display: inline-flex;
-  align-items: center;
-  font-size: .875em;
-  padding: 0;
-
-  .ng2-smart-page-item {
-    display: inline;
-    padding: 0.2rem;
+.ng2-smart-table-pagination {
+  &__wrap {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.875em;
+    padding: 1rem;
   }
 
-  .page-link-next, .page-link-prev {
-    font-size: 10px;
+  &__nav {
+    margin: 0 auto;
   }
-}
+  &__list {
+    margin: 0;
+    list-style: none;
+    display: flex;
+  }
 
-.ng2-smart-pagination-nav {
-  margin: 0 auto;
-}
-
-.ng2-smart-pagination-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  &__list-item {
+    span,
+    a {
+      color: var(--layout-text-color);
+      padding: 0.2rem 0.5rem;
+    }
+    a {
+      cursor: pointer;
+      &:hover {
+        background-color: var(--layout-background-color);
+        color: var(--layout-text-color);
+      }
+    }
+    .active {
+      background-color: var(--card-header-primary-background-color);
+      color: var(--card-header-primary-text-color);
+    }
+  }
 }

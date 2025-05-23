@@ -14,7 +14,10 @@ export class PagerComponent {
   protected readonly pagingConf = computed(() => this.source().pagingConf());
   protected readonly currentPerPage = computed(() => this.pagingConf().perPage);
   protected readonly currentPage = computed(() => this.pagingConf().page);
+  protected readonly isShowTotal = computed(() => !!this.pagingConf().showTotal);
   protected readonly count = computed(() => this.source().count());
+  protected readonly nextButtonText = computed(() => this.pagingConf().nextButtonText);
+  protected readonly prevButtonText = computed(() => this.pagingConf().nextButtonText);
   protected readonly lastPage = computed(() => Math.ceil(this.count() / this.currentPerPage()));
   protected readonly pages = computed(() => this.getPages(this.currentPage(), this.lastPage()));
 

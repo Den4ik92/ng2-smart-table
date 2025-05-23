@@ -174,6 +174,9 @@ interface SmartTableEditorCustom {
 
 export interface SmartTablePagerSettings {
   display: boolean;
+  nextButtonText?: string;
+  previewButtonText?: string;
+  showTotal?: boolean;
   page: number;
   perPage: number;
   perPageSelect?: number[];

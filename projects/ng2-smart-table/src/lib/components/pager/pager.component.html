@@ -1,66 +1,52 @@
-<div class="ng2-smart-pagination-wrap">
-  @if ((pagingConf().perPageSelect?.length || 0) > 0) {
-    <div></div>
-  }
-  <nav class="ng2-smart-pagination-nav">
-    <ul class="ng2-smart-pagination pagination">
-      <li class="ng2-smart-page-item page-item" [class.disabled]="currentPage() === 1">
-        <a
-          class="ng2-smart-page-link page-link"
-          href="#"
-          (click)="$event.preventDefault(); currentPage() === 1 ? false : paginate(1)"
-          aria-label="First">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      <li class="ng2-smart-page-item page-item" [class.disabled]="currentPage() === 1">
-        <a
-          class="ng2-smart-page-link page-link page-link-prev"
-          href="#"
-          (click)="$event.preventDefault(); currentPage() === 1 ? false : prev()"
-          aria-label="Prev">
-          <span aria-hidden="true">&lt;</span>
+<div class="ng2-smart-table-pagination__wrap">
+  <div>
+    @if (isShowTotal()) {
+      Total: {{ count() }}
+    }
+  </div>
+  <nav class="ng2-smart-table-pagination__nav">
+    <ul class="ng2-smart-table-pagination__list">
+      <li class="ng2-smart-table-pagination__list-item" [class.disabled]="currentPage() === 1">
+        <a (click)="currentPage() === 1 ? false : prev()" aria-label="Prev">
+          @if (prevButtonText(); as text) {
+            {{ text }}
+          } @else {
+            &laquo; Previous
+          }
         </a>
       </li>
       @for (page of pages(); track $index) {
-        <li class="ng2-smart-page-item page-item" [class.active]="currentPage() === page">
-          @if (currentPage() === page || isString(page)) {
-            <span class="ng2-smart-page-link page-link">{{ page }}</span>
+        <li class="ng2-smart-table-pagination__list-item" [class.active]="currentPage() === page">
+          @if (isString(page) || currentPage() === page) {
+            <span [class.active]="currentPage() === page">
+              {{ page }}
+            </span>
           } @else {
-            <a class="ng2-smart-page-link page-link" href="#" (click)="$event.preventDefault(); paginate(page)">{{
-              page
-            }}</a>
+            <a (click)="paginate(page)">{{ page }}</a>
           }
         </li>
       }
-      <li class="ng2-smart-page-item page-item" [class.disabled]="currentPage() === lastPage()">
-        <a
-          class="ng2-smart-page-link page-link page-link-next"
-          href="#"
-          (click)="$event.preventDefault(); currentPage() === lastPage() ? false : next()"
-          aria-label="Next">
-          <span aria-hidden="true">&gt;</span>
-        </a>
-      </li>
-      <li class="ng2-smart-page-item page-item" [class.disabled]="currentPage() === lastPage()">
-        <a
-          class="ng2-smart-page-link page-link"
-          href="#"
-          (click)="$event.preventDefault(); currentPage() === lastPage() ? false : paginate(lastPage())"
-          aria-label="Last">
-          <span aria-hidden="true">&raquo;</span>
+      <li class="ng2-smart-table-pagination__list-item" [class.disabled]="currentPage() === lastPage()">
+        <a (click)="currentPage() === lastPage() ? false : next()" aria-label="Next">
+          @if (nextButtonText(); as text) {
+            {{ text }}
+          } @else {
+            Next &raquo;
+          }
         </a>
       </li>
     </ul>
   </nav>
-  @if ((pagingConf().perPageSelect?.length || 0) > 0) {
-    <nav class="ng2-smart-pagination-per-page">
-      <label for="per-page"> Per Page: </label>
-      <select (change)="onChangePerPage($any($event.target))" [ngModel]="currentPerPage()" id="per-page">
-        @for (item of pagingConf().perPageSelect; track $index) {
-          <option [value]="item">{{ item }}</option>
-        }
-      </select>
-    </nav>
-  }
+  <div>
+    @if ((pagingConf().perPageSelect?.length || 0) > 0) {
+      <nav class="ng2-smart-pagination-per-page">
+        <label for="per-page"> Per Page: </label>
+        <select (change)="onChangePerPage($any($event.target))" [ngModel]="currentPerPage()" id="per-page">
+          @for (item of pagingConf().perPageSelect; track $index) {
+            <option [value]="item">{{ item }}</option>
+          }
+        </select>
+      </nav>
+    }
+  </div>
 </div>
