@@ -214,10 +214,7 @@ export class Grid {
     if (!columns || !columns.length) {
       return false;
     }
-    let initialSortColumn = columns?.find((column) => column?.sortDirection);
-    if (!initialSortColumn) {
-      initialSortColumn = columns?.find((column) => column.sort);
-    }
+    const initialSortColumn = columns?.find((column) => column?.sortDirection);
     if (!initialSortColumn) {
       return false;
     }
