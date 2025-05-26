@@ -1,4 +1,4 @@
-import { signal } from '@angular/core';
+import { signal, untracked } from '@angular/core';
 import { Column } from './column';
 import { Row } from './row';
 
@@ -15,7 +15,9 @@ export class Cell {
     public column: Column,
   ) {
     this.columnClass = column.class;
-    this.newValue.set(value);
+    untracked(() => {
+      this.newValue.set(value);
+    });
     this.styles = column.styles;
     this.title = column.title;
     this.id = column.id;
@@ -23,7 +25,7 @@ export class Cell {
 
   getValue() {
     const prepare = this.column.valuePrepareFunction;
-    return !prepare ? this.value : prepare.call(null, this.value, this.row.rowData, this);
+    return !prepare ? this.value : prepare.call(null, this.value, this.row.rowData(), this);
   }
 
   getNotPrepareValue() {

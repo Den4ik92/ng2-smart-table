@@ -229,7 +229,8 @@ export class AppComponent implements OnInit {
   editConfirm(event: SmartTableConfirmEditEvent): void {
     setTimeout(() => {
       event.confirm.resolve(event.newData);
-    }, 31500);
+      console.log(event.newData);
+    }, 500);
   }
   customEvent(event: any): void {
     this.source.remove(event.data);

@@ -128,7 +128,7 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
 
   protected emitUserRowClicked(row: Row): void {
     this.rowClicked.emit({
-      data: row ? row.rowData : null,
+      data: row ? row.rowData() : null,
       source: this.source(),
     });
   }
@@ -140,7 +140,7 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
   protected editEmitted(row: Row) {
     if (this.isExternalMode()) {
       this.edit.emit({
-        data: row.rowData,
+        data: row.rowData(),
         source: this.source(),
       });
       return;
@@ -153,7 +153,7 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
   }
 
   protected editCanceled(row: Row) {
-    this.editCancel.emit({ data: row.rowData, source: this.source() });
+    this.editCancel.emit({ data: row.rowData(), source: this.source() });
   }
 
   protected createEmitted() {
@@ -171,7 +171,7 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
   protected deleEmitted(row: Row) {
     if (this.isExternalMode()) {
       this.deleteEmitter.emit({
-        data: row.rowData,
+        data: row.rowData(),
         source: this.source(),
       });
     } else {
@@ -186,7 +186,7 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
 
   private emitUserSelectRow(row: Row | null): void {
     this.multiRowSelect.emit({
-      data: row ? row.rowData : null,
+      data: row ? row.rowData() : null,
       isSelected: row ? row.isSelected() : false,
       source: this.source(),
       selected: this.grid.dataSet.getSelectedRowsData(),

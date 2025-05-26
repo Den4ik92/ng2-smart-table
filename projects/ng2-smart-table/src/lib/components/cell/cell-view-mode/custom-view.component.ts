@@ -8,7 +8,7 @@ import { Cell } from '../../../lib/data-set/cell';
   template: `<ng-template
     *ngComponentOutlet="
       cell().column.renderComponent;
-      inputs: { rowData: cell().row.rowData, value: cell().getValue() }
+      inputs: { rowData: cell().row.rowData(), value: cell().getValue() }
     "></ng-template>`,
   imports: [NgComponentOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,

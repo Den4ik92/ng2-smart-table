@@ -126,7 +126,7 @@ export class Grid {
       .then((newData) => {
         row.pending.set(false);
         newData = newData || row.getNewData();
-        this.source.update(row.rowData, newData).then(() => {
+        this.source.update(row.rowData(), newData).then(() => {
           row.isInEditing.set(false);
         });
       })
@@ -137,7 +137,7 @@ export class Grid {
 
     if (this.getSetting('edit.confirmSave', false)) {
       confirmEmitter.emit({
-        data: row.rowData,
+        data: row.rowData(),
         newData: row.getNewData(),
         source: this.source,
         confirm: deferred,
@@ -157,7 +157,7 @@ export class Grid {
     deferred.promise
       .then(() => {
         row.pending.set(false);
-        this.source.remove(row.rowData);
+        this.source.remove(row.rowData());
       })
       .catch(() => {
         row.pending.set(false);
@@ -165,7 +165,7 @@ export class Grid {
       });
     if (this.getSetting('delete.confirmDelete', true)) {
       confirmEmitter.emit({
-        data: row.rowData,
+        data: row.rowData(),
         source: this.source,
         confirm: deferred,
       });

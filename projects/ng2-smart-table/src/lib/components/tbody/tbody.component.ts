@@ -50,7 +50,7 @@ export class Ng2SmartTableTbodyComponent<T extends BaseDataType = any> {
   protected customActionEmitted(actionName: string, row: Row) {
     this.customActionEmitter.emit({
       source: this.source(),
-      data: row.rowData,
+      data: row.rowData(),
       action: actionName,
     });
   }

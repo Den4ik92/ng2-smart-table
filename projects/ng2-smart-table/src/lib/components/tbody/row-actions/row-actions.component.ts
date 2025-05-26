@@ -25,7 +25,7 @@ export class RowActionsComponent<T extends BaseDataType = any> {
       return [];
     }
     const list = actions.custom.filter((action) =>
-      !action.hasPermissionFunction ? true : action.hasPermissionFunction(this.row().rowData),
+      !action.hasPermissionFunction ? true : action.hasPermissionFunction(this.row().rowData()),
     );
     return list;
   });
@@ -39,7 +39,7 @@ export class RowActionsComponent<T extends BaseDataType = any> {
     if (!editConfig || !editConfig.hasPermissionFunction) {
       return true;
     }
-    return editConfig.hasPermissionFunction(this.row().rowData);
+    return editConfig.hasPermissionFunction(this.row().rowData());
   });
 
   readonly isActionDeleteActive = computed<boolean>(() => {
@@ -51,7 +51,7 @@ export class RowActionsComponent<T extends BaseDataType = any> {
     if (!deleteConfig || !deleteConfig.hasPermissionFunction) {
       return true;
     }
-    return deleteConfig.hasPermissionFunction(this.row().rowData);
+    return deleteConfig.hasPermissionFunction(this.row().rowData());
   });
   readonly isExternalMode = computed<boolean>(() => {
     return this.grid().settings().mode === 'external';

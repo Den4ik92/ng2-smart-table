@@ -6,35 +6,34 @@ export class Row {
   readonly pending = signal(false);
   readonly isSelected = signal(false);
   readonly isInEditing = signal(false);
-  readonly cells = signal<Cell[]>([]);
+  readonly cells = computed<Cell[]>(() =>
+    this.columns().map((column: Column) => this.createCell(column, this.rowData())),
+  );
+  readonly rowData = signal<any>({});
+  readonly columns = signal<Column[]>([]);
   public readonly visibleCells = computed<Cell[]>(() => this.cells().filter((cell: Cell) => !cell.column.hide));
 
   constructor(
     public index: number,
-    public rowData: any,
-    protected columns: Column[],
+    protected rowDataObj: any,
+    protected columnsList: Column[],
   ) {
-    this.process();
+    this.rowData.set(rowDataObj);
+    this.columns.set(columnsList);
   }
 
   getNewData() {
-    const values = Object.assign({}, this.rowData);
+    const values = Object.assign({}, this.rowData());
     this.cells().forEach((cell) => (values[cell.column.id] = cell.newValue()));
     return values;
   }
 
   setData<T = any>(rowData: T): void {
-    this.rowData = rowData;
-    this.process();
+    this.rowData.set(rowData);
   }
 
-  process(): void {
-    const cells = this.columns.map((column: Column) => this.createCell(column));
-    this.cells.set(cells);
-  }
-
-  createCell(column: Column): Cell {
-    const value = typeof this.rowData[column.id] === 'undefined' ? '' : this.rowData[column.id];
+  createCell(column: Column, rowData: any): Cell {
+    const value = typeof rowData[column.id] === 'undefined' ? '' : rowData[column.id];
     return new Cell(value, this, column);
   }
 }

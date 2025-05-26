@@ -42,7 +42,7 @@ export class DataSet {
   }
 
   findRowByData(data: any): Row | undefined {
-    return this.rows().find((row: Row) => isObjectsIdentical(row.rowData, data));
+    return this.rows().find((row: Row) => isObjectsIdentical(row.rowData(), data));
   }
 
   setSelectAll(state: boolean): void {
@@ -109,14 +109,16 @@ export class DataSet {
 
   private storeSelectedRow(row: Row): void {
     if (row.isSelected()) {
-      if (this.isSelectedHasRow(row.rowData)) {
+      if (this.isSelectedHasRow(row.rowData())) {
         //check if row already in selected array to prevent duplicate
         return;
       }
-      this.selectedRowsData.push(row.rowData);
+      this.selectedRowsData.push(row.rowData());
     } else {
       const index = this.selectedRowsData.findIndex((rowData) => isObjectsIdentical(rowData, row));
-      this.selectedRowsData.splice(index, 1);
+      if (index !== -1) {
+        this.selectedRowsData.splice(index, 1);
+      }
     }
   }
 }

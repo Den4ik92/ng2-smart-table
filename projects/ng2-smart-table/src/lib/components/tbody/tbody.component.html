@@ -16,7 +16,7 @@
     [grid]="grid()"
     [source]="source()"
     [row]="row"
-    [class]="rowClassFunction()(row.rowData)"
+    [class]="rowClassFunction()(row.rowData())"
     [isMobileView]="isMobileView()"
     [class.selected]="row.isSelected()"
     (click)="rowClicked(row)"
