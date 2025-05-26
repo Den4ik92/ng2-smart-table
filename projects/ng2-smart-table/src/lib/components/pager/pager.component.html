@@ -6,8 +6,8 @@
   </div>
   <nav class="ng2-smart-table-pagination__nav">
     <ul class="ng2-smart-table-pagination__list">
-      <li class="ng2-smart-table-pagination__list-item" [class.disabled]="currentPage() === 1">
-        <a (click)="currentPage() === 1 ? false : prev()" aria-label="Prev">
+      <li class="ng2-smart-table-pagination__list-item" [class.disabled]="currentPage() <= 1">
+        <a (click)="prev()" aria-label="Prev">
           @if (prevButtonText(); as text) {
             {{ text }}
           } @else {
@@ -18,7 +18,7 @@
       @for (page of pages(); track $index) {
         <li class="ng2-smart-table-pagination__list-item" [class.active]="currentPage() === page">
           @if (isString(page) || currentPage() === page) {
-            <span [class.active]="currentPage() === page">
+            <span>
               {{ page }}
             </span>
           } @else {
@@ -26,8 +26,8 @@
           }
         </li>
       }
-      <li class="ng2-smart-table-pagination__list-item" [class.disabled]="currentPage() === lastPage()">
-        <a (click)="currentPage() === lastPage() ? false : next()" aria-label="Next">
+      <li class="ng2-smart-table-pagination__list-item" [class.disabled]="currentPage() >= lastPage()">
+        <a (click)="next()" aria-label="Next">
           @if (nextButtonText(); as text) {
             {{ text }}
           } @else {

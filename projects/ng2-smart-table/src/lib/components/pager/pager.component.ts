@@ -18,18 +18,24 @@ export class PagerComponent {
   protected readonly count = computed(() => this.source().count());
   protected readonly nextButtonText = computed(() => this.pagingConf().nextButtonText);
   protected readonly prevButtonText = computed(() => this.pagingConf().nextButtonText);
-  protected readonly lastPage = computed(() => Math.ceil(this.count() / this.currentPerPage()));
-  protected readonly pages = computed(() => this.getPages(this.currentPage(), this.lastPage()));
+  protected readonly lastPage = computed(() => Math.ceil(this.count() / this.currentPerPage()) || 1);
+  protected readonly pages = computed(() => this.getPages(this.currentPage(), this.lastPage(), this.count()));
 
   paginate(page: number) {
     this.source().setPage(page);
   }
 
   next() {
+    if (this.currentPage() >= this.lastPage() || !this.count()) {
+      return;
+    }
     this.paginate(this.currentPage() + 1);
   }
 
   prev() {
+    if (this.currentPage() <= 1 || !this.count()) {
+      return;
+    }
     this.paginate(this.currentPage() - 1);
   }
 
@@ -37,7 +43,10 @@ export class PagerComponent {
     return typeof value === 'string';
   }
 
-  getPages(current: number, last: number) {
+  getPages(current: number, last: number, total: number) {
+    if (!total) {
+      return [1];
+    }
     const delta = 2,
       left = current - delta,
       right = current + delta + 1,

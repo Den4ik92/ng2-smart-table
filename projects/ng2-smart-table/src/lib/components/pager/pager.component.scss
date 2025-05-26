@@ -22,16 +22,19 @@
       color: var(--layout-text-color);
       padding: 0.2rem 0.5rem;
     }
-    a {
+    &:not(.disabled) a {
       cursor: pointer;
       &:hover {
         background-color: var(--layout-background-color);
         color: var(--layout-text-color);
       }
     }
-    .active {
+    &.active span {
       background-color: var(--card-header-primary-background-color);
       color: var(--card-header-primary-text-color);
+    }
+    &.disabled {
+      opacity: 0.5;
     }
   }
 }
