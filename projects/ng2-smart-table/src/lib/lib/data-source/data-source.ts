@@ -55,18 +55,21 @@ export abstract class DataSource<T extends BaseDataType = any> {
 
   async appendMany(elements: T[]): Promise<true> {
     this.data.update((old) => [...old, ...elements]);
+    this.updateTotal(elements.length);
     this.emitOnChanged({ action: SmartTableOnChangedEventName.appendMany, newItems: elements });
     return Promise.resolve(true);
   }
 
   async add(element: T): Promise<true> {
     this.data.update((old) => [...old, element]);
+    this.updateTotal(1);
     this.emitOnChanged({ action: SmartTableOnChangedEventName.add, newItems: [element] });
     return Promise.resolve(true);
   }
 
   async remove(element: T): Promise<true> {
     this.data.update((old) => old.filter((el) => !isObjectsIdentical(el, element)));
+    this.updateTotal(-1);
     this.emitOnChanged({ action: SmartTableOnChangedEventName.remove, item: element }, this.data());
     return Promise.resolve(true);
   }
@@ -155,5 +158,13 @@ export abstract class DataSource<T extends BaseDataType = any> {
       sort: this.getSort(),
     };
     this.onChangedSource.next(actionData);
+  }
+
+  /**
+   * @param difference number to plus total
+   * @example -2 or 2
+   */
+  private updateTotal(difference: number) {
+    this.pagingConf.update((old) => ({ ...old, total: old.total + difference }));
   }
 }

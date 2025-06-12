@@ -1,6 +1,6 @@
 {
   "name": "@den4ik92/ng2-smart-table",
-  "version": "19.5.45",
+  "version": "19.5.46",
   "scripts": {
     "ng": "ng",
     "server": "node --watch ./projects/server/server.js",
