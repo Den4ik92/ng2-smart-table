@@ -13,7 +13,7 @@ import { DataSource } from '../data-source';
 
 // must return observable because of prepare can take some time
 export type ParamsPrepareFunction = (options: {
-  sort: SmartTableSortItem;
+  sort: SmartTableSortItem | null;
   filters: SmartTableFilterItem[];
   page: number;
   limit: number;

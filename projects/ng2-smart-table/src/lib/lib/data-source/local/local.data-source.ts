@@ -9,12 +9,16 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
   private readonly filteredAndSorted = computed<T[]>(() => {
     let list = this.data().slice(0);
     const filters = this.filters();
+    const sortConf = this.sortConf();
 
     if (filters.length) {
       list = list.filter((element) => isElementSatisfied(element, filters));
     }
-    if (this.sortConf()) {
-      const { field, direction, compare } = this.sortConf();
+    if (sortConf) {
+      const { field, direction, compare } = sortConf;
+      if (!field) {
+        return list;
+      }
       list = localSort<T>(list, field, direction, compare);
     }
     return list;

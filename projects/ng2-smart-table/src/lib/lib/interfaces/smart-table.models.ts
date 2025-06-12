@@ -27,6 +27,7 @@ export interface ColumnPositionState {
 export interface SmartTableSettings<T extends BaseDataType = any> {
   selectMode?: 'single' | 'multi';
   mode?: 'inline' | 'external';
+  resetSortOnThirdClick?: boolean;
   columnSortStorageKey?: string;
   columnSort?: boolean; // if you want to add column sort need to set true;
   hideHeader?: boolean;
@@ -253,7 +254,7 @@ interface SmartTableOnChangedEventBase<T extends BaseDataType = any> {
   elements: T[];
   filters: SmartTableFilterItem[];
   paging: SmartTablePagerSettings;
-  sort: SmartTableSortItem;
+  sort: SmartTableSortItem | null;
 }
 
 interface SmartTableOnChangedEventAll {

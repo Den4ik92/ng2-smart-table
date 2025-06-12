@@ -69,9 +69,11 @@ export class AppComponent implements OnInit {
       let paramsObject: Record<string, any> = {
         page: options.page,
         limit: options.limit,
-        sortBy: options.sort.field,
-        sortDirection: options.sort.direction,
       };
+      if (options.sort) {
+        paramsObject['sortBy'] = options.sort.field;
+        paramsObject['sortDirection'] = options.sort.direction;
+      }
       options.filters?.forEach((filter) => {
         paramsObject = { ...paramsObject, [filter.field]: filter.search };
       });
@@ -93,6 +95,7 @@ export class AppComponent implements OnInit {
 
   settings: SmartTableSettings<User> = {
     columnSortStorageKey: 'test1',
+    resetSortOnThirdClick: true,
     pager: {
       display: true,
       perPage: 100,

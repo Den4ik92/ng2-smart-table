@@ -198,7 +198,7 @@ export class Grid {
     initialPaging: Partial<SmartTablePagerSettings> | false,
   ): DataSource {
     const preparedSource = source || new LocalDataSource();
-    if (initialSort && !source?.getSort().field) {
+    if (initialSort && !source?.getSort()?.field) {
       preparedSource.setSort(initialSort, false);
     }
     if (initialPaging && initialPaging?.display) {

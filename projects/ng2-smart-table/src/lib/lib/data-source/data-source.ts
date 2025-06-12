@@ -13,7 +13,7 @@ import {
 
 export abstract class DataSource<T extends BaseDataType = any> {
   protected readonly onChangedSource = new Subject<SmartTableOnChangedEvent>();
-  protected readonly sortConf = signal<SmartTableSortItem>({ field: '', title: '', direction: 'desc' });
+  protected readonly sortConf = signal<SmartTableSortItem | null>(null);
   protected readonly filters = signal<SmartTableFilterItem[]>([]);
 
   readonly pagingConf = signal<SmartTablePagerSettings>({
@@ -32,7 +32,7 @@ export abstract class DataSource<T extends BaseDataType = any> {
 
   abstract count(): number;
 
-  readonly getSort = computed<SmartTableSortItem>(() => this.sortConf());
+  readonly getSort = computed<SmartTableSortItem | null>(() => this.sortConf());
   readonly getFilters = computed<SmartTableFilterItem[]>(() => this.filters());
 
   refresh(): void {
@@ -93,7 +93,7 @@ export abstract class DataSource<T extends BaseDataType = any> {
     return Promise.resolve(true);
   }
 
-  setSort(conf: SmartTableSortItem, doEmit = true) {
+  setSort(conf: SmartTableSortItem | null, doEmit = true) {
     this.sortConf.set(conf);
     this.pagingConf.update((old) => ({ ...old, page: 1 }));
     if (doEmit) {

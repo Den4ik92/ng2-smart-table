@@ -5,7 +5,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Column } from '../../lib/data-set/column';
 import { DataSource } from '../../lib/data-source/data-source';
 import { Grid } from '../../lib/grid';
-import { SmartTableSortDirection } from '../../lib/interfaces/smart-table.models';
+import { SmartTableSortDirection, SmartTableSortItem } from '../../lib/interfaces/smart-table.models';
 import { AddButtonComponent } from './cells/add-button.component';
 import { ColumnTitleComponent } from './cells/title/title.component';
 import { MobileFiltersComponent } from './mobile-filters/mobile-filters.component';
@@ -64,14 +64,29 @@ export class Ng2SmartTableTheadComponent {
 
   protected sortByColumn(column?: Column): void {
     const sort = this.currentSortConfig();
-    const { id: field, title } = column || { id: sort.field, title: sort.title };
-    const direction: SmartTableSortDirection =
-      field === sort.field ? (sort.direction === 'asc' ? 'desc' : 'asc') : 'asc';
-    this.source().setSort({
-      field,
-      title,
-      direction: direction,
-    });
+    if (!column && !sort) {
+      return;
+    }
+    let newSort: SmartTableSortItem | null = null;
+    if (column) {
+      let direction: SmartTableSortDirection = 'asc';
+      if (sort && sort.field === column.id && sort.title === column.title) {
+        direction = sort.direction === 'asc' ? 'desc' : 'asc';
+      }
+      newSort = {
+        field: column.id,
+        title: column.title,
+        direction: direction,
+      };
+    } else if (sort) {
+      newSort = {
+        field: sort.field,
+        title: sort.title,
+        direction: sort.direction === 'asc' ? 'desc' : 'asc',
+      };
+    }
+
+    this.source().setSort(this.getPrepareSort(newSort));
     this.filterDropdownIsOpen.set(false);
   }
 
@@ -82,4 +97,30 @@ export class Ng2SmartTableTheadComponent {
     }
     return filterOptions.inputClass || '';
   });
+
+  private lastColumnSort: (SmartTableSortItem & { count: number }) | null = null;
+
+  private getPrepareSort(newSort: SmartTableSortItem | null): SmartTableSortItem | null {
+    if (!this.grid().settings().resetSortOnThirdClick) {
+      return newSort;
+    }
+    if (!newSort) {
+      this.lastColumnSort = null;
+      return null;
+    }
+    if (
+      !this.lastColumnSort ||
+      newSort.field !== this.lastColumnSort.field ||
+      newSort.title !== this.lastColumnSort.title
+    ) {
+      this.lastColumnSort = { ...newSort, count: 1 };
+      return newSort;
+    }
+    if (this.lastColumnSort.count === 2) {
+      this.lastColumnSort = null;
+      return null;
+    }
+    this.lastColumnSort.count++;
+    return newSort;
+  }
 }
