@@ -10,4 +10,5 @@ import { ViewCell } from 'ng2-smart-table';
 export class CustomViewerComponent implements ViewCell {
   value = input<string>();
   rowData = input<any>();
+  test = input<string>();
 }

@@ -191,6 +191,7 @@ export class AppComponent implements OnInit {
           type: 'text',
         },
         renderComponent: CustomViewerComponent,
+        renderComponentInputs: { test: 'aasdfkjagshfg asdjfsd' },
       },
       {
         key: 'phone',

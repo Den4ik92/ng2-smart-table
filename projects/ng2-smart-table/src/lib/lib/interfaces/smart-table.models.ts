@@ -1,3 +1,4 @@
+import { ComponentType } from '@angular/cdk/portal';
 import { InputSignal } from '@angular/core';
 import { Cell } from '../data-set/cell';
 import { DataSource } from '../data-source/data-source';
@@ -134,7 +135,15 @@ interface SmartTableTextHtmlColumn<T extends BaseDataType> extends SmartTableDef
 
 interface SmartTableCustomColumn<T extends BaseDataType> extends SmartTableDefaultColumn<T> {
   type: 'custom';
-  renderComponent: any;
+  renderComponent: ComponentType<any>;
+  /**
+   * @description you can set any component inputs.
+   *
+   * inputs value is not updated when changed. set once onInit.
+   *
+   * make sure to set the correct input name to prevent setInput error
+   */
+  renderComponentInputs?: Record<string, any>;
 }
 
 export type SmartTableEditorAndFilterTypes = 'text' | 'textarea' | 'list' | 'custom' | 'checkbox';

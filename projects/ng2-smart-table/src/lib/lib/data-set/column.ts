@@ -1,3 +1,4 @@
+import { ComponentType } from '@angular/cdk/portal';
 import {
   SmartTableCompareFunction,
   SmartTableEditorAndFilter,
@@ -21,7 +22,8 @@ export class Column {
   isFilterable = false;
   editor: SmartTableEditorAndFilter | false = false;
   filter: SmartTableEditorAndFilter | false = false;
-  renderComponent: any;
+  renderComponent?: ComponentType<any>;
+  renderComponentInputs: Record<string, any> = {};
 
   compareFunction?: SmartTableCompareFunction;
   valuePrepareFunction?: SmartTableValuePrepareFunction;
@@ -46,6 +48,9 @@ export class Column {
     }
     if (settings.type === 'custom' && settings.renderComponent) {
       this.renderComponent = settings.renderComponent;
+    }
+    if (settings.type === 'custom' && settings.renderComponentInputs) {
+      this.renderComponentInputs = settings.renderComponentInputs;
     }
     this.isFilterable = !!settings['filter'];
     this.isSortable = settings.sort ?? false;

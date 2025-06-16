@@ -6,6 +6,7 @@ module.exports = tseslint.config(
   ...rootConfig,
   {
     files: ["**/*.ts"],
+
     rules: {
       "@angular-eslint/directive-selector": [
         "error",
@@ -15,6 +16,7 @@ module.exports = tseslint.config(
           style: "camelCase",
         },
       ],
+      "@typescript-eslint/no-explicit-any": 'off',
       "@angular-eslint/component-selector": [
         "error",
         {
