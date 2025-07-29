@@ -1,7 +1,7 @@
 import { HttpParams } from '@angular/common/http';
-import { computed } from '@angular/core';
+import { computed, signal } from '@angular/core';
 import { Observable } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { finalize, switchMap, take } from 'rxjs/operators';
 import {
   SmartTableFilterItem,
   SmartTableOnChangedEventName,
@@ -24,9 +24,11 @@ export type RequestFunction<T extends Record<string, any> = any> = (
 ) => Observable<{ total: number; data: T[] }>;
 
 export class ServerDataSource<T extends Record<string, any> = any> extends DataSource<T> {
-  readonly count = computed(() => this.pagingConf().total);
   paramPrepareFunction: ParamsPrepareFunction;
   requestFunction: RequestFunction<T>;
+
+  readonly count = computed(() => this.pagingConf().total);
+  readonly pending = signal(false);
 
   constructor(
     paramPrepareFunction: ParamsPrepareFunction,
@@ -53,6 +55,7 @@ export class ServerDataSource<T extends Record<string, any> = any> extends DataS
         SmartTableOnChangedEventName.refresh,
       ].includes(eventData.action as SmartTableOnChangedEventName)
     ) {
+      this.pending.set(true);
       this.paramPrepareFunction({
         sort: this.sortConf(),
         filters: this.filters(),
@@ -62,6 +65,9 @@ export class ServerDataSource<T extends Record<string, any> = any> extends DataS
         .pipe(
           switchMap((params) => this.requestFunction(params)),
           take(1),
+          finalize(() => {
+            this.pending.set(false);
+          }),
         )
         .subscribe((res) => {
           this.data.set(res.data);

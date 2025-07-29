@@ -51,10 +51,14 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
    * @description If you want to display pagination in your custom container, you can pass it to "paginationSlot".
    * @example
    * <ng2-smart-table
-   *    [paginationSlot]="paginationSlot">
+   *    [paginationSlot]="paginationContainerRef()">
    * </ng2-smart-table>
    * <div #paginationSlot>
    * </div>
+   * inside component
+   * readonly paginationContainerRef = viewChild<'paginationSlot', ViewContainerRef>('paginationSlot', {
+   *  read: ViewContainerRef,
+   * });
    */
   readonly paginationSlot = input<ViewContainerRef | undefined>();
   /**
