@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, TemplateRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DataSource } from '../../lib/data-source/data-source';
 
@@ -7,10 +8,12 @@ import { DataSource } from '../../lib/data-source/data-source';
   styleUrls: ['./pager.component.scss'],
   templateUrl: './pager.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule],
+  imports: [FormsModule, NgTemplateOutlet],
 })
 export class PagerComponent {
   readonly source = input.required<DataSource>();
+  readonly content = input<TemplateRef<any | undefined>>();
+
   protected readonly pagingConf = computed(() => this.source().pagingConf());
   protected readonly currentPerPage = computed(() => this.pagingConf().perPage);
   protected readonly currentPage = computed(() => this.pagingConf().page);

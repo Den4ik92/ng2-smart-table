@@ -1,10 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, viewChild, ViewContainerRef } from '@angular/core';
 import { NbCardModule, NbLayoutModule } from '@nebular/theme';
-import { LocalDataSource, SmartTableColumnEditorDirective } from 'ng2-smart-table';
+import { SmartTableColumnEditorDirective } from 'ng2-smart-table';
 import {
   ParamsPrepareFunction,
   RequestFunction,
+  ServerDataSource,
 } from 'projects/ng2-smart-table/src/lib/lib/data-source/server/server.data-source';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -46,13 +47,19 @@ export interface Address {
 export class AppComponent implements OnInit {
   private readonly http = inject(HttpClient);
 
+  protected readonly paginationSlotContainer = viewChild<'paginationSlot', ViewContainerRef>('paginationSlot', {
+    read: ViewContainerRef,
+  });
+
+  count = signal(0);
+
   private requestFunction(): RequestFunction<User> {
     return (params) =>
       this.http
         .get<{ users: User[]; totalCount: number }>('http://localhost:3000/api/users', {
           params,
         })
-        .pipe(map((data) => ({ data: data.users, total: data.totalCount })));
+        .pipe(map((data) => ({ data: data.users, totalInfo: 25000, total: data.totalCount })));
   }
 
   deleteGender = 'male';
@@ -83,21 +90,25 @@ export class AppComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 2500 } })).subscribe((res) => {
-      this.source.load(res.data);
-    });
+    // this.requestFunction()(new HttpParams({ fromObject: { page: 1, limit: 2500 } })).subscribe((res) => {
+    //   this.source.load(res.data);
+    // });
     // this.source.emitOnChanged({action: 'refresh'})
+    setTimeout(() => {
+      this.count.set(2);
+    }, 2000);
   }
 
   readonly tableHide = signal(false);
-  // readonly source = new ServerDataSource<User>(this.paramPrepareFunction, this.requestFunction());
-  readonly source = new LocalDataSource<User>();
+  readonly source = new ServerDataSource<User>(this.paramPrepareFunction, this.requestFunction());
+  // readonly source = new LocalDataSource<User>();
 
   settings: SmartTableSettings<User> = {
     columnSortStorageKey: 'test1',
     resetSortOnThirdClick: true,
     pager: {
       display: true,
+      showTotal: true,
       perPage: 100,
       perPageSelect: [10, 20, 50, 100],
     },

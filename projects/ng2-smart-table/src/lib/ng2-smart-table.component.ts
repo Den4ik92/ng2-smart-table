@@ -2,15 +2,19 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ComponentRef,
+  computed,
   ElementRef,
+  Injector,
+  input,
   NgZone,
   OnChanges,
   OnDestroy,
-  SimpleChange,
-  computed,
-  input,
   output,
   signal,
+  SimpleChange,
+  TemplateRef,
+  ViewContainerRef,
 } from '@angular/core';
 
 import { PagerComponent } from './components/pager/pager.component';
@@ -43,6 +47,37 @@ import {
 export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnChanges, OnDestroy, AfterViewInit {
   readonly source = input.required<DataSource<T>>();
   readonly settings = input.required<SmartTableSettings<T>>();
+  /**
+   * @description If you want to display pagination in your custom container, you can pass it to "paginationSlot".
+   * @example
+   * <ng2-smart-table
+   *    [paginationSlot]="paginationSlot">
+   * </ng2-smart-table>
+   * <div #paginationSlot>
+   * </div>
+   */
+  readonly paginationSlot = input<ViewContainerRef | undefined>();
+  /**
+   * @description if you want to render custom data inside a container with pagination you can pass a TemplateRef
+   * @example
+   * <ng2-smart-table
+   *    [paginationTemplateData]="paginationData"
+   * >
+   * </ng2-smart-table>
+   * <ng-template #paginationData
+   * >
+   *    any data
+   * </ng-template>
+   * ----- or another option, will work only if you do not use paginationSlot
+   * <ng2-smart-table
+   *    [paginationTemplateData]="paginationData"
+   * >
+   *    <ng-container pager-content>
+   *        some content will be rendered in the pager
+   *    </ng-container>
+   * </ng2-smart-table>
+   */
+  readonly paginationTemplateData = input<TemplateRef<unknown> | undefined>();
 
   readonly multiRowSelect = output<SmartTableRowSelectEvent<T>>();
   readonly rowClicked = output<SmartTableRowClickedEvent<T>>();
@@ -87,10 +122,12 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
   });
   private resizeObserver: ResizeObserver | null = null;
   private resizeDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private paginationComponentRef: ComponentRef<PagerComponent> | null = null;
 
   constructor(
     private elementRef: ElementRef,
     private ngZone: NgZone,
+    private injector: Injector,
   ) {}
 
   ngOnChanges({ settings }: Record<string, SimpleChange>) {
@@ -103,13 +140,27 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
     }
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     this.setupResizeObserver();
+    if (this.isPagerDisplay() && this.paginationSlot()) {
+      this.paginationComponentRef = this.paginationSlot()!.createComponent(PagerComponent, {
+        injector: this.injector,
+      });
+      this.paginationComponentRef.setInput('source', this.source());
+      if (this.paginationTemplateData()) {
+        this.paginationComponentRef.setInput('content', this.paginationTemplateData());
+      }
+    }
   }
 
   ngOnDestroy(): void {
     this.grid.detach();
     this.destroyResizeObserver();
+    if (this.paginationComponentRef) {
+      this.paginationComponentRef.destroy();
+      this.paginationComponentRef = null;
+      this.paginationSlot()?.detach();
+    }
   }
 
   protected multipleSelectRow(row: Row): void {

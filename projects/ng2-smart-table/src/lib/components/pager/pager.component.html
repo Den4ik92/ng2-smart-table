@@ -1,8 +1,14 @@
 <div class="ng2-smart-table-pagination__wrap">
-  <div>
-    @if (isShowTotal()) {
-      Total: {{ count() }}
-    }
+  <div class="total-wrap">
+    <ng-content>
+      @if (content()) {
+        <ng-template [ngTemplateOutlet]="content()!"></ng-template>
+      } @else {
+        @if (isShowTotal()) {
+          <span class="total-count"> Total: {{ count() }} </span>
+        }
+      }
+    </ng-content>
   </div>
   <nav class="ng2-smart-table-pagination__nav">
     <ul class="ng2-smart-table-pagination__list">
