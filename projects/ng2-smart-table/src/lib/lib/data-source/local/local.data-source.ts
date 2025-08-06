@@ -73,6 +73,7 @@ export class LocalDataSource<T extends Record<string, any> = any> extends DataSo
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   override async emitOnChanged(event: SmartTableOnChangedEventToEmit, newElements?: T[]) {
     super.emitOnChanged(event, this.paginatedList());
     if (this.pagingConf().display && this.isPageOutOfBounce()) {

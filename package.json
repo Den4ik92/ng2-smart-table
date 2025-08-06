@@ -1,16 +1,18 @@
 {
   "name": "@den4ik92/ng2-smart-table",
-  "version": "19.6.2",
+  "version": "19.6.3",
   "scripts": {
     "ng": "ng",
+    "prepare": "husky",
     "server": "node --watch ./projects/server/server.js",
     "serve": "ng serve --port 4205",
     "start": "npm run server & npm run serve",
     "build:demo": "ng build demo --aot --prod",
-    "build:lib": "ng build ng2-smart-table --configuration production",
+    "build:lib": "npm run lint && ng build ng2-smart-table --configuration production",
     "build:ci": "npm run build:demo && npm run build:lib",
     "release": "npm run build:lib && npm run publish",
     "publish": "cd dist/ng2-smart-table && npm publish --access=public",
+    "prepush": "npm run lint:all",
     "lint": "ng lint ng2-smart-table"
   },
   "dependencies": {

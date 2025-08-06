@@ -13,7 +13,7 @@
   <nav class="ng2-smart-table-pagination__nav">
     <ul class="ng2-smart-table-pagination__list">
       <li class="ng2-smart-table-pagination__list-item" [class.disabled]="currentPage() <= 1">
-        <a (click)="prev()" aria-label="Prev">
+        <a tabindex="0" (keyup)="prev()" (click)="prev()" aria-label="Prev">
           @if (prevButtonText(); as text) {
             {{ text }}
           } @else {
@@ -28,12 +28,12 @@
               {{ page }}
             </span>
           } @else {
-            <a (click)="paginate(page)">{{ page }}</a>
+            <a [tabindex]="page" (keyup)="paginate(page)" (click)="paginate(page)">{{ page }}</a>
           }
         </li>
       }
       <li class="ng2-smart-table-pagination__list-item" [class.disabled]="currentPage() >= lastPage()">
-        <a (click)="next()" aria-label="Next">
+        <a tabindex="10" (keyup)="next()" (click)="next()" aria-label="Next">
           @if (nextButtonText(); as text) {
             {{ text }}
           } @else {
@@ -47,7 +47,10 @@
     @if ((pagingConf().perPageSelect?.length || 0) > 0) {
       <nav class="ng2-smart-pagination-per-page">
         <label for="per-page"> Per Page: </label>
-        <select (change)="onChangePerPage($any($event.target))" [ngModel]="currentPerPage()" id="per-page">
+        <select
+          (change)="onChangePerPage($any($event.target))"
+          [ngModel]="currentPerPage()"
+          id="ng2-smart-pagination-per-page">
           @for (item of pagingConf().perPageSelect; track $index) {
             <option [value]="item">{{ item }}</option>
           }

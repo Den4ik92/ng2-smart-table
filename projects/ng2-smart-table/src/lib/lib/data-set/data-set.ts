@@ -67,8 +67,6 @@ export class DataSet {
 
   multipleSelectRow(row: Row): Row {
     row.isSelected.update((old) => !old);
-    console.log('row', row);
-
     this.storeSelectedRow(row);
     return row;
   }
