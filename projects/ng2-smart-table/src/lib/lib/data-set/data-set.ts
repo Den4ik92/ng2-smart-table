@@ -66,7 +66,9 @@ export class DataSet {
   }
 
   multipleSelectRow(row: Row): Row {
-    row.isSelected.set(!row.isSelected());
+    row.isSelected.update((old) => !old);
+    console.log('row', row);
+
     this.storeSelectedRow(row);
     return row;
   }
@@ -115,7 +117,7 @@ export class DataSet {
       }
       this.selectedRowsData.push(row.rowData());
     } else {
-      const index = this.selectedRowsData.findIndex((rowData) => isObjectsIdentical(rowData, row));
+      const index = this.selectedRowsData.findIndex((rowData) => isObjectsIdentical(rowData, row.rowData()));
       if (index !== -1) {
         this.selectedRowsData.splice(index, 1);
       }
