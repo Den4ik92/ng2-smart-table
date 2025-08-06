@@ -12,7 +12,7 @@
     "build:ci": "npm run build:demo && npm run build:lib",
     "release": "npm run build:lib && npm run publish",
     "publish": "cd dist/ng2-smart-table && npm publish --access=public",
-    "prepush": "npm run lint:all",
+    "prepush": "npm run lint",
     "lint": "ng lint ng2-smart-table"
   },
   "dependencies": {
@@ -46,6 +46,7 @@
     "@types/node": "^12.11.1",
     "angular-eslint": "19.0.1",
     "cors": "^2.8.5",
+    "husky": "^9.1.7",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.2.6",
