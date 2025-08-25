@@ -1,6 +1,6 @@
 {
   "name": "@den4ik92/ng2-smart-table",
-  "version": "19.6.3",
+  "version": "19.6.42",
   "scripts": {
     "ng": "ng",
     "prepare": "husky",

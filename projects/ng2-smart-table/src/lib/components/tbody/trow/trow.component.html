@@ -34,7 +34,7 @@
 
 <ng-template #actions>
   @if (isCreateRow() || row().isInEditing()) {
-    <td class="ng2-smart-actions">
+    <td class="ng2-smart-actions" (click)="$event.stopPropagation()">
       <ng2-st-tbody-create-cancel
         [grid]="grid()"
         [rowIndex]="row().index || 0"

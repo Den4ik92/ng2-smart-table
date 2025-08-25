@@ -10,7 +10,7 @@ import { BaseEditorComponent } from './base-editor.component';
     <textarea
       [class]="inputClass()"
       class="form-control"
-      [ngModel]="cell().newValue()"
+      [ngModel]="cell().getValue()"
       (ngModelChange)="cell().setNewValue($event)"
       [name]="cell().id"
       [disabled]="!cell().isEditable()"

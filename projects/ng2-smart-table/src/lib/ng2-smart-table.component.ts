@@ -147,12 +147,16 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
   ngAfterViewInit() {
     this.setupResizeObserver();
     if (this.isPagerDisplay() && this.paginationSlot()) {
-      this.paginationComponentRef = this.paginationSlot()!.createComponent(PagerComponent, {
-        injector: this.injector,
-      });
-      this.paginationComponentRef.setInput('source', this.source());
-      if (this.paginationTemplateData()) {
-        this.paginationComponentRef.setInput('content', this.paginationTemplateData());
+      try {
+        this.paginationComponentRef = this.paginationSlot()!.createComponent(PagerComponent, {
+          injector: this.injector,
+        });
+        this.paginationComponentRef.setInput('source', this.source());
+        if (this.paginationTemplateData()) {
+          this.paginationComponentRef.setInput('content', this.paginationTemplateData());
+        }
+      } catch {
+        //do nothing
       }
     }
   }
@@ -161,7 +165,7 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
     this.grid.detach();
     this.destroyResizeObserver();
     if (this.paginationComponentRef) {
-      this.paginationComponentRef.destroy();
+      this.paginationComponentRef?.destroy();
       this.paginationComponentRef = null;
       this.paginationSlot()?.detach();
     }
@@ -271,7 +275,7 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
       }, 20);
     });
 
-    const hostElement = this.elementRef.nativeElement;
+    const hostElement = this.elementRef?.nativeElement;
     if (hostElement) {
       this.resizeObserver.observe(hostElement);
     }
