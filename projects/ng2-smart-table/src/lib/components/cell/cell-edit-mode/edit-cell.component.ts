@@ -24,7 +24,6 @@ import { CustomEditComponent } from './custom-edit.component';
 })
 export class EditCellComponent {
   readonly cell = input.required<Cell>();
-  // readonly inputClass = input('');
 
   getEditorType(): SmartTableEditorAndFilterTypes {
     const editor = this.cell().column.editor;

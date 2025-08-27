@@ -1,13 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   input,
   InputSignal,
-  OnChanges,
   OnDestroy,
   OnInit,
   OutputEmitterRef,
-  SimpleChanges,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 
@@ -17,17 +16,24 @@ import { Column } from '../../../lib/data-set/column';
 import { DataSource } from '../../../lib/data-source/data-source';
 
 @Component({ template: '', selector: 'ng2-base-filter-component', changeDetection: ChangeDetectionStrategy.OnPush })
-export class BaseFilterComponent implements FilterComponent, OnDestroy, OnChanges, OnInit {
+export class BaseFilterComponent implements FilterComponent, OnDestroy, OnInit {
   delay = 300;
   changesSubscription?: Subscription;
-  readonly query = input<unknown>('');
+  readonly query = input<unknown>(null);
   readonly inputClass = input<string>('');
   readonly source = input.required<DataSource>();
   readonly column = input.required<Column>();
-
   readonly filterEmitter = input.required<OutputEmitterRef<any>>();
 
   readonly inputControl = new UntypedFormControl();
+
+  placeholder = '';
+
+  constructor() {
+    effect(() => {
+      this.inputControl?.setValue(this.query(), { emitEvent: false });
+    });
+  }
 
   ngOnDestroy() {
     if (this.changesSubscription) {
@@ -41,12 +47,8 @@ export class BaseFilterComponent implements FilterComponent, OnDestroy, OnChange
       .subscribe((value: string) => {
         this.setFilter(value);
       });
-  }
 
-  ngOnChanges({ query }: SimpleChanges) {
-    if (query) {
-      this.inputControl?.setValue(query.currentValue, { emitEvent: false });
-    }
+    this.placeholder = this.column()?.getFilterConfig()?.placeholder || this.column()?.getFilterConfig()?.selectText;
   }
 
   setFilter(query: any) {

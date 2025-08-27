@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { BaseEditorComponent } from './base-editor.component';
 
@@ -13,23 +13,20 @@ import { BaseEditorComponent } from './base-editor.component';
       [name]="cell().id"
       [disabled]="!cell().isEditable()"
       (change)="onChange($event)"
-      [checked]="cell().getValue() === trueVal()" />
+      [checked]="cell().getValue() === trueVal" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CheckboxEditorComponent extends BaseEditorComponent {
-  readonly trueVal = computed(() => {
-    return this.cell().column.getEditorConfig()?.true || true;
-  });
-  readonly falseVal = computed(() => {
-    return this.cell().column.getEditorConfig()?.false || false;
-  });
+export class CheckboxEditorComponent extends BaseEditorComponent implements OnInit {
+  trueVal: any = true;
+  falseVal: any = false;
 
-  constructor() {
-    super();
+  ngOnInit(): void {
+    this.trueVal = this.cell().column.getEditorConfig()?.true || true;
+    this.falseVal = this.cell().column.getEditorConfig()?.false || false;
   }
 
   onChange(event: any) {
-    this.cell().setNewValue(event.target.checked ? this.trueVal() : this.falseVal());
+    this.cell().setNewValue(event.target.checked ? this.trueVal : this.falseVal);
   }
 }

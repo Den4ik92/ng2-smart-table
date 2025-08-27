@@ -1,6 +1,6 @@
 {
   "name": "@den4ik92/ng2-smart-table",
-  "version": "19.6.42",
+  "version": "19.6.45",
   "scripts": {
     "ng": "ng",
     "prepare": "husky",
@@ -28,7 +28,7 @@
     "@nebular/eva-icons": "^15.0.0",
     "@nebular/theme": "^15.0.0",
     "eva-icons": "^1.1.3",
-    "nbx-inputs": "^2.0.1",
+    "nbx-inputs": "^2.0.4",
     "nebular-icons": "^1.1.0",
     "ng-packagr": "^19.0.1",
     "rxjs": "~7.8.0",

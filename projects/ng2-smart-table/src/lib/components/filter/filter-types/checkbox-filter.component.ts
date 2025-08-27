@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { BaseFilterComponent } from './base-filter.component';
 
@@ -34,18 +34,14 @@ import { BaseFilterComponent } from './base-filter.component';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule],
 })
-export class CheckboxFilterComponent extends BaseFilterComponent implements OnInit, OnChanges, OnDestroy {
+export class CheckboxFilterComponent extends BaseFilterComponent {
   readonly filterIsActive = computed(() => this.query() !== null);
   readonly currentState = computed<boolean>(() => {
     const valuesConfig = this.getValuesConfig(this.column().getFilterConfig());
     return this.query() === valuesConfig.trueVal ? true : this.query() === valuesConfig.falseVal ? false : false;
   });
-
-  constructor() {
-    super();
-  }
 
   private getValuesConfig(filterConfig: any): { trueVal: string | true; falseVal: string | false } {
     try {

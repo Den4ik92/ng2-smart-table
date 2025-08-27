@@ -43,7 +43,7 @@ import { SelectFilterComponent } from './filter-types/select-filter.component';
   imports: [SelectFilterComponent, CheckboxFilterComponent, InputFilterComponent],
 })
 export class BuildInFilterComponent {
-  readonly query = input<unknown>('');
+  readonly query = input<unknown>(null);
   readonly inputClass = input<string>('');
   readonly source = input.required<DataSource>();
   readonly column = input.required<Column>();

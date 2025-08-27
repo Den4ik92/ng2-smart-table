@@ -1,4 +1,4 @@
-import { computed, signal } from '@angular/core';
+import { Signal, signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { isObjectsIdentical } from '../helpers';
 import {
@@ -32,8 +32,8 @@ export abstract class DataSource<T extends BaseDataType = any> {
 
   abstract count(): number;
 
-  readonly getSort = computed<SmartTableSortItem | null>(() => this.sortConf());
-  readonly getFilters = computed<SmartTableFilterItem[]>(() => this.filters());
+  readonly getSort = this.sortConf as unknown as Signal<SmartTableSortItem | null>;
+  readonly getFilters = this.filters as unknown as Signal<SmartTableFilterItem[]>;
 
   refresh(): void {
     this.emitOnChanged({ action: SmartTableOnChangedEventName.refresh });
@@ -107,7 +107,9 @@ export abstract class DataSource<T extends BaseDataType = any> {
     }
     const foundIndex = this.filters().findIndex((filter) => filter.field === newFilter.field);
     const newSearchString =
-      typeof newFilter.search === 'undefined' || newFilter.search === null ? '' : `${newFilter.search}`;
+      typeof newFilter.search === 'undefined' || newFilter.search === null || newFilter.search === 'null'
+        ? ''
+        : `${newFilter.search}`;
     if (foundIndex === -1) {
       if (newSearchString?.length) {
         this.filters.set([...this.filters(), newFilter]);

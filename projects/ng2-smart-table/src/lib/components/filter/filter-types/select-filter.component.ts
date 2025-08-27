@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { BaseFilterComponent } from './base-filter.component';
 
@@ -7,8 +7,8 @@ import { BaseFilterComponent } from './base-filter.component';
   selector: 'ng2-select-filter',
   template: `
     <select [class]="inputClass()" class="form-control" [formControl]="inputControl">
-      <option value="">{{ column().getFilterConfig().selectText || 'all' }}</option>
-      @for (option of column().getFilterConfig().list; track $index) {
+      <option [value]="null">{{ placeholder || 'all' }}</option>
+      @for (option of optionsList(); track $index) {
         <option [value]="option.value">
           {{ option.title }}
         </option>
@@ -16,6 +16,14 @@ import { BaseFilterComponent } from './base-filter.component';
     </select>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
 })
-export class SelectFilterComponent extends BaseFilterComponent {}
+export class SelectFilterComponent extends BaseFilterComponent implements OnInit {
+  readonly optionsList = signal<{ title: string; value: any }[]>([]);
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    const config = this.column().getFilterConfig();
+    this.optionsList.set(config?.list || []);
+  }
+}

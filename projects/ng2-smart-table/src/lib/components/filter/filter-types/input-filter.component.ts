@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { BaseFilterComponent } from './base-filter.component';
 
@@ -11,9 +11,9 @@ import { BaseFilterComponent } from './base-filter.component';
       [formControl]="inputControl"
       class="form-control"
       type="text"
-      placeholder="{{ column().title }}" />
+      placeholder="{{ placeholder || column().title }}" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
 })
 export class InputFilterComponent extends BaseFilterComponent {}

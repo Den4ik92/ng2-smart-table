@@ -37,15 +37,16 @@ import { CustomFilterComponent } from './custom-filter.component';
   imports: [CustomFilterComponent, BuildInFilterComponent],
 })
 export class FilterComponent {
+  readonly column = input.required<Column>();
+  readonly source = input.required<DataSource>();
+  readonly inputClass = input<string>('');
+
   protected readonly query = computed<null | string>(() => {
     const columnFilter = this.source()
       .getFilters()
       .find((filter) => filter.field === this.column().id);
     return columnFilter?.search ?? null;
   });
-  readonly column = input.required<Column>();
-  readonly source = input.required<DataSource>();
-  readonly inputClass = input<string>('');
 
   onFilter(query: any) {
     const columnFilter = this.column().filter;

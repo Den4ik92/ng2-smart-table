@@ -11,7 +11,7 @@ import { BaseEditorComponent } from './base-editor.component';
       type="text"
       [class]="inputClass()"
       class="form-control"
-      [ngModel]="cell().getValue()"
+      [ngModel]="cell().newValue()"
       (ngModelChange)="cell().setNewValue($event)"
       [name]="cell().id"
       [placeholder]="cell().title"

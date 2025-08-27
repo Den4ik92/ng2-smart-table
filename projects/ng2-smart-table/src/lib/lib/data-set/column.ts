@@ -49,8 +49,8 @@ export class Column {
     if (settings.type === 'custom' && settings.renderComponent) {
       this.renderComponent = settings.renderComponent;
     }
-    if (settings.type === 'custom' && settings.renderComponentInputs) {
-      this.renderComponentInputs = settings.renderComponentInputs;
+    if (settings.type === 'custom' && settings.inputs) {
+      this.renderComponentInputs = settings.inputs;
     }
     this.isFilterable = !!settings['filter'];
     this.isSortable = settings.sort ?? false;
@@ -62,21 +62,21 @@ export class Column {
     this.filterFunction = settings.filterFunction;
   }
 
-  getEditorConfig(): SmartTableEditorAndFilter['config'] | false {
+  getEditorConfig(): SmartTableEditorAndFilter['config'] | undefined {
     if (this.editor) {
       return this.editor?.config;
     }
-    return false;
+    return undefined;
   }
 
   getFilterType() {
     return this.filter && this.filter.type;
   }
 
-  getFilterConfig(): SmartTableEditorAndFilter['config'] | false {
+  getFilterConfig(): SmartTableEditorAndFilter['config'] | undefined {
     if (this.filter) {
       return this.filter?.config;
     }
-    return false;
+    return undefined;
   }
 }

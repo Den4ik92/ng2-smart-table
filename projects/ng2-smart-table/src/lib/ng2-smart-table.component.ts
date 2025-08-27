@@ -56,7 +56,7 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
    * <div #paginationSlot>
    * </div>
    * inside component
-   * readonly paginationContainerRef = viewChild<'paginationSlot', ViewContainerRef>('paginationSlot', {
+   * readonly paginationContainerRef = viewChild('paginationSlot', {
    *  read: ViewContainerRef,
    * });
    */

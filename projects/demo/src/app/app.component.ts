@@ -161,6 +161,10 @@ export class AppComponent implements OnInit {
         sort: true,
         filter: {
           type: 'checkbox',
+          config: {
+            true: 'male',
+            false: 'female',
+          },
         },
         valuePrepareFunction: (cell: 'male' | 'female') => cell === 'male',
       },
@@ -172,6 +176,7 @@ export class AppComponent implements OnInit {
         filter: {
           type: 'list',
           config: {
+            placeholder: 'All gender',
             list: [
               { value: 'male', title: 'male' },
               { value: 'female', title: 'female' },
@@ -189,8 +194,11 @@ export class AppComponent implements OnInit {
         type: 'text',
         sort: true,
         filter: {
-          type: 'custom',
-          component: CustomFilterComponent,
+          type: 'list',
+          config: {
+            placeholder: 'All',
+            list: [],
+          },
         },
         // sort: true,
       },
@@ -200,14 +208,27 @@ export class AppComponent implements OnInit {
         type: 'custom',
         filter: {
           type: 'text',
+          config: {
+            placeholder: 'custom',
+          },
         },
         renderComponent: CustomViewerComponent,
-        renderComponentInputs: { test: 'aasdfkjagshfg asdjfsd' },
+        inputs: { test: 'sdasd' },
       },
       {
         key: 'phone',
         title: 'phone',
         type: 'text',
+        filter: {
+          type: 'custom',
+          config: {
+            placeholder: 'All',
+            inputs: {
+              testInput: 'sssss',
+            },
+          },
+          component: CustomFilterComponent,
+        },
       },
 
       {

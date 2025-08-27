@@ -133,17 +133,15 @@ interface SmartTableTextHtmlColumn<T extends BaseDataType> extends SmartTableDef
   type: 'text' | 'html';
 }
 
-interface SmartTableCustomColumn<T extends BaseDataType> extends SmartTableDefaultColumn<T> {
+interface SmartTableCustomColumn<T extends BaseDataType, C = any> extends SmartTableDefaultColumn<T> {
   type: 'custom';
-  renderComponent: ComponentType<any>;
+  renderComponent: ComponentType<C>;
   /**
    * @description you can set any component inputs.
-   *
    * inputs value is not updated when changed. set once onInit.
-   *
    * make sure to set the correct input name to prevent setInput error
    */
-  renderComponentInputs?: Record<string, any>;
+  inputs?: Record<string, any>;
 }
 
 export type SmartTableEditorAndFilterTypes = 'text' | 'textarea' | 'list' | 'custom' | 'checkbox';
@@ -156,15 +154,18 @@ export type SmartTableEditorAndFilter =
 
 interface SmartTableTextEditor {
   type: 'text' | 'textarea';
-  config?: any;
+  config?: {
+    placeholder?: string;
+  } & Record<string, any>;
 }
 
 interface SmartTableEditorList {
   type: 'list';
   config: {
+    placeholder?: string;
     selectText?: string;
     list: SelectOption[];
-  };
+  } & Record<string, any>;
 }
 
 interface SmartTableEditorCheckbox {
@@ -173,13 +174,21 @@ interface SmartTableEditorCheckbox {
     true: any;
     false: any;
     resetText?: string;
-  };
+  } & Record<string, any>;
 }
 
 interface SmartTableEditorCustom {
   type: 'custom';
   component: any;
-  config?: any;
+  config?: {
+    placeholder?: string;
+    /**
+     * @description you can set any component inputs.
+     * inputs value is not updated when changed. set once onInit.
+     * make sure to set the correct input name to prevent setInput error
+     */
+    inputs?: Record<string, any>;
+  } & Record<string, any>;
 }
 
 export interface SmartTablePagerSettings {

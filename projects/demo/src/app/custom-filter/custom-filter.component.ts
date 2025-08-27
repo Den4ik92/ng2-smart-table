@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbxInputSelectComponent, NbxSelectOption } from 'nbx-inputs';
 import { BaseFilterComponent } from 'ng2-smart-table';
@@ -8,12 +8,16 @@ import { BaseFilterComponent } from 'ng2-smart-table';
   styleUrl: './custom-filter.component.css',
   imports: [FormsModule, ReactiveFormsModule, NbxInputSelectComponent],
 })
-export class CustomFilterComponent extends BaseFilterComponent {
-  options = Array.from({ length: 100 }).map(
-    (_, index) => ({ value: index, title: index }) as unknown as NbxSelectOption,
-  );
+export class CustomFilterComponent extends BaseFilterComponent implements OnInit {
+  testInput = input('');
 
-  filterChanged(value: string | string[]) {
-    this.setFilter(value);
+  options = [
+    { value: null, title: 'All' },
+    ...Array.from({ length: 100 }).map((_, index) => ({ value: index, title: index }) as unknown as NbxSelectOption),
+  ];
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    console.log(this.testInput());
   }
 }
