@@ -146,6 +146,14 @@ export class AppComponent implements OnInit {
         editor: {
           type: 'custom',
           component: CustomEditorComponent,
+          config: {
+            inputs: {
+              // had error in this line
+              ins: 's',
+              // no error! Component CustomEditorComponent has 'testInput'
+              testInput: 'asdfasdf',
+            },
+          },
         },
       },
       {

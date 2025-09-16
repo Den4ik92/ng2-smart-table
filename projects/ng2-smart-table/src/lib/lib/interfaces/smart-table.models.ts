@@ -133,9 +133,9 @@ interface SmartTableTextHtmlColumn<T extends BaseDataType> extends SmartTableDef
   type: 'text' | 'html';
 }
 
-interface SmartTableCustomColumn<T extends BaseDataType, C = any> extends SmartTableDefaultColumn<T> {
+interface SmartTableCustomColumn<T extends BaseDataType> extends SmartTableDefaultColumn<T> {
   type: 'custom';
-  renderComponent: ComponentType<C>;
+  renderComponent: ComponentType<any>;
   /**
    * @description you can set any component inputs.
    * inputs value is not updated when changed. set once onInit.
@@ -177,9 +177,9 @@ interface SmartTableEditorCheckbox {
   } & Record<string, any>;
 }
 
-interface SmartTableEditorCustom {
+export interface SmartTableEditorCustom {
   type: 'custom';
-  component: any;
+  component: ComponentType<any>;
   config?: {
     placeholder?: string;
     /**
