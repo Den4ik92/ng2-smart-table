@@ -8,7 +8,7 @@
         <div
           cdkDrag
           [cdkDragLockAxis]="'y'"
-          [cdkDragStartDelay]="grid()?.columnSortDragDelay() || 300"
+          [cdkDragStartDelay]="grid()?.columnSortDragDelay() || 0"
           [cdkDragDisabled]="column.moveDisabled"
           class="drag-row"
           #dragRow

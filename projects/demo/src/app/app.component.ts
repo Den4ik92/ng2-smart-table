@@ -112,7 +112,7 @@ export class AppComponent implements OnInit {
       perPageSelect: [10, 20, 50, 100],
     },
     tableWidthMobileBreakpoint: 768,
-    columnSort: { active: true, stateStorageKey: 'test1' },
+    columnSort: { active: true, stateStorageKey: 'test1', dragDelay: 0 },
     selectMode: 'multi',
     actions: {
       add: false,

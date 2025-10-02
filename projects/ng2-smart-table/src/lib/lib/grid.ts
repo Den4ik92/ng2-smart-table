@@ -45,7 +45,7 @@ export class Grid {
     return this.settings().actionsPosition === 'right';
   });
   readonly columnSortDragDelay = computed<number>(() => {
-    return this.settings().columnSort?.dragDelay || 300;
+    return this.settings().columnSort?.dragDelay || 0;
   });
 
   private readonly columnStateStorageKey = computed<string | undefined>(() => {
