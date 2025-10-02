@@ -36,6 +36,7 @@ export interface SmartTableSettings<T extends BaseDataType = any> {
     stateStorageKey?: string;
     /**
      * @description delay to start move column card
+     * @default 0
      */
     dragDelay?: number;
     active: boolean;
