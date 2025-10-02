@@ -3,49 +3,41 @@
     <h6>Table columns setup</h6>
   </div>
   <div class="sort-card-body">
-    <div
-      class="list"
-      cdkDropList
-      [cdkDropListData]="currentState"
-      (cdkDropListDropped)="drop($event)"
-    >
+    <div class="list" cdkDropList [cdkDropListData]="currentState" (cdkDropListDropped)="drop($event)">
       @for (column of currentState; track column.key + i; let i = $index) {
-
-      <div
-        cdkDrag
-        [cdkDragLockAxis]="'y'"
-        [cdkDragStartDelay]="300"
-        [cdkDragDisabled]="column.moveDisabled"
-        class="drag-row"
-        #dragRow
-        [style.--drag-row-height]="50"
-      >
-        <div class="drag-placeholder" *cdkDragPlaceholder></div>
-        <div class="index-cell">
-          {{ i + 1 }}
+        <div
+          cdkDrag
+          [cdkDragLockAxis]="'y'"
+          [cdkDragStartDelay]="grid()?.columnSortDragDelay() || 300"
+          [cdkDragDisabled]="column.moveDisabled"
+          class="drag-row"
+          #dragRow
+          [style.--drag-row-height]="50">
+          <div class="drag-placeholder" *cdkDragPlaceholder></div>
+          <div class="index-cell">
+            {{ i + 1 }}
+          </div>
+          <label class="sort-column-checkbox-wrap" [for]="'sort-column-checkbox-' + i">
+            <span></span>
+            <input
+              [disabled]="column.moveDisabled"
+              [id]="'sort-column-checkbox-' + i"
+              title="Active state. If checked the column will be displayed"
+              type="checkbox"
+              class="sort-column-checkbox-input"
+              [checked]="!column.hide"
+              (change)="setVisibility(i)" />
+            <span></span>
+          </label>
+          {{ column.title }}
         </div>
-        <label class="sort-column-checkbox-wrap" [for]="'sort-column-checkbox-' + i">
-          <span></span>
-          <input
-            [disabled]="column.moveDisabled"
-            [id]="'sort-column-checkbox-' + i"
-            title="Active state. If checked the column will be displayed"
-            type="checkbox"
-            class="sort-column-checkbox-input"
-            [checked]="!column.hide"
-            (change)="setVisibility(i)"
-          />
-          <span></span>
-        </label>
-        {{ column.title }}
-      </div>
       }
     </div>
   </div>
   @if (stateHasChanged()) {
-  <div class="sort-card-footer">
-    <button class="reset-button" (click)="resetChanges()">reset</button>
-    <button class="update-button" (click)="setAndUpdate()">Update</button>
-  </div>
+    <div class="sort-card-footer">
+      <button class="reset-button" (click)="resetChanges()">reset</button>
+      <button class="update-button" (click)="setAndUpdate()">Update</button>
+    </div>
   }
 </div>

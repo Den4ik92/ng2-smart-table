@@ -44,6 +44,13 @@ export class Grid {
   readonly actionIsOnRight = computed<boolean>(() => {
     return this.settings().actionsPosition === 'right';
   });
+  readonly columnSortDragDelay = computed<number>(() => {
+    return this.settings().columnSort?.dragDelay || 300;
+  });
+
+  private readonly columnStateStorageKey = computed<string | undefined>(() => {
+    return this.settings().columnSort?.stateStorageKey;
+  });
 
   constructor(source: DataSource | undefined, settings: SmartTableSettings) {
     this.setSource(source, settings);
@@ -66,7 +73,7 @@ export class Grid {
 
   setSettings(settings: SmartTableSettings) {
     this.updateSettingsAndDataSet(settings);
-    if (settings.columnSort) {
+    if (settings.columnSort?.active) {
       this.setColumnsSortState(settings.columns);
     }
   }
@@ -294,8 +301,8 @@ export class Grid {
       },
       'columnRefresh',
     );
-    if (this.columnStateStorageKey) {
-      setLocalStorage(this.columnStateStorageKey, this.currentColumnsSortState);
+    if (this.columnStateStorageKey()) {
+      setLocalStorage(this.columnStateStorageKey()!, this.currentColumnsSortState);
     }
     if (emitEvent) {
       this.columnsSortedEmitter.emit(this.currentColumnsSortState);
@@ -304,11 +311,11 @@ export class Grid {
 
   private setColumnsSortState(columns?: SmartTableColumnSettings[]) {
     const columnsState = this.getColumnsStateFromSettings(columns);
-    if (this.columnStateStorageKey) {
-      const storageState = getLocalStorage<ColumnPositionState[]>(this.columnStateStorageKey);
+    if (this.columnStateStorageKey()) {
+      const storageState = getLocalStorage<ColumnPositionState[]>(this.columnStateStorageKey()!);
       if (!storageState) {
         this.currentColumnsSortState = columnsState;
-        setLocalStorage(this.columnStateStorageKey, columnsState);
+        setLocalStorage(this.columnStateStorageKey()!, columnsState);
         return;
       }
       const merged = this.getMergedColumnStates(storageState, columnsState);
@@ -342,9 +349,5 @@ export class Grid {
       return !filtered.some((column) => column.title === state.title && column.key === state.key);
     });
     return [...filtered, ...newColumns];
-  }
-
-  private get columnStateStorageKey(): string | undefined {
-    return this.settings().columnSortStorageKey;
   }
 }

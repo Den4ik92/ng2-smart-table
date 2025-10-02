@@ -104,7 +104,6 @@ export class AppComponent implements OnInit {
   // readonly source = new LocalDataSource<User>();
 
   settings: SmartTableSettings<User> = {
-    columnSortStorageKey: 'test1',
     resetSortOnThirdClick: true,
     pager: {
       display: true,
@@ -113,7 +112,7 @@ export class AppComponent implements OnInit {
       perPageSelect: [10, 20, 50, 100],
     },
     tableWidthMobileBreakpoint: 768,
-    columnSort: true,
+    columnSort: { active: true, stateStorageKey: 'test1' },
     selectMode: 'multi',
     actions: {
       add: false,

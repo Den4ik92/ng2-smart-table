@@ -29,8 +29,17 @@ export interface SmartTableSettings<T extends BaseDataType = any> {
   selectMode?: 'single' | 'multi';
   mode?: 'inline' | 'external';
   resetSortOnThirdClick?: boolean;
-  columnSortStorageKey?: string;
-  columnSort?: boolean; // if you want to add column sort need to set true;
+  columnSort?: {
+    /**
+     * @description  save table columns state in local storage and use it after init
+     */
+    stateStorageKey?: string;
+    /**
+     * @description delay to start move column card
+     */
+    dragDelay?: number;
+    active: boolean;
+  };
   hideHeader?: boolean;
   hideSubHeader?: boolean;
   /**
