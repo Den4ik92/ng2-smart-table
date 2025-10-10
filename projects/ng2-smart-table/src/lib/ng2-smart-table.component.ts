@@ -5,6 +5,7 @@ import {
   ComponentRef,
   computed,
   ElementRef,
+  inject,
   Injector,
   input,
   NgZone,
@@ -45,6 +46,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnChanges, OnDestroy, AfterViewInit {
+  private readonly elementRef = inject(ElementRef);
+  private readonly ngZone = inject(NgZone);
+  private readonly injector = inject(Injector);
+
   readonly source = input.required<DataSource<T>>();
   readonly settings = input.required<SmartTableSettings<T>>();
   /**
@@ -127,12 +132,6 @@ export class Ng2SmartTableComponent<T extends BaseDataType = any> implements OnC
   private resizeObserver: ResizeObserver | null = null;
   private resizeDebounceTimer: ReturnType<typeof setTimeout> | null = null;
   private paginationComponentRef: ComponentRef<PagerComponent> | null = null;
-
-  constructor(
-    private elementRef: ElementRef,
-    private ngZone: NgZone,
-    private injector: Injector,
-  ) {}
 
   ngOnChanges({ settings }: Record<string, SimpleChange>) {
     if (this.grid) {
