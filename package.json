@@ -1,6 +1,6 @@
 {
   "name": "@den4ik92/ng2-smart-table",
-  "version": "19.6.48",
+  "version": "20.0.0",
   "scripts": {
     "ng": "ng",
     "prepare": "husky",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@angular/animations": "^20.3.4",
-    "@angular/cdk": "^19.2.14",
+    "@angular/cdk": "^20.2.8",
     "@angular/common": "^20.3.4",
     "@angular/compiler": "^20.3.4",
     "@angular/core": "^20.3.4",
