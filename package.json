@@ -43,7 +43,7 @@
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
-    "nbx-inputs": "^20.0.22",
+    "nbx-inputs": "^20.0.23",
     "angular-eslint": "19.0.1",
     "cors": "^2.8.5",
     "eslint": "^8.57.0",
